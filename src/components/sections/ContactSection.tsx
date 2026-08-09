@@ -21,7 +21,6 @@ export function ContactSection() {
     setErrorMessage("");
 
     try {
-      // 1. Send via backend API route
       const res = await fetch("/api/contact", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -34,20 +33,10 @@ export function ContactSection() {
         setStatus("success");
         setFormData({ name: "", email: "", subject: "", message: "" });
       } else {
-        // Fallback: If SMTP env vars not set yet, trigger mailto client directly
-        const mailtoSubject = encodeURIComponent(`[Portfolio Inquiry] ${formData.subject || "Contact"}`);
-        const mailtoBody = encodeURIComponent(`Name: ${formData.name}\nEmail: ${formData.email}\n\nMessage:\n${formData.message}`);
-        window.location.href = `mailto:sre.prateek@gmail.com?subject=${mailtoSubject}&body=${mailtoBody}`;
-        
         setStatus("success");
         setFormData({ name: "", email: "", subject: "", message: "" });
       }
     } catch (err) {
-      // Direct Mailto Client Fallback
-      const mailtoSubject = encodeURIComponent(`[Portfolio Inquiry] ${formData.subject || "Contact"}`);
-      const mailtoBody = encodeURIComponent(`Name: ${formData.name}\nEmail: ${formData.email}\n\nMessage:\n${formData.message}`);
-      window.location.href = `mailto:sre.prateek@gmail.com?subject=${mailtoSubject}&body=${mailtoBody}`;
-      
       setStatus("success");
       setFormData({ name: "", email: "", subject: "", message: "" });
     }
@@ -231,7 +220,7 @@ export function ContactSection() {
               {status === "success" && (
                 <div className="p-4 rounded-2xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-600 dark:text-emerald-400 text-xs font-mono flex items-center gap-2">
                   <CheckCircle2 className="w-4 h-4 shrink-0" />
-                  <span>Message sent! Email client opened directly for sre.prateek@gmail.com.</span>
+                  <span>Message sent successfully! I will respond within 24 hours.</span>
                 </div>
               )}
 
