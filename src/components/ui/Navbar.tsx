@@ -7,6 +7,7 @@ import { Terminal, Download, Menu, X, Sparkles, ChevronRight } from "lucide-reac
 
 export function Navbar() {
   const [scrolled, setScrolled] = useState(false);
+  const [activeSection, setActiveSection] = useState("#hero");
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const navLinks = [
@@ -20,6 +21,22 @@ export function Navbar() {
   useEffect(() => {
     const handleScroll = () => {
       setScrolled(window.scrollY > 20);
+
+      // Scroll Spy for active section highlight (like takeuforward.org)
+      const sections = ["#hero", "#about", "#skills", "#projects", "#experience", "#contact"];
+      const scrollPosition = window.scrollY + 120;
+
+      for (const section of sections) {
+        const el = document.querySelector(section) as HTMLElement | null;
+        if (el) {
+          const top = el.offsetTop;
+          const height = el.offsetHeight;
+          if (scrollPosition >= top && scrollPosition < top + height) {
+            setActiveSection(section);
+            break;
+          }
+        }
+      }
     };
 
     window.addEventListener("scroll", handleScroll);
@@ -28,6 +45,7 @@ export function Navbar() {
 
   const scrollToSection = (href: string) => {
     setMobileMenuOpen(false);
+    setActiveSection(href);
     const element = document.querySelector(href);
     if (element) {
       element.scrollIntoView({ behavior: "smooth" });
@@ -35,59 +53,67 @@ export function Navbar() {
   };
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 px-3 sm:px-6 lg:px-8 pt-2 sm:pt-4 pointer-events-none">
+    <header className="fixed top-0 left-0 right-0 z-50 px-3 sm:px-6 lg:px-8 pt-3 sm:pt-4 pointer-events-none">
       <nav
-        className={`max-w-6xl mx-auto rounded-2xl sm:rounded-3xl transition-all duration-500 pointer-events-auto px-4 py-2.5 sm:px-6 sm:py-3.5 glass-navbar-ios ${
-          scrolled ? "shadow-xl border-azure-500/30 dark:border-cyan-400/30" : ""
+        className={`max-w-6xl mx-auto rounded-full transition-all duration-300 pointer-events-auto px-4 py-2.5 sm:px-6 sm:py-3 glass-navbar-tuf ${
+          scrolled ? "shadow-2xl border-azure-500/40 dark:border-cyan-400/40" : ""
         }`}
       >
         <div className="flex items-center justify-between">
-          {/* Brand Logo & SRE Badge */}
+          {/* Brand Logo (TUF Inspired Badge) */}
           <a
             href="#hero"
             onClick={(e) => {
               e.preventDefault();
               scrollToSection("#hero");
             }}
-            className="flex items-center gap-2 sm:gap-3 group active:scale-95 transition-transform touch-manipulation"
+            className="flex items-center gap-2.5 group active:scale-95 transition-transform touch-manipulation"
           >
-            <div className="p-2 sm:p-2.5 rounded-xl sm:rounded-2xl bg-gradient-to-tr from-azure-600 via-cyan-500 to-emerald-500 text-white shadow-azure-glow group-hover:scale-105 transition-all duration-300">
-              <Terminal className="w-4 h-4 sm:w-5 sm:h-5" />
+            <div className="p-2 sm:p-2.5 rounded-full bg-gradient-to-tr from-azure-600 via-cyan-500 to-emerald-500 text-white shadow-azure-glow group-hover:scale-105 transition-all duration-300">
+              <Terminal className="w-4 h-4 sm:w-4.5 sm:h-4.5" />
             </div>
             <div className="flex flex-col">
-              <span className="font-heading font-extrabold text-base sm:text-lg tracking-tight text-dark-900 dark:text-white flex items-center gap-1.5">
+              <span className="font-heading font-extrabold text-base sm:text-lg tracking-tight text-dark-900 dark:text-white flex items-center gap-1">
                 Prateek<span className="text-azure-600 dark:text-cyan-400">Gupta</span>
               </span>
-              <span className="text-[10px] sm:text-xs font-mono font-bold text-azure-600 dark:text-cyan-300 tracking-wider uppercase -mt-0.5">
-                SRE & Cloud
+              <span className="text-[10px] font-mono font-bold text-azure-600 dark:text-cyan-300 tracking-wider uppercase -mt-1 hidden sm:inline-block">
+                SRE & Cloud Architecture
               </span>
             </div>
           </a>
 
-          {/* Desktop Navigation Links */}
-          <div className="hidden md:flex items-center gap-1 bg-white/50 dark:bg-dark-900/50 p-1.5 rounded-2xl border border-slate-200/60 dark:border-slate-800/60 backdrop-blur-md">
-            {navLinks.map((link) => (
-              <a
-                key={link.name}
-                href={link.href}
-                onClick={(e) => {
-                  e.preventDefault();
-                  scrollToSection(link.href);
-                }}
-                className="px-4 py-2 text-xs sm:text-sm font-semibold rounded-xl text-dark-800 dark:text-cream-300 hover:text-azure-600 dark:hover:text-cyan-300 hover:bg-azure-500/10 dark:hover:bg-azure-500/20 transition-all duration-200"
-              >
-                {link.name}
-              </a>
-            ))}
+          {/* Desktop Navigation Links (TUF Inspired Active Pill Tabs) */}
+          <div className="hidden md:flex items-center gap-1 bg-white/40 dark:bg-dark-900/40 p-1.5 rounded-full border border-slate-200/50 dark:border-slate-800/50 backdrop-blur-md">
+            {navLinks.map((link) => {
+              const isActive = activeSection === link.href;
+
+              return (
+                <a
+                  key={link.name}
+                  href={link.href}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    scrollToSection(link.href);
+                  }}
+                  className={`relative px-4 py-1.5 text-xs sm:text-sm font-semibold rounded-full transition-all duration-200 ${
+                    isActive
+                      ? "text-azure-600 dark:text-cyan-300 font-bold bg-azure-500/15 dark:bg-cyan-400/15 border border-azure-500/30 dark:border-cyan-400/30 shadow-sm"
+                      : "text-dark-800/80 dark:text-cream-300/80 hover:text-azure-600 dark:hover:text-cyan-300 hover:bg-azure-500/10 dark:hover:bg-azure-500/20"
+                  }`}
+                >
+                  {link.name}
+                </a>
+              );
+            })}
           </div>
 
-          {/* Right Action Controls: Resume Button, Theme Toggle & Mobile Menu */}
+          {/* Right Action Controls: Download Resume Pill & Theme Toggle */}
           <div className="flex items-center gap-2 sm:gap-3">
-            {/* Download Resume CTA */}
+            {/* Download Resume Pill CTA (TUF Style Rounded Button) */}
             <a
               href="/resume.pdf"
               download
-              className="hidden sm:inline-flex items-center gap-2 px-4 py-2 text-xs font-extrabold rounded-xl sm:rounded-2xl bg-gradient-to-r from-azure-500 via-cyan-500 to-emerald-500 text-white shadow-azure-glow hover:scale-105 transition-all duration-300 font-heading"
+              className="hidden sm:inline-flex items-center gap-2 px-5 py-2 text-xs font-extrabold rounded-full bg-gradient-to-r from-azure-500 via-cyan-500 to-emerald-500 text-white shadow-azure-glow hover:scale-105 active:scale-98 transition-all duration-300 font-heading"
             >
               <Download className="w-3.5 h-3.5" />
               <span>Resume</span>
@@ -99,7 +125,7 @@ export function Navbar() {
             {/* Mobile Hamburger Toggle Button */}
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="md:hidden p-2.5 rounded-xl sm:rounded-2xl bg-white/80 dark:bg-dark-900/80 border border-slate-200/80 dark:border-slate-800/80 text-dark-900 dark:text-cream-200 hover:text-azure-600 focus:outline-none touch-manipulation active:scale-95 transition-all"
+              className="md:hidden p-2.5 rounded-full bg-white/80 dark:bg-dark-900/80 border border-slate-200/80 dark:border-slate-800/80 text-dark-900 dark:text-cream-200 hover:text-azure-600 focus:outline-none touch-manipulation active:scale-95 transition-all"
               aria-label="Toggle Navigation Menu"
             >
               {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
@@ -118,7 +144,7 @@ export function Navbar() {
             transition={{ duration: 0.25, ease: "easeOut" }}
             className="md:hidden max-w-6xl mx-auto mt-2 pointer-events-auto"
           >
-            <div className="p-4 rounded-3xl glass-navbar-ios shadow-2xl border border-azure-500/30 dark:border-cyan-400/30 flex flex-col gap-2">
+            <div className="p-4 rounded-3xl glass-navbar-tuf shadow-2xl border border-azure-500/30 dark:border-cyan-400/30 flex flex-col gap-2">
               {navLinks.map((link) => (
                 <a
                   key={link.name}
@@ -139,7 +165,7 @@ export function Navbar() {
                   href="/resume.pdf"
                   download
                   onClick={() => setMobileMenuOpen(false)}
-                  className="w-full flex items-center justify-center gap-2 px-4 py-3 rounded-2xl bg-gradient-to-r from-azure-500 via-cyan-500 to-emerald-500 text-white font-extrabold text-sm font-heading shadow-azure-glow active:scale-98 transition-all"
+                  className="w-full flex items-center justify-center gap-2 px-4 py-3 rounded-full bg-gradient-to-r from-azure-500 via-cyan-500 to-emerald-500 text-white font-extrabold text-sm font-heading shadow-azure-glow active:scale-98 transition-all"
                 >
                   <Download className="w-4 h-4" />
                   <span>Download Resume PDF</span>
