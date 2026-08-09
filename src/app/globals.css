@@ -1,0 +1,135 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Space+Grotesk:wght@500;600;700;800&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --font-space-grotesk: 'Space Grotesk', sans-serif;
+    --font-inter: 'Inter', sans-serif;
+    --font-jetbrains-mono: 'JetBrains Mono', monospace;
+    --background: 210 40% 98%;
+    --foreground: 222 47% 11%;
+  }
+
+  .dark {
+    --background: 222 47% 4%;
+    --foreground: 210 40% 98%;
+  }
+
+  html {
+    scroll-behavior: smooth;
+    font-family: var(--font-inter);
+  }
+
+  body {
+    background-color: #FAF9E1;
+    color: #0F172A;
+    overflow-x: hidden;
+  }
+
+  .dark body {
+    background-color: #07090E;
+    color: #F8FAFC;
+  }
+
+  /* Azure & Emerald Scrollbar */
+  ::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: #FAF9E1;
+  }
+
+  .dark ::-webkit-scrollbar-track {
+    background: #07090E;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: linear-gradient(180deg, #0284C7 0%, #06B6D4 50%, #10B981 100%);
+    border-radius: 4px;
+    border: 2px solid #FAF9E1;
+  }
+
+  .dark ::-webkit-scrollbar-thumb {
+    background: linear-gradient(180deg, #0284C7 0%, #22D3EE 50%, #10B981 100%);
+    border: 2px solid #07090E;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: #0284C7;
+  }
+}
+
+/* Enterprise Azure & Emerald Gradient Utilities */
+.text-gradient-sre {
+  background: linear-gradient(135deg, #0284C7 0%, #06B6D4 50%, #10B981 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.dark .text-gradient-sre {
+  background: linear-gradient(135deg, #38BDF8 0%, #22D3EE 50%, #34D399 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* Noise Grain Overlay */
+.bg-noise {
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.035'/%3E%3C/svg%3E");
+}
+
+/* Animated Digital Infrastructure Tech Grid */
+.bg-tech-grid {
+  background-image: linear-gradient(to right, rgba(2, 132, 199, 0.07) 1px, transparent 1px),
+                    linear-gradient(to bottom, rgba(2, 132, 199, 0.07) 1px, transparent 1px);
+  background-size: 40px 40px;
+  animation: gridShift 30s linear infinite;
+}
+
+.dark .bg-tech-grid {
+  background-image: linear-gradient(to right, rgba(2, 132, 199, 0.12) 1px, transparent 1px),
+                    linear-gradient(to bottom, rgba(2, 132, 199, 0.12) 1px, transparent 1px);
+  background-size: 40px 40px;
+}
+
+@keyframes gridShift {
+  0% {
+    background-position: 0 0;
+  }
+  100% {
+    background-position: 40px 40px;
+  }
+}
+
+/* iOS 18 Apple Liquid Frosted Glassmorphism Utility */
+.glass-navbar-ios {
+  background: rgba(255, 253, 245, 0.72);
+  backdrop-filter: blur(28px) saturate(190%);
+  -webkit-backdrop-filter: blur(28px) saturate(190%);
+  border: 1px solid rgba(255, 255, 255, 0.65);
+  box-shadow: 0 10px 40px -10px rgba(15, 23, 42, 0.12), inset 0 1px 1px 0 rgba(255, 255, 255, 0.8);
+}
+
+.dark .glass-navbar-ios {
+  background: rgba(15, 23, 42, 0.72);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: 0 14px 45px -10px rgba(0, 0, 0, 0.75), inset 0 1px 1px 0 rgba(255, 255, 255, 0.15);
+}
+
+/* Glassmorphism Card Utilities */
+.glass-card {
+  background: rgba(255, 253, 245, 0.88);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(2, 132, 199, 0.18);
+  box-shadow: 0 8px 32px 0 rgba(15, 23, 42, 0.08);
+}
+
+.dark .glass-card {
+  background: rgba(15, 23, 42, 0.85);
+  border: 1px solid rgba(2, 132, 199, 0.25);
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.65);
+}
