@@ -6,48 +6,56 @@ import { portfolioData } from "@/data/content";
 import { TiltCard } from "@/components/ui/TiltCard";
 import {
   Cloud,
-  FileCode,
-  GitMerge,
-  Code,
-  Globe,
-  Cpu,
-  Layers,
   Network,
-  Boxes,
-  Terminal,
-  Zap,
-  CheckCircle2,
-  Atom,
-  Server,
+  Layers,
   Database,
-  Container,
+  Cpu,
+  Boxes,
+  Repeat,
+  ShieldCheck,
   GitBranch,
+  Workflow,
+  Key,
+  BarChart3,
+  Container,
+  Gauge,
+  Terminal,
+  Code,
+  TerminalSquare,
+  FileCode,
+  FileCode2,
+  FileSpreadsheet,
+  GitMerge,
+  Activity,
   Sparkles,
 } from "lucide-react";
 
 export function SkillsSection() {
-  const [activeTab, setActiveTab] = useState<string>("all");
-
-  const categoryIconMap: Record<string, React.ReactNode> = {
-    Cloud: <Cloud className="w-5 h-5 text-azure-500 dark:text-azure-400" />,
-    FileCode: <FileCode className="w-5 h-5 text-cyan-500 dark:text-cyan-400" />,
-    GitMerge: <GitMerge className="w-5 h-5 text-emerald-500 dark:text-emerald-400" />,
-    Code: <Code className="w-5 h-5 text-azure-600 dark:text-cyan-300" />,
-    Globe: <Globe className="w-5 h-5 text-emerald-600 dark:text-emerald-300" />,
-  };
+  const [selectedCategory, setSelectedCategory] = useState<string>("all");
 
   const skillIconMap: Record<string, React.ReactNode> = {
-    Cloud: <Cloud className="w-4 h-4 text-azure-500 dark:text-azure-400" />,
-    Network: <Network className="w-4 h-4 text-azure-500 dark:text-azure-400" />,
-    Layers: <Layers className="w-4 h-4 text-azure-500 dark:text-azure-400" />,
-    Cpu: <Cpu className="w-4 h-4 text-cyan-500 dark:text-cyan-400" />,
-    Boxes: <Boxes className="w-4 h-4 text-cyan-500 dark:text-cyan-400" />,
-    Terminal: <Terminal className="w-4 h-4 text-emerald-500 dark:text-emerald-400" />,
-    GitBranch: <GitBranch className="w-4 h-4 text-emerald-500 dark:text-emerald-400" />,
-    Container: <Container className="w-4 h-4 text-emerald-500 dark:text-emerald-400" />,
-    Atom: <Atom className="w-4 h-4 text-azure-600 dark:text-cyan-300" />,
-    Server: <Server className="w-4 h-4 text-azure-600 dark:text-cyan-300" />,
-    Database: <Database className="w-4 h-4 text-azure-600 dark:text-cyan-300" />,
+    Cloud: <Cloud className="w-5 h-5" />,
+    Network: <Network className="w-5 h-5" />,
+    Layers: <Layers className="w-5 h-5" />,
+    Database: <Database className="w-5 h-5" />,
+    Cpu: <Cpu className="w-5 h-5" />,
+    Boxes: <Boxes className="w-5 h-5" />,
+    Repeat: <Repeat className="w-5 h-5" />,
+    ShieldCheck: <ShieldCheck className="w-5 h-5" />,
+    GitBranch: <GitBranch className="w-5 h-5" />,
+    Workflow: <Workflow className="w-5 h-5" />,
+    Key: <Key className="w-5 h-5" />,
+    BarChart3: <BarChart3 className="w-5 h-5" />,
+    Container: <Container className="w-5 h-5" />,
+    Gauge: <Gauge className="w-5 h-5" />,
+    Terminal: <Terminal className="w-5 h-5" />,
+    Code: <Code className="w-5 h-5" />,
+    TerminalSquare: <TerminalSquare className="w-5 h-5" />,
+    FileCode: <FileCode className="w-5 h-5" />,
+    FileCode2: <FileCode2 className="w-5 h-5" />,
+    FileSpreadsheet: <FileSpreadsheet className="w-5 h-5" />,
+    GitMerge: <GitMerge className="w-5 h-5" />,
+    Activity: <Activity className="w-5 h-5" />,
   };
 
   const categories = [
@@ -55,19 +63,16 @@ export function SkillsSection() {
     ...portfolioData.skillCategories.map((c) => ({ id: c.id, label: c.category })),
   ];
 
-  const filteredCategories =
-    activeTab === "all"
-      ? portfolioData.skillCategories
-      : portfolioData.skillCategories.filter((c) => c.id === activeTab);
+  const displayedSkills =
+    selectedCategory === "all"
+      ? portfolioData.skillCategories.flatMap((c) => c.skills)
+      : portfolioData.skillCategories.find((c) => c.id === selectedCategory)?.skills || [];
 
   return (
-    <section id="skills" className="py-24 relative bg-cream-100 dark:bg-dark-950 text-dark-900 dark:text-cream-300">
-      {/* Background Azure Radial Glow */}
-      <div className="absolute top-1/3 left-1/2 -translate-x-1/2 w-[600px] h-[600px] bg-azure-glow blur-[150px] pointer-events-none opacity-50" />
-
+    <section id="skills" className="py-16 sm:py-24 relative bg-cream-100 dark:bg-dark-950 text-dark-900 dark:text-cream-300">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         {/* Section Header */}
-        <div className="text-center max-w-3xl mx-auto mb-12">
+        <div className="text-center max-w-3xl mx-auto mb-10 sm:mb-16">
           <motion.div
             initial={{ opacity: 0, y: 15 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -75,17 +80,17 @@ export function SkillsSection() {
             className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-azure-500/10 dark:bg-azure-500/20 border border-azure-500/30 text-azure-600 dark:text-cyan-300 text-xs font-mono tracking-wider uppercase mb-3 shadow-md"
           >
             <Sparkles className="w-3.5 h-3.5 text-emerald-500 dark:text-emerald-400" />
-            <span>SRE & Cloud Capabilities</span>
+            <span>Technical Capabilities</span>
           </motion.div>
           <motion.h2
             initial={{ opacity: 0, y: 15 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ delay: 0.1 }}
-            className="font-heading font-extrabold text-3xl sm:text-5xl tracking-tight text-dark-900 dark:text-white mb-4"
+            className="font-heading font-extrabold text-3xl sm:text-5xl tracking-tight text-dark-900 dark:text-white mb-3 sm:mb-4"
           >
             <span className="bg-clip-text text-transparent bg-gradient-to-r from-azure-600 via-cyan-500 to-emerald-500 dark:from-azure-300 dark:via-cyan-300 dark:to-emerald-300">
-              Cloud, SRE & DevSecOps Capabilities
+              SRE & Cloud Skillset
             </span>
           </motion.h2>
           <motion.p
@@ -93,22 +98,22 @@ export function SkillsSection() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ delay: 0.2 }}
-            className="text-dark-800/90 dark:text-cream-300/90 text-base sm:text-lg"
+            className="text-dark-800/90 dark:text-cream-300/90 text-sm sm:text-base px-2"
           >
-            Categorized technical skills focused on Azure infrastructure automation, Terraform IaC, DevSecOps gates, and Prometheus SRE telemetry.
+            Infrastructure as Code, DevSecOps pipelines, Azure Landing Zones, and SRE observability telemetry.
           </motion.p>
         </div>
 
-        {/* Category Filter Tabs */}
-        <div className="flex flex-wrap justify-center gap-2 mb-12">
+        {/* Touch Scrollable Category Tabs */}
+        <div className="flex items-center justify-start sm:justify-center gap-2 overflow-x-auto no-scrollbar pb-3 mb-8 sm:mb-12 px-1 -mx-4 sm:mx-0 px-4 sm:px-0">
           {categories.map((cat) => (
             <button
               key={cat.id}
-              onClick={() => setActiveTab(cat.id)}
-              className={`px-5 py-2.5 rounded-xl text-xs sm:text-sm font-semibold transition-all duration-300 ${
-                activeTab === cat.id
-                  ? "bg-gradient-to-r from-azure-500 via-cyan-500 to-emerald-500 text-white dark:text-dark-950 font-bold shadow-azure-glow scale-105"
-                  : "bg-white dark:bg-dark-900 border border-slate-200 dark:border-slate-800 text-dark-800/80 dark:text-slate-400 hover:text-azure-600 dark:hover:text-white hover:border-azure-500/40"
+              onClick={() => setSelectedCategory(cat.id)}
+              className={`px-3.5 py-2 sm:px-5 sm:py-2.5 rounded-xl sm:rounded-2xl text-xs sm:text-sm font-semibold whitespace-nowrap transition-all duration-300 touch-manipulation active:scale-95 shrink-0 ${
+                selectedCategory === cat.id
+                  ? "bg-gradient-to-r from-azure-500 via-cyan-500 to-emerald-500 text-white shadow-azure-glow font-bold"
+                  : "bg-white/90 dark:bg-dark-900/90 text-dark-800 dark:text-cream-300 hover:text-azure-600 border border-slate-200 dark:border-slate-800 backdrop-blur-md"
               }`}
             >
               {cat.label}
@@ -116,61 +121,43 @@ export function SkillsSection() {
           ))}
         </div>
 
-        {/* Skill Category Cards Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {filteredCategories.map((catGroup, idx) => (
+        {/* Skills Cards Grid */}
+        <motion.div layout className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6">
+          {displayedSkills.map((skill, idx) => (
             <motion.div
-              key={catGroup.id}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: idx * 0.1 }}
+              layout
+              initial={{ opacity: 0, y: 15 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: 15 }}
+              transition={{ duration: 0.3, delay: idx * 0.04 }}
+              key={skill.name}
             >
-              <TiltCard className="h-full p-7 rounded-3xl bg-white/90 dark:bg-dark-900 border border-slate-200 dark:border-slate-800 hover:border-azure-500/50 backdrop-blur-2xl transition-all duration-300 shadow-lg flex flex-col justify-between group">
+              <TiltCard className="p-5 sm:p-6 rounded-2xl sm:rounded-3xl bg-white/90 dark:bg-dark-900/90 border border-slate-200/80 dark:border-slate-800/80 backdrop-blur-xl hover:border-azure-500/50 dark:hover:border-cyan-400/50 transition-all duration-300 shadow-md h-full flex flex-col justify-between group">
                 <div>
-                  {/* Category Header */}
-                  <div className="flex items-center gap-3.5 mb-6">
-                    <div className="p-3.5 rounded-2xl bg-cream-100 dark:bg-dark-850 border border-slate-200 dark:border-slate-700/60 group-hover:border-azure-500 transition-colors shadow-md">
-                      {categoryIconMap[catGroup.iconName] || <Zap className="w-5 h-5 text-azure-500" />}
+                  <div className="flex items-start justify-between gap-3 mb-3">
+                    <div className="p-2.5 sm:p-3 rounded-xl sm:rounded-2xl bg-azure-500/10 text-azure-600 dark:text-cyan-300 border border-azure-500/20 group-hover:scale-110 transition-transform">
+                      {skillIconMap[skill.iconName] || <Terminal className="w-5 h-5" />}
                     </div>
-                    <div>
-                      <h3 className="font-heading font-bold text-xl text-dark-900 dark:text-white group-hover:text-azure-600 dark:group-hover:text-cyan-300 transition-colors">
-                        {catGroup.category}
-                      </h3>
-                      <p className="text-xs text-dark-800/70 dark:text-slate-400">{catGroup.description}</p>
-                    </div>
+
+                    <span className="px-2.5 py-1 rounded-full text-[10px] sm:text-xs font-mono font-bold bg-azure-500/10 dark:bg-cyan-400/10 text-azure-700 dark:text-cyan-300 border border-azure-500/20">
+                      {skill.level}
+                    </span>
                   </div>
 
-                  {/* Clean Skill Cards (No Percentages & No Progress Bars) */}
-                  <div className="space-y-3.5 my-4">
-                    {catGroup.skills.map((skill) => (
-                      <div
-                        key={skill.name}
-                        className="p-4 rounded-2xl bg-cream-100/70 dark:bg-dark-950/80 border border-slate-200 dark:border-slate-800/80 hover:border-azure-500/40 transition-all shadow-sm"
-                      >
-                        <div className="flex items-center justify-between mb-1.5">
-                          <span className="font-heading font-semibold text-sm text-dark-900 dark:text-slate-100 flex items-center gap-2">
-                            {skillIconMap[skill.iconName] || <CheckCircle2 className="w-4 h-4 text-azure-500" />}
-                            <span>{skill.name}</span>
-                          </span>
-                          <span className="text-[10px] font-mono font-bold px-2.5 py-0.5 rounded-full bg-azure-500/10 dark:bg-azure-500/20 text-azure-600 dark:text-cyan-300 border border-azure-500/30">
-                            {skill.level}
-                          </span>
-                        </div>
+                  <h3 className="font-heading font-bold text-base sm:text-lg text-dark-900 dark:text-white mb-2 group-hover:text-azure-600 dark:group-hover:text-cyan-300 transition-colors">
+                    {skill.name}
+                  </h3>
 
-                        {skill.description && (
-                          <p className="text-xs text-dark-800/80 dark:text-slate-400 font-mono pl-6 leading-relaxed">
-                            {skill.description}
-                          </p>
-                        )}
-                      </div>
-                    ))}
-                  </div>
+                  {skill.description && (
+                    <p className="text-xs sm:text-sm text-dark-800/80 dark:text-slate-300/90 leading-relaxed font-body">
+                      {skill.description}
+                    </p>
+                  )}
                 </div>
               </TiltCard>
             </motion.div>
           ))}
-        </div>
+        </motion.div>
       </div>
     </section>
   );

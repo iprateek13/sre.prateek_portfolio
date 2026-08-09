@@ -2,67 +2,64 @@
 
 import React from "react";
 import { portfolioData } from "@/data/content";
-import { ArrowUp, Github, Linkedin, Mail, Terminal } from "lucide-react";
+import { Terminal, Heart, Github, Linkedin, Mail } from "lucide-react";
 
 export function Footer() {
-  const scrollToTop = () => {
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  };
-
-  const socialIconMap: Record<string, React.ReactNode> = {
-    Github: <Github className="w-4 h-4" />,
-    Linkedin: <Linkedin className="w-4 h-4" />,
-    Mail: <Mail className="w-4 h-4" />,
-  };
+  const currentYear = new Date().getFullYear();
 
   return (
-    <footer className="relative bg-cream-100 dark:bg-dark-950 border-t border-azure-500/20 dark:border-cyan-400/15 text-dark-800 dark:text-slate-400 py-12">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row items-center justify-between gap-6">
-        {/* Brand & Title */}
-        <div className="flex items-center gap-3">
-          <div className="w-8 h-8 rounded-xl bg-white dark:bg-dark-900 border border-azure-500/40 dark:border-cyan-400/40 flex items-center justify-center text-azure-500 dark:text-cyan-400 shadow-md">
-            <Terminal className="w-4 h-4" />
-          </div>
-          <div>
-            <span className="text-dark-900 dark:text-white font-heading font-bold text-base">
-              {portfolioData.name}
-            </span>
-            <span className="text-xs text-azure-600 dark:text-cyan-300 block font-mono font-bold">
-              SRE, DevOps & Cloud Engineer
-            </span>
-          </div>
-        </div>
-
-        {/* Social Icons & Back to top */}
-        <div className="flex items-center gap-4">
+    <footer className="py-12 border-t border-slate-200/80 dark:border-slate-800/80 bg-cream-100 dark:bg-dark-950 text-dark-900 dark:text-cream-300 relative z-10">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex flex-col sm:flex-row items-center justify-between gap-6 text-center sm:text-left">
+          {/* Brand & SRE Description */}
           <div className="flex items-center gap-3">
-            {portfolioData.socials.map((social) => (
-              <a
-                key={social.platform}
-                href={social.url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="p-2.5 rounded-xl bg-white dark:bg-dark-900 border border-slate-200 dark:border-slate-800 hover:text-azure-600 dark:hover:text-cyan-300 hover:border-azure-500 transition-colors shadow-sm"
-                aria-label={social.platform}
-              >
-                {socialIconMap[social.iconName] || <Mail className="w-4 h-4" />}
-              </a>
-            ))}
+            <div className="p-2.5 rounded-2xl bg-gradient-to-tr from-azure-600 via-cyan-500 to-emerald-500 text-white shadow-azure-glow">
+              <Terminal className="w-5 h-5" />
+            </div>
+            <div>
+              <span className="font-heading font-extrabold text-base sm:text-lg text-dark-900 dark:text-white block">
+                Prateek<span className="text-azure-600 dark:text-cyan-400">Gupta</span>
+              </span>
+              <span className="text-xs font-mono text-dark-800/70 dark:text-slate-400">
+                SRE, DevOps & Azure Cloud Architecture
+              </span>
+            </div>
           </div>
 
-          <button
-            onClick={scrollToTop}
-            className="p-2.5 rounded-xl bg-gradient-to-r from-azure-500 via-cyan-500 to-emerald-500 text-white dark:text-dark-950 font-bold hover:scale-105 transition-all shadow-azure-glow"
-            aria-label="Back to top"
-            title="Back to Top"
-          >
-            <ArrowUp className="w-4 h-4" />
-          </button>
-        </div>
-      </div>
+          {/* Copyright & SRE Tech Tag */}
+          <div className="text-xs font-mono text-dark-800/80 dark:text-slate-400">
+            <span>© {currentYear} Prateek Gupta. Built with Next.js 14, TailwindCSS & Three.js.</span>
+          </div>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-8 pt-6 border-t border-slate-200 dark:border-slate-900 text-center text-xs text-dark-800/70 dark:text-slate-400 font-mono">
-        © {new Date().getFullYear()} {portfolioData.name}. All rights reserved. SRE & DevSecOps Portfolio built with Next.js, TypeScript, Tailwind CSS & Framer Motion.
+          {/* Social Links */}
+          <div className="flex items-center gap-3">
+            <a
+              href="https://github.com/iprateek13"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="p-2.5 rounded-xl bg-white/90 dark:bg-dark-900/90 border border-slate-200 dark:border-slate-800 hover:border-azure-500 text-dark-800 dark:text-cream-300 hover:text-azure-600 transition-colors shadow-sm"
+              aria-label="GitHub Profile"
+            >
+              <Github className="w-4 h-4" />
+            </a>
+            <a
+              href="https://linkedin.com/in/iprateekgupta13"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="p-2.5 rounded-xl bg-white/90 dark:bg-dark-900/90 border border-slate-200 dark:border-slate-800 hover:border-azure-500 text-dark-800 dark:text-cream-300 hover:text-azure-600 transition-colors shadow-sm"
+              aria-label="LinkedIn Profile"
+            >
+              <Linkedin className="w-4 h-4" />
+            </a>
+            <a
+              href="mailto:sre.prateek@gmail.com"
+              className="p-2.5 rounded-xl bg-white/90 dark:bg-dark-900/90 border border-slate-200 dark:border-slate-800 hover:border-azure-500 text-dark-800 dark:text-cream-300 hover:text-azure-600 transition-colors shadow-sm"
+              aria-label="Email Prateek"
+            >
+              <Mail className="w-4 h-4" />
+            </a>
+          </div>
+        </div>
       </div>
     </footer>
   );
