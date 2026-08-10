@@ -104,27 +104,27 @@
   }
 }
 
-/* takeuforward.org (TUF) Floating Island Glossy Glassmorphism Utility */
+/* 54px+ Ultra-Blur Glassmorphism Navbar Utility */
 .glass-navbar-tuf {
-  background: rgba(255, 253, 245, 0.78);
-  backdrop-filter: blur(24px) saturate(190%);
-  -webkit-backdrop-filter: blur(24px) saturate(190%);
-  border: 1px solid rgba(2, 132, 199, 0.2);
-  border-top: 1.5px solid rgba(255, 255, 255, 0.95);
+  background: rgba(255, 253, 245, 0.65);
+  backdrop-filter: blur(54px) saturate(240%) contrast(108%);
+  -webkit-backdrop-filter: blur(54px) saturate(240%) contrast(108%);
+  border: 1px solid rgba(2, 132, 199, 0.22);
+  border-top: 1.5px solid rgba(255, 255, 255, 0.98);
   box-shadow: 
-    0 12px 35px -10px rgba(15, 23, 42, 0.12),
-    inset 0 1px 1px 0 rgba(255, 255, 255, 0.9);
+    0 16px 40px -10px rgba(15, 23, 42, 0.14),
+    inset 0 1.5px 1px 0 rgba(255, 255, 255, 0.95);
 }
 
 .dark .glass-navbar-tuf {
-  background: rgba(15, 23, 42, 0.78);
-  backdrop-filter: blur(24px) saturate(190%);
-  -webkit-backdrop-filter: blur(24px) saturate(190%);
-  border: 1px solid rgba(2, 132, 199, 0.28);
-  border-top: 1.5px solid rgba(255, 255, 255, 0.25);
+  background: rgba(15, 23, 42, 0.65);
+  backdrop-filter: blur(54px) saturate(240%) contrast(108%);
+  -webkit-backdrop-filter: blur(54px) saturate(240%) contrast(108%);
+  border: 1px solid rgba(2, 132, 199, 0.32);
+  border-top: 1.5px solid rgba(255, 255, 255, 0.35);
   box-shadow: 
-    0 16px 45px -10px rgba(0, 0, 0, 0.8),
-    inset 0 1px 1px 0 rgba(255, 255, 255, 0.2);
+    0 20px 50px -10px rgba(0, 0, 0, 0.85),
+    inset 0 1.5px 1px 0 rgba(255, 255, 255, 0.25);
 }
 
 /* Glassmorphism Card Utilities */
