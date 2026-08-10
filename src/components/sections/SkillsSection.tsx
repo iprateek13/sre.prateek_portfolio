@@ -104,21 +104,23 @@ export function SkillsSection() {
           </motion.p>
         </div>
 
-        {/* Touch Scrollable Category Tabs */}
-        <div className="flex items-center justify-start sm:justify-center gap-2 overflow-x-auto no-scrollbar pb-3 mb-8 sm:mb-12 px-1 -mx-4 sm:mx-0 px-4 sm:px-0">
-          {categories.map((cat) => (
-            <button
-              key={cat.id}
-              onClick={() => setSelectedCategory(cat.id)}
-              className={`px-3.5 py-2 sm:px-5 sm:py-2.5 rounded-xl sm:rounded-2xl text-xs sm:text-sm font-semibold whitespace-nowrap transition-all duration-300 touch-manipulation active:scale-95 shrink-0 ${
-                selectedCategory === cat.id
-                  ? "bg-gradient-to-r from-azure-500 via-cyan-500 to-emerald-500 text-white shadow-azure-glow font-bold"
-                  : "bg-white/90 dark:bg-dark-900/90 text-dark-800 dark:text-cream-300 hover:text-azure-600 border border-slate-200 dark:border-slate-800 backdrop-blur-md"
-              }`}
-            >
-              {cat.label}
-            </button>
-          ))}
+        {/* Touch Scrollable Category Tabs Wrapper (Prevents clipping 1st or last button) */}
+        <div className="w-full overflow-x-auto no-scrollbar pb-4 mb-8 sm:mb-12">
+          <div className="flex items-center justify-start sm:justify-center gap-2.5 min-w-max px-2 sm:px-4">
+            {categories.map((cat) => (
+              <button
+                key={cat.id}
+                onClick={() => setSelectedCategory(cat.id)}
+                className={`px-4 py-2.5 sm:px-5 sm:py-2.5 rounded-xl sm:rounded-2xl text-xs sm:text-sm font-semibold whitespace-nowrap transition-all duration-300 touch-manipulation active:scale-95 shrink-0 ${
+                  selectedCategory === cat.id
+                    ? "bg-gradient-to-r from-azure-500 via-cyan-500 to-emerald-500 text-white shadow-azure-glow font-bold scale-102"
+                    : "bg-white/90 dark:bg-dark-900/90 text-dark-800 dark:text-cream-300 hover:text-azure-600 border border-slate-200 dark:border-slate-800 backdrop-blur-md"
+                }`}
+              >
+                {cat.label}
+              </button>
+            ))}
+          </div>
         </div>
 
         {/* Skills Cards Grid */}
@@ -144,16 +146,24 @@ export function SkillsSection() {
                     </span>
                   </div>
 
-                  <h3 className="font-heading font-bold text-base sm:text-lg text-dark-900 dark:text-white mb-2 group-hover:text-azure-600 dark:group-hover:text-cyan-300 transition-colors">
+                  <h3 className="font-heading font-extrabold text-base sm:text-lg text-dark-900 dark:text-white mb-2 leading-snug">
                     {skill.name}
                   </h3>
-
                   {skill.description && (
-                    <p className="text-xs sm:text-sm text-dark-800/80 dark:text-slate-300/90 leading-relaxed font-body">
+                    <p className="text-xs text-dark-800/80 dark:text-slate-300 font-body leading-relaxed">
                       {skill.description}
                     </p>
                   )}
                 </div>
+
+                {skill.isKey && (
+                  <div className="mt-4 pt-3 border-t border-slate-100 dark:border-slate-800/80 flex items-center justify-between">
+                    <span className="text-[10px] font-mono font-extrabold text-emerald-600 dark:text-emerald-400 uppercase tracking-wider flex items-center gap-1">
+                      <Sparkles className="w-3 h-3" />
+                      Core Capability
+                    </span>
+                  </div>
+                )}
               </TiltCard>
             </motion.div>
           ))}
