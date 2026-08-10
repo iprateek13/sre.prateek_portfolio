@@ -139,44 +139,57 @@ export function Navbar() {
 
             <ThemeToggle />
 
+            {/* Mobile Hamburger Button with Smooth Icon Rotation */}
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="md:hidden p-2.5 rounded-full bg-white/80 dark:bg-dark-900/80 border border-slate-200/80 dark:border-slate-800/80 text-dark-900 dark:text-cream-200 hover:text-azure-600 focus:outline-none touch-manipulation active:scale-95 transition-all"
+              className="md:hidden p-2.5 rounded-full bg-white/80 dark:bg-dark-900/80 border border-slate-200/80 dark:border-slate-800/80 text-dark-900 dark:text-cream-200 hover:text-azure-600 focus:outline-none touch-manipulation active:scale-95 transition-all duration-300 flex items-center justify-center relative overflow-hidden"
               aria-label="Toggle Navigation Menu"
             >
-              {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+              <motion.div
+                initial={false}
+                animate={{ rotate: mobileMenuOpen ? 180 : 0, scale: mobileMenuOpen ? 1.05 : 1 }}
+                transition={{ duration: 0.3, ease: [0.32, 0.72, 0, 1] }}
+              >
+                {mobileMenuOpen ? <X className="w-5 h-5 text-azure-600 dark:text-cyan-400" /> : <Menu className="w-5 h-5" />}
+              </motion.div>
             </button>
           </div>
         </div>
       </nav>
 
-      {/* Mobile Drawer Dropdown Menu */}
+      {/* Mobile Drawer Dropdown Menu with Ultra-Liquid Glass & iOS Spring Physics */}
       <AnimatePresence>
         {mobileMenuOpen && (
           <motion.div
-            initial={{ opacity: 0, y: -15, scale: 0.96 }}
+            initial={{ opacity: 0, y: -20, scale: 0.94 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: -15, scale: 0.96 }}
-            transition={{ duration: 0.25, ease: "easeOut" }}
-            className="md:hidden max-w-6xl mx-auto mt-2 pointer-events-auto"
+            exit={{ opacity: 0, y: -20, scale: 0.94 }}
+            transition={{
+              duration: 0.35,
+              ease: [0.32, 0.72, 0, 1], // iOS Spring Physics Cubic Bezier Curve
+            }}
+            className="md:hidden max-w-6xl mx-auto mt-2.5 pointer-events-auto transform-gpu"
           >
-            <div className="p-4 rounded-3xl glass-navbar-tuf shadow-2xl border border-azure-500/30 dark:border-cyan-400/30 flex flex-col gap-2">
-              {navLinks.map((link) => (
-                <a
+            <div className="p-4 sm:p-5 rounded-3xl glass-mobile-drawer flex flex-col gap-2.5 shadow-2xl">
+              {navLinks.map((link, idx) => (
+                <motion.a
                   key={link.name}
                   href={link.href}
+                  initial={{ opacity: 0, x: -10 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: idx * 0.04, duration: 0.25 }}
                   onClick={(e) => {
                     e.preventDefault();
                     scrollToSection(link.href);
                   }}
-                  className="flex items-center justify-between px-4 py-3 rounded-2xl text-sm font-bold text-dark-900 dark:text-white hover:bg-azure-500/10 dark:hover:bg-azure-500/20 active:bg-azure-500/20 transition-all touch-manipulation"
+                  className="flex items-center justify-between px-4.5 py-3.5 rounded-2xl text-sm font-bold text-dark-900 dark:text-white hover:bg-azure-500/10 dark:hover:bg-azure-500/20 active:bg-azure-500/25 transition-all touch-manipulation group"
                 >
-                  <span>{link.name}</span>
-                  <ChevronRight className="w-4 h-4 text-azure-500 dark:text-cyan-400" />
-                </a>
+                  <span className="group-hover:translate-x-1 transition-transform">{link.name}</span>
+                  <ChevronRight className="w-4 h-4 text-azure-500 dark:text-cyan-400 group-hover:translate-x-1 transition-transform" />
+                </motion.a>
               ))}
 
-              <div className="pt-2 mt-1 border-t border-slate-200/60 dark:border-slate-800/60 flex items-center justify-between gap-3">
+              <div className="pt-3 mt-1 border-t border-slate-200/80 dark:border-slate-800/80 flex items-center justify-between gap-3">
                 <a
                   href="/resume.pdf"
                   download
@@ -184,7 +197,7 @@ export function Navbar() {
                     setMobileMenuOpen(false);
                     trackResumeDownload();
                   }}
-                  className="w-full flex items-center justify-center gap-2 px-4 py-3 rounded-full bg-gradient-to-r from-azure-500 via-cyan-500 to-emerald-500 text-white font-extrabold text-sm font-heading shadow-azure-glow active:scale-98 transition-all"
+                  className="w-full flex items-center justify-center gap-2 px-5 py-3.5 rounded-full bg-gradient-to-r from-azure-500 via-cyan-500 to-emerald-500 text-white font-extrabold text-sm font-heading shadow-azure-glow active:scale-98 transition-all duration-300"
                 >
                   <Download className="w-4 h-4" />
                   <span>Download Resume PDF</span>
