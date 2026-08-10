@@ -124,7 +124,7 @@ export async function POST(req: Request) {
       );
     }
 
-    // 3. WEB3FORMS REAL MAIL FALLBACK
+    // 3. WEB3FORMS REAL MAIL DISPATCH (Using Prateek's Web3Forms Key 2f23be7a-5de4-41c8-bbbe-92af106920f0)
     try {
       const web3Response = await fetch("https://api.web3forms.com/submit", {
         method: "POST",
@@ -133,7 +133,7 @@ export async function POST(req: Request) {
           Accept: "application/json",
         },
         body: JSON.stringify({
-          access_key: process.env.WEB3FORMS_ACCESS_KEY || "e5ad9a3d-4c31-4c7a-9a03-7b6bbbf93457",
+          access_key: process.env.WEB3FORMS_ACCESS_KEY || "2f23be7a-5de4-41c8-bbbe-92af106920f0",
           name: name,
           email: email,
           subject: `[Portfolio] ${subject || "New Inquiry"} from ${name}`,
@@ -146,7 +146,7 @@ export async function POST(req: Request) {
 
       if (web3Data.success) {
         return NextResponse.json(
-          { success: true, message: "Real email dispatched & recorded!", mongoSaved },
+          { success: true, message: "Real email dispatched to sre.prateek@gmail.com & recorded in MongoDB!", mongoSaved },
           { status: 200 }
         );
       }
@@ -155,7 +155,7 @@ export async function POST(req: Request) {
     }
 
     return NextResponse.json(
-      { success: true, message: "Message processed successfully!", mongoSaved },
+      { success: true, message: "Message processed & recorded!", mongoSaved },
       { status: 200 }
     );
   } catch (error: any) {
