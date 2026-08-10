@@ -1,172 +1,175 @@
 "use client";
 
 import React, { useRef, useState, useEffect, useMemo } from "react";
-import { Canvas, useFrame } from "@react-three/fiber";
+import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import { Float, OrbitControls } from "@react-three/drei";
 import * as THREE from "three";
 import { CloudMeshCanvas } from "./CloudMeshCanvas";
 
-// Orbiting Satellite Node Component (Kubernetes Pods / Cloud VMs)
-function SatelliteNode({
-  radius,
-  speed,
-  angleOffset,
+// Floating Glowing 3D Cloud Node Component
+function GlowingCloudNode({
+  position,
   color,
   size,
+  speed,
 }: {
-  radius: number;
-  speed: number;
-  angleOffset: number;
+  position: [number, number, number];
   color: string;
   size: number;
+  speed: number;
 }) {
   const meshRef = useRef<THREE.Mesh>(null);
-  const lineRef = useRef<THREE.Line>(null);
 
-  useFrame((state) => {
-    const time = state.clock.getElapsedTime() * speed + angleOffset;
-    const x = Math.cos(time) * radius;
-    const z = Math.sin(time) * radius;
-    const y = Math.sin(time * 1.5) * (radius * 0.35);
-
+  useFrame((state, delta) => {
     if (meshRef.current) {
-      meshRef.current.position.set(x, y, z);
-      meshRef.current.rotation.x += 0.02;
-      meshRef.current.rotation.y += 0.03;
-    }
-
-    if (lineRef.current) {
-      const positions = lineRef.current.geometry.attributes.position;
-      positions.setXYZ(0, 0, 0, 0); // Core center
-      positions.setXYZ(1, x, y, z); // Satellite position
-      positions.needsUpdate = true;
+      meshRef.current.rotation.x += delta * speed;
+      meshRef.current.rotation.y += delta * (speed * 1.2);
     }
   });
 
-  const lineGeometry = useMemo(() => {
-    const geom = new THREE.BufferGeometry();
-    geom.setAttribute("position", new THREE.BufferAttribute(new Float32Array(6), 3));
-    return geom;
-  }, []);
-
   return (
-    <group>
-      {/* Telemetry Data Link Line to Core */}
-      {/* @ts-ignore */}
-      <line ref={lineRef} geometry={lineGeometry}>
-        <lineBasicMaterial color={color} transparent opacity={0.35} />
-      </line>
-
-      {/* Orbiting Satellite Node Sphere */}
-      <mesh ref={meshRef}>
-        <sphereGeometry args={[size, 24, 24]} />
+    <Float speed={2.5} rotationIntensity={0.8} floatIntensity={1.5}>
+      <mesh ref={meshRef} position={position}>
+        <icosahedronGeometry args={[size, 2]} />
         <meshStandardMaterial
           color={color}
           emissive={color}
-          emissiveIntensity={0.8}
-          roughness={0.2}
+          emissiveIntensity={0.7}
+          roughness={0.15}
+          metalness={0.8}
         />
       </mesh>
+    </Float>
+  );
+}
+
+// Wireframe Geometric Torus Knot Mesh
+function WireframeTorusMesh() {
+  const torusRef = useRef<THREE.Mesh>(null);
+  const outerRingRef = useRef<THREE.Mesh>(null);
+
+  useFrame((state, delta) => {
+    if (torusRef.current) {
+      torusRef.current.rotation.x += delta * 0.2;
+      torusRef.current.rotation.y += delta * 0.3;
+    }
+    if (outerRingRef.current) {
+      outerRingRef.current.rotation.y -= delta * 0.25;
+      outerRingRef.current.rotation.z += delta * 0.15;
+    }
+  });
+
+  return (
+    <group>
+      {/* Central Floating Torus Knot Wireframe Mesh */}
+      <Float speed={1.8} rotationIntensity={0.4} floatIntensity={1.1}>
+        <mesh ref={torusRef}>
+          <torusKnotGeometry args={[1.5, 0.45, 128, 32, 2, 3]} />
+          <meshStandardMaterial
+            color="#0284C7"
+            wireframe
+            emissive="#0284C7"
+            emissiveIntensity={0.8}
+            roughness={0.1}
+          />
+        </mesh>
+
+        {/* Outer Concentric Wireframe Ring */}
+        <mesh ref={outerRingRef}>
+          <torusGeometry args={[2.5, 0.06, 16, 100]} />
+          <meshStandardMaterial
+            color="#22D3EE"
+            wireframe
+            emissive="#22D3EE"
+            emissiveIntensity={0.6}
+          />
+        </mesh>
+      </Float>
     </group>
   );
 }
 
-// Central 3D Azure Cloud Infrastructure Cluster Hub Core
-function CloudClusterCore() {
-  const innerCoreRef = useRef<THREE.Mesh>(null);
-  const outerRingRef = useRef<THREE.Mesh>(null);
-  const particlesRef = useRef<THREE.Points>(null);
+// Dynamic Orbiting Point Lights Component
+function OrbitingPointLights() {
+  const light1Ref = useRef<THREE.PointLight>(null);
+  const light2Ref = useRef<THREE.PointLight>(null);
+  const light3Ref = useRef<THREE.PointLight>(null);
 
-  useFrame((state, delta) => {
-    if (innerCoreRef.current) {
-      innerCoreRef.current.rotation.x += delta * 0.25;
-      innerCoreRef.current.rotation.y += delta * 0.35;
+  useFrame((state) => {
+    const t = state.clock.getElapsedTime();
+    if (light1Ref.current) {
+      light1Ref.current.position.x = Math.sin(t * 0.7) * 6;
+      light1Ref.current.position.y = Math.cos(t * 0.5) * 5;
+      light1Ref.current.position.z = Math.cos(t * 0.7) * 6;
     }
-    if (outerRingRef.current) {
-      outerRingRef.current.rotation.x -= delta * 0.15;
-      outerRingRef.current.rotation.z += delta * 0.2;
+    if (light2Ref.current) {
+      light2Ref.current.position.x = Math.cos(t * 0.6) * -6;
+      light2Ref.current.position.y = Math.sin(t * 0.8) * 4;
+      light2Ref.current.position.z = Math.sin(t * 0.6) * 6;
     }
-    if (particlesRef.current) {
-      particlesRef.current.rotation.y -= delta * 0.05;
+    if (light3Ref.current) {
+      light3Ref.current.position.x = Math.sin(t * 0.9) * 5;
+      light3Ref.current.position.y = Math.sin(t * 0.4) * -5;
+      light3Ref.current.position.z = Math.cos(t * 0.9) * -5;
     }
   });
 
-  // Orbital Satellite Node Configuration
-  const satellites = [
-    { radius: 3.2, speed: 0.7, angleOffset: 0, color: "#0284C7", size: 0.18 },
-    { radius: 3.8, speed: 0.5, angleOffset: Math.PI / 3, color: "#22D3EE", size: 0.15 },
-    { radius: 4.4, speed: 0.8, angleOffset: (Math.PI * 2) / 3, color: "#10B981", size: 0.2 },
-    { radius: 3.5, speed: 0.6, angleOffset: Math.PI, color: "#38BDF8", size: 0.16 },
-    { radius: 4.1, speed: 0.75, angleOffset: (Math.PI * 4) / 3, color: "#34D399", size: 0.17 },
-    { radius: 4.8, speed: 0.45, angleOffset: (Math.PI * 5) / 3, color: "#06B6D4", size: 0.19 },
-  ];
+  return (
+    <>
+      <pointLight ref={light1Ref} intensity={3.5} color="#0284C7" distance={15} />
+      <pointLight ref={light2Ref} intensity={3} color="#22D3EE" distance={15} />
+      <pointLight ref={light3Ref} intensity={3.2} color="#10B981" distance={15} />
+    </>
+  );
+}
 
-  // Orbital Particle Field
-  const particleCount = 280;
-  const particlePositions = useMemo(() => {
-    const pos = new Float32Array(particleCount * 3);
-    for (let i = 0; i < particleCount * 3; i += 3) {
-      pos[i] = (Math.random() - 0.5) * 16;
-      pos[i + 1] = (Math.random() - 0.5) * 16;
-      pos[i + 2] = (Math.random() - 0.5) * 16;
+// Mouse Camera Rotation Controller
+function CameraMouseController() {
+  const { camera } = useThree();
+
+  useFrame((state) => {
+    const mouseX = state.mouse.x * 1.8;
+    const mouseY = state.mouse.y * 1.5;
+
+    camera.position.x = THREE.MathUtils.lerp(camera.position.x, mouseX, 0.04);
+    camera.position.y = THREE.MathUtils.lerp(camera.position.y, mouseY, 0.04);
+    camera.lookAt(0, 0, 0);
+  });
+
+  return null;
+}
+
+// Particle Field Backdrop
+function ParticleField() {
+  const count = 300;
+  const positions = useMemo(() => {
+    const pos = new Float32Array(count * 3);
+    for (let i = 0; i < count * 3; i += 3) {
+      pos[i] = (Math.random() - 0.5) * 18;
+      pos[i + 1] = (Math.random() - 0.5) * 18;
+      pos[i + 2] = (Math.random() - 0.5) * 18;
     }
     return pos;
   }, []);
 
   return (
-    <group>
-      {/* Central Floating 3D Azure Hub Core */}
-      <Float speed={2.2} rotationIntensity={0.5} floatIntensity={1.2}>
-        <group>
-          {/* Inner Geodesic Core */}
-          <mesh ref={innerCoreRef}>
-            <icosahedronGeometry args={[1.5, 2]} />
-            <meshStandardMaterial
-              color="#0284C7"
-              wireframe
-              emissive="#0284C7"
-              emissiveIntensity={0.65}
-              roughness={0.1}
-            />
-          </mesh>
-
-          {/* Outer Wireframe Ring */}
-          <mesh ref={outerRingRef}>
-            <torusGeometry args={[2.3, 0.08, 16, 100]} />
-            <meshStandardMaterial
-              color="#22D3EE"
-              wireframe
-              emissive="#22D3EE"
-              emissiveIntensity={0.5}
-            />
-          </mesh>
-        </group>
-      </Float>
-
-      {/* Orbiting Satellite Nodes */}
-      {satellites.map((sat, idx) => (
-        <SatelliteNode key={idx} {...sat} />
-      ))}
-
-      {/* Orbiting Telemetry Particle Cloud */}
-      <points ref={particlesRef}>
-        <bufferGeometry>
-          <bufferAttribute
-            attach="attributes-position"
-            count={particleCount}
-            array={particlePositions}
-            itemSize={3}
-          />
-        </bufferGeometry>
-        <pointsMaterial
-          size={0.065}
-          color="#10B981"
-          transparent
-          opacity={0.8}
-          blending={THREE.AdditiveBlending}
+    <points>
+      <bufferGeometry>
+        <bufferAttribute
+          attach="attributes-position"
+          count={count}
+          array={positions}
+          itemSize={3}
         />
-      </points>
-    </group>
+      </bufferGeometry>
+      <pointsMaterial
+        size={0.065}
+        color="#10B981"
+        transparent
+        opacity={0.8}
+        blending={THREE.AdditiveBlending}
+      />
+    </points>
   );
 }
 
@@ -194,20 +197,45 @@ export function ThreeCloudScene() {
     return <CloudMeshCanvas />;
   }
 
+  // Floating Glowing 3D Cloud Nodes Placement
+  const cloudNodes = [
+    { position: [-3.2, 2.1, -1.5] as [number, number, number], color: "#0284C7", size: 0.32, speed: 0.4 },
+    { position: [3.4, -1.8, 1.2] as [number, number, number], color: "#22D3EE", size: 0.28, speed: 0.5 },
+    { position: [-2.8, -2.2, -2.1] as [number, number, number], color: "#10B981", size: 0.35, speed: 0.35 },
+    { position: [2.9, 2.5, -1.8] as [number, number, number], color: "#38BDF8", size: 0.3, speed: 0.45 },
+    { position: [-4.1, 0.4, 1.6] as [number, number, number], color: "#34D399", size: 0.26, speed: 0.6 },
+    { position: [4.2, 0.2, -2.4] as [number, number, number], color: "#06B6D4", size: 0.34, speed: 0.4 },
+  ];
+
   return (
-    <div className="absolute inset-0 w-full h-full z-0 opacity-85">
+    <div className="absolute inset-0 w-full h-full z-0 opacity-85 pointer-events-none lg:pointer-events-auto">
       <Canvas camera={{ position: [0, 0, 8.5], fov: 45 }}>
-        <ambientLight intensity={0.8} />
-        <pointLight position={[10, 10, 10]} intensity={2} color="#0284C7" />
-        <pointLight position={[-10, -10, -10]} intensity={1.8} color="#10B981" />
-        <pointLight position={[0, 10, -5]} intensity={1.5} color="#22D3EE" />
-        <CloudClusterCore />
+        <ambientLight intensity={0.7} />
+
+        {/* Dynamic Point Lights */}
+        <OrbitingPointLights />
+
+        {/* Wireframe Geometric Torus Mesh */}
+        <WireframeTorusMesh />
+
+        {/* Floating Glowing 3D Cloud Nodes */}
+        {cloudNodes.map((node, idx) => (
+          <GlowingCloudNode key={idx} {...node} />
+        ))}
+
+        {/* Particle Backdrop */}
+        <ParticleField />
+
+        {/* Interactive Mouse Camera Rotation */}
+        <CameraMouseController />
+
+        {/* Orbit Controls with Damping */}
         <OrbitControls
           enableZoom={false}
           enablePan={false}
-          rotateSpeed={0.6}
+          rotateSpeed={0.5}
           autoRotate
-          autoRotateSpeed={0.8}
+          autoRotateSpeed={0.7}
           dampingFactor={0.05}
         />
       </Canvas>
