@@ -2,38 +2,16 @@
 
 import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { ThreeCloudScene } from "@/components/canvas/ThreeCloudScene";
-import { LiveTerminal } from "@/components/ui/LiveTerminal";
 import { portfolioData } from "@/data/content";
-import { ArrowRight, Download, Github, Linkedin, Mail, Cloud, Cpu, ShieldCheck, Sparkles, Zap, Activity } from "lucide-react";
+import { LiveTerminal } from "@/components/ui/LiveTerminal";
+import { ThreeCloudScene } from "@/components/canvas/ThreeCloudScene";
+import { Github, Linkedin, Mail, Download, ArrowRight, Sparkles, Zap, ShieldCheck } from "lucide-react";
+import { trackResumeDownload } from "@/lib/telemetry";
 
 export function HeroSection() {
   const [titleIndex, setTitleIndex] = useState(0);
   const [displayText, setDisplayText] = useState("");
   const [isDeleting, setIsDeleting] = useState(false);
-
-  useEffect(() => {
-    const currentTitle = portfolioData.rotatingTitles[titleIndex];
-    let timer: NodeJS.Timeout;
-
-    if (!isDeleting && displayText === currentTitle) {
-      timer = setTimeout(() => setIsDeleting(true), 2200);
-    } else if (isDeleting && displayText === "") {
-      setIsDeleting(false);
-      setTitleIndex((prev) => (prev + 1) % portfolioData.rotatingTitles.length);
-    } else {
-      const speed = isDeleting ? 40 : 80;
-      timer = setTimeout(() => {
-        setDisplayText(
-          isDeleting
-            ? currentTitle.substring(0, displayText.length - 1)
-            : currentTitle.substring(0, displayText.length + 1)
-        );
-      }, speed);
-    }
-
-    return () => clearTimeout(timer);
-  }, [displayText, isDeleting, titleIndex]);
 
   const socialIconMap: Record<string, React.ReactNode> = {
     Github: <Github className="w-5 h-5" />,
@@ -41,34 +19,49 @@ export function HeroSection() {
     Mail: <Mail className="w-5 h-5" />,
   };
 
+  useEffect(() => {
+    const currentTitle = portfolioData.rotatingTitles[titleIndex];
+    const updateSpeed = isDeleting ? 40 : 80;
+
+    const timer = setTimeout(() => {
+      if (!isDeleting) {
+        setDisplayText(currentTitle.substring(0, displayText.length + 1));
+        if (displayText === currentTitle) {
+          setTimeout(() => setIsDeleting(true), 2200);
+        }
+      } else {
+        setDisplayText(currentTitle.substring(0, displayText.length - 1));
+        if (displayText === "") {
+          setIsDeleting(false);
+          setTitleIndex((prev) => (prev + 1) % portfolioData.rotatingTitles.length);
+        }
+      }
+    }, updateSpeed);
+
+    return () => clearTimeout(timer);
+  }, [displayText, isDeleting, titleIndex]);
+
   return (
-    <section
-      id="hero"
-      className="relative min-h-screen pt-24 sm:pt-32 pb-16 sm:pb-20 flex items-center justify-center overflow-hidden bg-cream-100 dark:bg-dark-950 text-dark-900 dark:text-cream-300"
-    >
-      {/* 3D WebGL Canvas Scene */}
+    <section id="hero" className="relative min-h-screen pt-28 pb-16 sm:pt-36 sm:pb-24 flex items-center justify-center overflow-hidden">
+      {/* Dynamic 3D WebGL WebGL Background Canvas */}
       <ThreeCloudScene />
 
-      {/* Animated Digital Infrastructure Tech Grid */}
-      <div className="absolute inset-0 bg-tech-grid opacity-30 dark:opacity-20 pointer-events-none" />
-
-      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 w-full">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
-          {/* Left Hero Text Column */}
+          {/* Left Column: Hero Typography & Bio */}
           <div className="lg:col-span-7 text-center lg:text-left flex flex-col items-center lg:items-start">
-            {/* Availability Badge */}
+            {/* Availability Pill Badge */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5 }}
-              className="inline-flex items-center gap-2 px-3.5 py-1.5 sm:px-4 sm:py-2 rounded-full bg-white/90 dark:bg-dark-900/90 border border-azure-500/30 dark:border-cyan-400/40 text-[11px] sm:text-xs font-bold text-azure-600 dark:text-cyan-300 backdrop-blur-xl shadow-md mb-4 sm:mb-6 max-w-full"
+              className="inline-flex items-center gap-2.5 px-4 py-2 rounded-full bg-white/90 dark:bg-dark-900/90 border border-azure-500/30 dark:border-cyan-400/30 text-azure-600 dark:text-cyan-300 text-xs font-mono mb-6 shadow-md backdrop-blur-xl"
             >
-              <span className="relative flex h-2.5 w-2.5 shrink-0">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-azure-500 dark:bg-cyan-400 opacity-75" />
-                <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-azure-600 dark:bg-cyan-400" />
+              <span className="relative flex h-2.5 w-2.5">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500"></span>
               </span>
-              <Activity className="w-3.5 h-3.5 text-emerald-500 dark:text-emerald-400 shrink-0" />
-              <span className="truncate">{portfolioData.availability}</span>
+              <span className="font-semibold">{portfolioData.availability}</span>
             </motion.div>
 
             {/* Main Name Heading */}
@@ -76,7 +69,7 @@ export function HeroSection() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.1 }}
-              className="font-heading font-extrabold text-3.5xl xs:text-5xl sm:text-7xl lg:text-8xl tracking-tight text-dark-900 dark:text-white mb-3 sm:mb-4 leading-none"
+              className="font-heading font-extrabold text-3.5xl xs:text-5xl sm:text-7xl lg:text-8xl tracking-tight text-dark-900 dark:text-white leading-[1.08] mb-3 sm:mb-4"
             >
               <span className="bg-clip-text text-transparent bg-gradient-to-r from-azure-600 via-cyan-500 to-emerald-500 dark:from-azure-300 dark:via-cyan-300 dark:to-emerald-300 animate-gradient-x">
                 {portfolioData.name}
@@ -129,6 +122,7 @@ export function HeroSection() {
               <a
                 href="/resume.pdf"
                 download
+                onClick={trackResumeDownload}
                 className="group inline-flex items-center justify-center gap-2.5 px-6 sm:px-8 py-3.5 sm:py-4 text-xs sm:text-sm font-semibold rounded-2xl bg-white/90 dark:bg-dark-900/90 border border-slate-300 dark:border-slate-700/80 hover:border-azure-500 text-dark-900 dark:text-cream-200 hover:text-azure-600 backdrop-blur-xl transition-all duration-300 hover:scale-105 active:scale-98 shadow-md w-full sm:w-auto"
               >
                 <Download className="w-4 h-4 text-azure-500 group-hover:-translate-y-0.5 transition-transform" />

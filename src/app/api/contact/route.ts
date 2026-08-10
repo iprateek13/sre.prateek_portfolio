@@ -2,6 +2,37 @@ import { NextResponse } from "next/server";
 import nodemailer from "nodemailer";
 import clientPromise from "@/lib/mongodb";
 
+export async function GET() {
+  try {
+    if (clientPromise) {
+      const mongoClient = await clientPromise;
+      const db = mongoClient.db(process.env.MONGODB_DB_NAME || "prateek_portfolio");
+      const collection = db.collection("contact_submissions");
+
+      const submissions = await collection
+        .find({})
+        .sort({ createdAt: -1 })
+        .limit(50)
+        .toArray();
+
+      return NextResponse.json(
+        { success: true, count: submissions.length, submissions },
+        { status: 200 }
+      );
+    }
+
+    return NextResponse.json(
+      { success: true, count: 0, submissions: [] },
+      { status: 200 }
+    );
+  } catch (error) {
+    return NextResponse.json(
+      { error: "Failed to retrieve contact submissions" },
+      { status: 500 }
+    );
+  }
+}
+
 export async function POST(req: Request) {
   try {
     const body = await req.json();
