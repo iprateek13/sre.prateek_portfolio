@@ -3,12 +3,13 @@
 import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ThemeToggle } from "./ThemeToggle";
-import { Terminal, Download, Menu, X, Sparkles, ChevronRight } from "lucide-react";
+import { Terminal, Download, Menu, X, ChevronRight } from "lucide-react";
 
 export function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [activeSection, setActiveSection] = useState("#hero");
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const navLinks = [
     { name: "About", href: "#about" },
@@ -22,7 +23,7 @@ export function Navbar() {
     const handleScroll = () => {
       setScrolled(window.scrollY > 20);
 
-      // Scroll Spy for active section highlight (like takeuforward.org)
+      // Scroll Spy for active section highlight
       const sections = ["#hero", "#about", "#skills", "#projects", "#experience", "#contact"];
       const scrollPosition = window.scrollY + 120;
 
@@ -40,7 +41,19 @@ export function Navbar() {
     };
 
     window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
+
+    // Track modal open/close to hide navbar smoothly
+    const checkModal = () => {
+      setIsModalOpen(document.body.classList.contains("modal-open"));
+    };
+
+    const observer = new MutationObserver(checkModal);
+    observer.observe(document.body, { attributes: true, attributeFilter: ["class"] });
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+      observer.disconnect();
+    };
   }, []);
 
   const scrollToSection = (href: string) => {
@@ -53,14 +66,18 @@ export function Navbar() {
   };
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 px-3 sm:px-6 lg:px-8 pt-3 sm:pt-4 pointer-events-none">
+    <header
+      className={`fixed top-0 left-0 right-0 z-40 px-3 sm:px-6 lg:px-8 pt-3 sm:pt-4 transition-all duration-300 ${
+        isModalOpen ? "opacity-0 pointer-events-none -translate-y-8 scale-95" : "opacity-100 translate-y-0 scale-100"
+      }`}
+    >
       <nav
         className={`max-w-6xl mx-auto rounded-full transition-all duration-300 pointer-events-auto px-4 py-2.5 sm:px-6 sm:py-3 glass-navbar-tuf ${
           scrolled ? "shadow-2xl border-azure-500/40 dark:border-cyan-400/40" : ""
         }`}
       >
         <div className="flex items-center justify-between">
-          {/* Brand Logo (TUF Inspired Badge) */}
+          {/* Brand Logo */}
           <a
             href="#hero"
             onClick={(e) => {
@@ -82,7 +99,7 @@ export function Navbar() {
             </div>
           </a>
 
-          {/* Desktop Navigation Links (TUF Inspired Active Pill Tabs) */}
+          {/* Desktop Navigation Links */}
           <div className="hidden md:flex items-center gap-1 bg-white/40 dark:bg-dark-900/40 p-1.5 rounded-full border border-slate-200/50 dark:border-slate-800/50 backdrop-blur-md">
             {navLinks.map((link) => {
               const isActive = activeSection === link.href;
@@ -107,9 +124,8 @@ export function Navbar() {
             })}
           </div>
 
-          {/* Right Action Controls: Download Resume Pill & Theme Toggle */}
+          {/* Right Action Controls */}
           <div className="flex items-center gap-2 sm:gap-3">
-            {/* Download Resume Pill CTA (TUF Style Rounded Button) */}
             <a
               href="/resume.pdf"
               download
@@ -119,10 +135,8 @@ export function Navbar() {
               <span>Resume</span>
             </a>
 
-            {/* Light / Dark Mode Toggle */}
             <ThemeToggle />
 
-            {/* Mobile Hamburger Toggle Button */}
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
               className="md:hidden p-2.5 rounded-full bg-white/80 dark:bg-dark-900/80 border border-slate-200/80 dark:border-slate-800/80 text-dark-900 dark:text-cream-200 hover:text-azure-600 focus:outline-none touch-manipulation active:scale-95 transition-all"

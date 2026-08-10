@@ -15,23 +15,34 @@ export function ProjectModal({ project, onClose }: ProjectModalProps) {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === "Escape") onClose();
     };
+
+    // Add modal-open class to hide navbar and lock scroll
     document.body.style.overflow = "hidden";
+    document.body.classList.add("modal-open");
     window.addEventListener("keydown", handleKeyDown);
+
     return () => {
       document.body.style.overflow = "auto";
+      document.body.classList.remove("modal-open");
       window.removeEventListener("keydown", handleKeyDown);
     };
   }, [onClose]);
 
   return (
     <AnimatePresence>
-      <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6 lg:p-8 overflow-y-auto bg-dark-950/80 backdrop-blur-md">
+      {/* Outer Backdrop Overlay - Clicking vacant area triggers onClose() */}
+      <div
+        onClick={onClose}
+        className="fixed inset-0 z-[100] flex items-center justify-center p-3 sm:p-6 lg:p-8 overflow-y-auto bg-dark-950/80 backdrop-blur-md cursor-pointer"
+      >
+        {/* Inner Modal Card - Stop Propagation to prevent closing on card click */}
         <motion.div
+          onClick={(e) => e.stopPropagation()}
           initial={{ opacity: 0, scale: 0.95, y: 20 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
           exit={{ opacity: 0, scale: 0.95, y: 20 }}
-          transition={{ duration: 0.3 }}
-          className="relative w-full max-w-3xl rounded-3xl bg-white dark:bg-dark-900 border border-slate-200 dark:border-slate-800 shadow-2xl overflow-hidden my-auto max-h-[88vh] flex flex-col"
+          transition={{ duration: 0.25, ease: "easeOut" }}
+          className="relative w-full max-w-3xl rounded-3xl bg-white dark:bg-dark-900 border border-slate-200 dark:border-slate-800 shadow-2xl overflow-hidden my-auto max-h-[88vh] flex flex-col cursor-default"
         >
           {/* Header Bar */}
           <div className="p-5 sm:p-6 border-b border-slate-200/80 dark:border-slate-800/80 flex items-center justify-between bg-cream-100/50 dark:bg-dark-950/50">
@@ -46,7 +57,7 @@ export function ProjectModal({ project, onClose }: ProjectModalProps) {
 
             <button
               onClick={onClose}
-              className="p-2.5 rounded-2xl bg-slate-100 dark:bg-dark-800 text-dark-800 dark:text-slate-200 hover:text-azure-600 transition-colors touch-manipulation active:scale-95"
+              className="p-2.5 rounded-2xl bg-slate-100 dark:bg-dark-800 text-dark-800 dark:text-slate-200 hover:text-azure-600 hover:bg-slate-200 dark:hover:bg-dark-700 transition-all touch-manipulation active:scale-95 shadow-sm"
               aria-label="Close modal"
             >
               <X className="w-5 h-5" />
@@ -99,29 +110,43 @@ export function ProjectModal({ project, onClose }: ProjectModalProps) {
             )}
 
             {/* Tags */}
-            <div className="flex flex-wrap gap-2 pt-2">
-              {project.tags.map((tag) => (
-                <span
-                  key={tag}
-                  className="px-3 py-1 rounded-xl text-xs font-mono font-bold bg-azure-500/10 text-azure-700 dark:text-cyan-300 border border-azure-500/20"
-                >
-                  {tag}
-                </span>
-              ))}
+            <div>
+              <h4 className="text-xs font-mono font-bold text-azure-600 dark:text-cyan-400 uppercase tracking-wider mb-3">
+                Technologies & Tools
+              </h4>
+              <div className="flex flex-wrap gap-2">
+                {project.tags.map((tag) => (
+                  <span
+                    key={tag}
+                    className="px-3 py-1 rounded-xl bg-slate-100 dark:bg-dark-800 border border-slate-200 dark:border-slate-700 text-xs font-mono font-semibold text-dark-800 dark:text-slate-200"
+                  >
+                    {tag}
+                  </span>
+                ))}
+              </div>
             </div>
           </div>
 
-          {/* Modal Footer Action Bar */}
-          <div className="p-4 sm:p-6 border-t border-slate-200/80 dark:border-slate-800/80 flex flex-col sm:flex-row items-stretch sm:items-center justify-end gap-3 bg-cream-100/50 dark:bg-dark-950/50">
-            <a
-              href={project.githubUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-2xl bg-gradient-to-r from-azure-500 via-cyan-500 to-emerald-500 text-white font-extrabold text-xs sm:text-sm font-heading shadow-azure-glow hover:scale-105 active:scale-98 transition-all"
+          {/* Footer Action Buttons */}
+          <div className="p-4 sm:p-6 border-t border-slate-200/80 dark:border-slate-800/80 bg-cream-100/50 dark:bg-dark-950/50 flex flex-wrap items-center justify-between gap-3">
+            <div className="flex items-center gap-3">
+              <a
+                href={project.githubUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-gradient-to-r from-azure-500 via-cyan-500 to-emerald-500 text-white font-extrabold text-xs font-heading shadow-azure-glow hover:scale-105 active:scale-95 transition-all"
+              >
+                <Github className="w-4 h-4" />
+                <span>View GitHub Profile</span>
+              </a>
+            </div>
+
+            <button
+              onClick={onClose}
+              className="px-5 py-2.5 rounded-full bg-slate-200 dark:bg-dark-800 text-dark-900 dark:text-slate-200 font-bold text-xs hover:bg-slate-300 dark:hover:bg-dark-700 transition-colors"
             >
-              <Github className="w-4 h-4" />
-              <span>View GitHub Profile</span>
-            </a>
+              Close Window
+            </button>
           </div>
         </motion.div>
       </div>
