@@ -56,7 +56,7 @@ export function AboutSection() {
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.5 }}
-            className="lg:col-span-7 flex flex-col justify-between p-8 sm:p-10 rounded-3xl bg-gradient-to-br from-white/95 via-cream-100/70 to-azure-50/40 dark:from-dark-900 dark:via-dark-900 dark:to-azure-950/40 border-t-2 border-t-azure-400/60 dark:border-t-cyan-400/60 border border-azure-500/25 dark:border-azure-400/25 backdrop-blur-2xl shadow-xl relative overflow-hidden h-full"
+            className="lg:col-span-7 flex flex-col justify-between p-8 sm:p-10 rounded-3xl bg-white/90 dark:bg-dark-900/90 border border-azure-500/25 dark:border-azure-400/25 backdrop-blur-2xl shadow-lg relative overflow-hidden h-full"
           >
             <div className="absolute top-0 right-0 p-6 opacity-10 pointer-events-none">
               <Cloud className="w-52 h-52 text-azure-500 dark:text-cyan-400" />
@@ -90,7 +90,7 @@ export function AboutSection() {
             </div>
           </motion.div>
 
-          {/* Education & Certification Side Column with Glassmorphic Gradient Styling */}
+          {/* Education & Certification Side Column */}
           <motion.div
             initial={{ opacity: 0, x: 20 }}
             whileInView={{ opacity: 1, x: 0 }}
@@ -99,13 +99,13 @@ export function AboutSection() {
             className="lg:col-span-5 flex flex-col gap-4"
           >
             {/* Education Box */}
-            <TiltCard className="p-6 sm:p-7 rounded-3xl bg-gradient-to-br from-white/95 via-cream-100/70 to-azure-50/50 dark:from-dark-900 dark:via-dark-900 dark:to-azure-950/40 border-t-2 border-t-azure-400/60 dark:border-t-cyan-400/60 border border-azure-500/25 dark:border-azure-400/25 backdrop-blur-2xl shadow-xl hover:border-azure-500/50 transition-all duration-300 group">
+            <TiltCard className="p-6 sm:p-7 rounded-3xl bg-white/90 dark:bg-dark-900/90 border border-slate-200 dark:border-slate-800 backdrop-blur-2xl shadow-lg hover:border-azure-500/40 transition-colors">
               <div className="flex items-start gap-4">
-                <div className="p-3.5 rounded-2xl bg-gradient-to-tr from-azure-600 via-cyan-500 to-emerald-500 text-white shadow-azure-glow shrink-0 group-hover:scale-105 transition-transform">
+                <div className="p-3.5 rounded-2xl bg-azure-500/10 text-azure-500 border border-azure-500/30 shadow-md shrink-0">
                   <GraduationCap className="w-6 h-6" />
                 </div>
                 <div>
-                  <span className="text-xs font-mono text-azure-600 dark:text-cyan-300 uppercase tracking-wider font-extrabold">
+                  <span className="text-xs font-mono text-azure-600 dark:text-cyan-300 uppercase tracking-wider font-bold">
                     {portfolioData.education.period}
                   </span>
                   <h4 className="font-heading font-bold text-xl text-dark-900 dark:text-white mt-1 leading-snug">
@@ -114,7 +114,7 @@ export function AboutSection() {
                   <p className="text-sm text-dark-800/80 dark:text-slate-300 mt-1">
                     {portfolioData.education.institution}
                   </p>
-                  <p className="text-xs text-azure-600/90 dark:text-cyan-300/90 mt-2 font-mono font-semibold">
+                  <p className="text-xs text-dark-800/70 dark:text-slate-400 mt-2 font-mono">
                     Specialization: {portfolioData.education.specialization}
                   </p>
                 </div>
@@ -125,18 +125,18 @@ export function AboutSection() {
             {portfolioData.certifications.map((cert) => (
               <TiltCard
                 key={cert.code}
-                className="p-6 sm:p-7 rounded-3xl bg-gradient-to-br from-white/95 via-cream-100/70 to-emerald-50/50 dark:from-dark-900 dark:via-dark-900 dark:to-emerald-950/40 border-t-2 border-t-emerald-400/60 dark:border-t-emerald-400/60 border border-emerald-500/30 dark:border-cyan-400/40 backdrop-blur-2xl shadow-xl hover:border-emerald-500/50 transition-all duration-300 group"
+                className="p-6 sm:p-7 rounded-3xl bg-gradient-to-br from-white via-cream-100 to-azure-50/50 dark:from-dark-900 dark:via-dark-900 dark:to-azure-950/40 border border-azure-500/30 dark:border-cyan-400/40 backdrop-blur-2xl shadow-md"
               >
                 <div className="flex items-start gap-4">
-                  <div className="p-3.5 rounded-2xl bg-gradient-to-tr from-emerald-600 via-cyan-500 to-azure-500 text-white shadow-azure-glow shrink-0 group-hover:scale-105 transition-transform">
+                  <div className="p-3.5 rounded-2xl bg-emerald-500/10 text-emerald-600 dark:text-emerald-300 border border-emerald-500/30 shadow-md shrink-0">
                     <Award className="w-6 h-6" />
                   </div>
                   <div>
                     <div className="flex items-center gap-2">
-                      <span className="px-2.5 py-0.5 rounded-lg bg-gradient-to-r from-azure-500 via-cyan-500 to-emerald-500 text-white text-xs font-extrabold font-mono shadow-sm">
+                      <span className="px-2.5 py-0.5 rounded bg-gradient-to-r from-azure-500 via-cyan-500 to-emerald-500 text-white text-xs font-extrabold font-mono">
                         {cert.code}
                       </span>
-                      <span className="text-xs text-azure-600 dark:text-cyan-300 font-mono font-extrabold">Issued {cert.issueDate}</span>
+                      <span className="text-xs text-azure-600 dark:text-cyan-300 font-mono font-bold">Issued {cert.issueDate}</span>
                     </div>
                     <h4 className="font-heading font-bold text-lg text-dark-900 dark:text-white mt-2 leading-snug">
                       {cert.name}

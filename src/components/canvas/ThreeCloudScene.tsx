@@ -93,22 +93,22 @@ function CloudClusterCore() {
 
   // Orbital Satellite Node Configuration
   const satellites = [
-    { radius: 2.8, speed: 0.7, angleOffset: 0, color: "#0284C7", size: 0.16 },
-    { radius: 3.4, speed: 0.5, angleOffset: Math.PI / 3, color: "#22D3EE", size: 0.14 },
-    { radius: 3.9, speed: 0.8, angleOffset: (Math.PI * 2) / 3, color: "#10B981", size: 0.18 },
-    { radius: 3.1, speed: 0.6, angleOffset: Math.PI, color: "#38BDF8", size: 0.15 },
-    { radius: 3.6, speed: 0.75, angleOffset: (Math.PI * 4) / 3, color: "#34D399", size: 0.16 },
-    { radius: 4.2, speed: 0.45, angleOffset: (Math.PI * 5) / 3, color: "#06B6D4", size: 0.17 },
+    { radius: 3.2, speed: 0.7, angleOffset: 0, color: "#0284C7", size: 0.18 },
+    { radius: 3.8, speed: 0.5, angleOffset: Math.PI / 3, color: "#22D3EE", size: 0.15 },
+    { radius: 4.4, speed: 0.8, angleOffset: (Math.PI * 2) / 3, color: "#10B981", size: 0.2 },
+    { radius: 3.5, speed: 0.6, angleOffset: Math.PI, color: "#38BDF8", size: 0.16 },
+    { radius: 4.1, speed: 0.75, angleOffset: (Math.PI * 4) / 3, color: "#34D399", size: 0.17 },
+    { radius: 4.8, speed: 0.45, angleOffset: (Math.PI * 5) / 3, color: "#06B6D4", size: 0.19 },
   ];
 
   // Orbital Particle Field
-  const particleCount = 220;
+  const particleCount = 280;
   const particlePositions = useMemo(() => {
     const pos = new Float32Array(particleCount * 3);
     for (let i = 0; i < particleCount * 3; i += 3) {
-      pos[i] = (Math.random() - 0.5) * 14;
-      pos[i + 1] = (Math.random() - 0.5) * 14;
-      pos[i + 2] = (Math.random() - 0.5) * 14;
+      pos[i] = (Math.random() - 0.5) * 16;
+      pos[i + 1] = (Math.random() - 0.5) * 16;
+      pos[i + 2] = (Math.random() - 0.5) * 16;
     }
     return pos;
   }, []);
@@ -120,7 +120,7 @@ function CloudClusterCore() {
         <group>
           {/* Inner Geodesic Core */}
           <mesh ref={innerCoreRef}>
-            <icosahedronGeometry args={[1.2, 2]} />
+            <icosahedronGeometry args={[1.5, 2]} />
             <meshStandardMaterial
               color="#0284C7"
               wireframe
@@ -132,7 +132,7 @@ function CloudClusterCore() {
 
           {/* Outer Wireframe Ring */}
           <mesh ref={outerRingRef}>
-            <torusGeometry args={[1.9, 0.07, 16, 100]} />
+            <torusGeometry args={[2.3, 0.08, 16, 100]} />
             <meshStandardMaterial
               color="#22D3EE"
               wireframe
@@ -159,10 +159,10 @@ function CloudClusterCore() {
           />
         </bufferGeometry>
         <pointsMaterial
-          size={0.06}
+          size={0.065}
           color="#10B981"
           transparent
-          opacity={0.75}
+          opacity={0.8}
           blending={THREE.AdditiveBlending}
         />
       </points>
@@ -195,8 +195,8 @@ export function ThreeCloudScene() {
   }
 
   return (
-    <div className="absolute right-0 top-0 bottom-0 w-full lg:w-1/2 h-full z-0 opacity-70 pointer-events-none lg:pointer-events-auto">
-      <Canvas camera={{ position: [0, 0, 7.5], fov: 45 }}>
+    <div className="absolute inset-0 w-full h-full z-0 opacity-85">
+      <Canvas camera={{ position: [0, 0, 8.5], fov: 45 }}>
         <ambientLight intensity={0.8} />
         <pointLight position={[10, 10, 10]} intensity={2} color="#0284C7" />
         <pointLight position={[-10, -10, -10]} intensity={1.8} color="#10B981" />
