@@ -7,43 +7,43 @@
       <stop offset="100%" stop-color="#10B981" />
     </linearGradient>
 
-    <!-- Specular Reflection Highlight -->
+    <!-- Top Glass Sheen Reflection -->
     <linearGradient id="topSheen" x1="0%" y1="0%" x2="0%" y2="100%">
-      <stop offset="0%" stop-color="#FFFFFF" stop-opacity="0.35" />
+      <stop offset="0%" stop-color="#FFFFFF" stop-opacity="0.32" />
       <stop offset="100%" stop-color="#FFFFFF" stop-opacity="0" />
     </linearGradient>
 
-    <!-- Outer Ambient Glow Filter -->
+    <!-- Ambient Outer Glow -->
     <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
       <feDropShadow dx="0" dy="6" stdDeviation="10" flood-color="#0284C7" flood-opacity="0.4"/>
     </filter>
   </defs>
 
-  <!-- Outer Perfect Circle with Footer Button Azure-Cyan-Emerald Gradient -->
+  <!-- Outer Perfect Circle Badge with Footer Button Gradient -->
   <circle cx="128" cy="128" r="120" fill="url(#footerBtnGrad)" filter="url(#glow)" />
 
-  <!-- Top Sheen Rim Reflection -->
-  <ellipse cx="128" cy="72" rx="90" ry="45" fill="url(#topSheen)" />
+  <!-- Top Glass Sheen Reflection -->
+  <ellipse cx="128" cy="70" rx="92" ry="46" fill="url(#topSheen)" />
 
-  <!-- Inner Subtle Ring Detail -->
-  <circle cx="128" cy="128" r="112" fill="none" stroke="#FFFFFF" stroke-width="2.5" stroke-opacity="0.3" stroke-dasharray="6 3" />
+  <!-- Inner Concentric Ring Accent -->
+  <circle cx="128" cy="128" r="112" fill="none" stroke="#FFFFFF" stroke-width="2" stroke-opacity="0.3" stroke-dasharray="6 3" />
 
   <!-- Crisp Terminal Prompt Symbol >_ -->
-  <path d="M 38 108 L 60 126 L 38 144" 
+  <path d="M 36 108 L 58 126 L 36 144" 
         fill="none" 
         stroke="#FFFFFF" 
         stroke-width="10" 
         stroke-linecap="round" 
         stroke-linejoin="round" />
 
-  <!-- Crisp White Bold "SREng." Typography -->
-  <text x="74" y="140" 
-        font-family="system-ui, -apple-system, sans-serif" 
+  <!-- Clean Bold Crisp White "SREng" Typography (Dot Removed) -->
+  <text x="74" y="142" 
+        font-family="system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" 
         font-weight="900" 
-        font-size="52" 
+        font-size="54" 
         fill="#FFFFFF" 
-        letter-spacing="0.5">SREng<tspan fill="#A7F3D0">.</tspan></text>
+        letter-spacing="1">SREng</text>
 
-  <!-- Bottom Terminal Cursor Underline Accent -->
-  <rect x="76" y="154" width="28" height="6" rx="3" fill="#FFFFFF" opacity="0.9" />
+  <!-- Sleek Terminal Cursor Bar Underline -->
+  <rect x="76" y="156" width="32" height="6" rx="3" fill="#FFFFFF" opacity="0.9" />
 </svg>
