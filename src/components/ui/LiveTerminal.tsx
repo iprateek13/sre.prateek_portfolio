@@ -1,343 +1,279 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import {
-  Terminal as TerminalIcon,
-  Play,
-  Check,
-  Copy,
-  Network,
-  Activity,
-  ShieldCheck,
-  Server,
-  Database,
-  Cpu,
-  Layers,
-} from "lucide-react";
+import { Terminal as TerminalIcon, Sparkles, CornerDownLeft, Trash2, Check, Copy } from "lucide-react";
+import canvasConfetti from "canvas-confetti";
 
-interface CommandStep {
-  cmd: string;
-  output: string[];
+interface HistoryItem {
+  command: string;
+  output: React.ReactNode;
 }
 
-const sreDevOpsSteps: CommandStep[] = [
-  {
-    cmd: "terraform plan -out=tfplan",
-    output: [
-      "Initializing Azure & AWS providers (v3.116, v5.62)...",
-      "azurerm_resource_group.rg_landing_zone: Refreshed",
-      "aws_vpc.prod_multi_cloud_vpc: Refreshed",
-      "Plan: 15 to add (15+ Child Modules), 0 to destroy.",
-      "  + module.hub_network.azurerm_firewall [ACTIVE]",
-      "  + module.spoke_vnet.vnet_peering [CONNECTED]",
-      "  + module.aws_vpc.public_subnet [PROVISIONED]",
-    ],
-  },
-  {
-    cmd: "trivy image scan azure-prod-app:latest",
-    output: [
-      "Scanning target container image 'azure-prod-app'...",
-      "Total Vulnerabilities: 0 (CRITICAL: 0, HIGH: 0)",
-      "Checking Checkov IaC Security Policies...",
-      "  PASSED: CKV_AZURE_1 -- Key Vault secret expiration set",
-      "  PASSED: CKV_AZURE_35 -- Network isolation enforced",
-      "Security Gate Status: PASSED (DevSecOps Guardrails OK)",
-    ],
-  },
-  {
-    cmd: "kubectl get pods -n observability",
-    output: [
-      "NAME                             READY   STATUS    AGE",
-      "prometheus-k8s-server-0          1/1     Running   42d",
-      "grafana-telemetry-dashboard-8f  1/1     Running   42d",
-      "alertmanager-sre-pager-79d       1/1     Running   42d",
-      "SLA Status: 99.99% Uptime (MTTR < 5ms)",
-    ],
-  },
-];
-
 export function LiveTerminal() {
-  const [viewMode, setViewMode] = useState<"terminal" | "topology" | "telemetry">("terminal");
-  const [activeStep, setActiveStep] = useState(0);
-  const [displayedLogs, setDisplayedLogs] = useState<string[]>([]);
-  const [isTyping, setIsTyping] = useState(false);
+  const [inputVal, setInputVal] = useState("");
+  const [history, setHistory] = useState<HistoryItem[]>([]);
+  const [isMatrixMode, setIsMatrixMode] = useState(false);
   const [copied, setCopied] = useState(false);
-  const [healthData, setHealthData] = useState<any>(null);
+  const bottomRef = useRef<HTMLDivElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
 
-  // Fetch real-time SRE API health status
+  // Auto-scroll terminal to bottom on new output
   useEffect(() => {
-    fetch("/api/health")
-      .then((res) => res.json())
-      .then((data) => setHealthData(data))
-      .catch(() => {});
+    bottomRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [history, isMatrixMode]);
+
+  // Initial Welcome Output
+  useEffect(() => {
+    setHistory([
+      {
+        command: "welcome",
+        output: (
+          <div className="space-y-1 text-slate-300">
+            <p className="text-cyan-300 font-bold">
+              ⚡ Welcome to Prateek's SRE & Cloud Interactive Terminal v2.4
+            </p>
+            <p className="text-slate-400">
+              Type <span className="text-emerald-400 font-bold">help</span> or click any quick pill below to execute CLI commands:
+            </p>
+          </div>
+        ),
+      },
+    ]);
   }, []);
 
-  // Terminal Typing Simulation Effect
-  useEffect(() => {
-    if (viewMode !== "terminal") return;
-    let currentLogs: string[] = [];
-    let stepIndex = 0;
-    setIsTyping(true);
+  const handleRunCommand = (cmdStr: string) => {
+    const trimmed = cmdStr.trim().toLowerCase();
+    if (!trimmed) return;
 
-    const step = sreDevOpsSteps[activeStep];
+    let outputNode: React.ReactNode = null;
 
-    const interval = setInterval(() => {
-      if (stepIndex < step.output.length) {
-        currentLogs = [...currentLogs, step.output[stepIndex]];
-        setDisplayedLogs([...currentLogs]);
-        stepIndex++;
-      } else {
-        setIsTyping(false);
-        clearInterval(interval);
-      }
-    }, 240);
+    switch (trimmed) {
+      case "help":
+        outputNode = (
+          <div className="space-y-1 text-slate-300">
+            <p className="text-cyan-300 font-bold">Available Commands:</p>
+            <div className="grid grid-cols-2 gap-x-4 gap-y-1 text-[11px] pt-1">
+              <div><span className="text-emerald-400 font-bold">skills</span> - SRE & Cloud Stack</div>
+              <div><span className="text-emerald-400 font-bold">projects</span> - Top Infrastructure Case Studies</div>
+              <div><span className="text-emerald-400 font-bold">whoami</span> - Prateek's Bio Summary</div>
+              <div><span className="text-emerald-400 font-bold">contact</span> - Email & Reach Out</div>
+              <div><span className="text-emerald-400 font-bold">matrix</span> - Cyberpunk Rain Animation</div>
+              <div><span className="text-emerald-400 font-bold">hire</span> - Trigger Celebration Blast 🎉</div>
+              <div><span className="text-emerald-400 font-bold">clear</span> - Clear Terminal Output</div>
+            </div>
+          </div>
+        );
+        break;
 
-    return () => clearInterval(interval);
-  }, [activeStep, viewMode]);
+      case "skills":
+        outputNode = (
+          <div className="space-y-1">
+            <p className="text-cyan-300 font-bold">Cloud & Reliability Architecture Matrix:</p>
+            <div className="text-slate-300 space-y-1 pt-1">
+              <p>☁️ <span className="text-azure-400 font-semibold">Cloud Platforms:</span> Azure (Expert), AWS (Peering & Multi-Cloud)</p>
+              <p>🛠️ <span className="text-emerald-400 font-semibold">IaC & Automation:</span> Terraform (15+ Modules), Bicep, Ansible</p>
+              <p>📦 <span className="text-cyan-300 font-semibold">Containers & K8s:</span> Docker, Kubernetes, Helm, AKS, EKS</p>
+              <p>📊 <span className="text-amber-300 font-semibold">Observability:</span> Prometheus, Grafana, Alertmanager, Azure Monitor</p>
+              <p>🛡️ <span className="text-rose-400 font-semibold">DevSecOps:</span> Checkov, Trivy, GitHub Actions CI/CD</p>
+            </div>
+          </div>
+        );
+        break;
 
-  const handleCopy = () => {
-    const textToCopy = `$ ${sreDevOpsSteps[activeStep].cmd}\n${displayedLogs.join("\n")}`;
-    navigator.clipboard.writeText(textToCopy);
+      case "projects":
+        outputNode = (
+          <div className="space-y-1.5">
+            <p className="text-cyan-300 font-bold">Featured SRE Case Studies:</p>
+            <div className="space-y-1 text-slate-300">
+              <p><span className="text-emerald-400 font-bold">1. Enterprise Azure Landing Zone</span> (15+ Terraform Child Modules)</p>
+              <p><span className="text-cyan-300 font-bold">2. Bidi Multi-Cloud Peering Mesh</span> (Azure Hub VNet &lt;-&gt; AWS VPC)</p>
+              <p><span className="text-amber-300 font-bold">3. Automated DevSecOps Pipeline</span> (Checkov & Trivy Guardrails)</p>
+            </div>
+          </div>
+        );
+        break;
+
+      case "whoami":
+        outputNode = (
+          <div className="space-y-1 text-slate-300">
+            <p className="text-cyan-300 font-bold">Prateek Gupta — SRE & DevOps Engineer</p>
+            <p>Architecting resilient, self-healing cloud infrastructure on Azure & AWS with 99.99% SLA reliability.</p>
+          </div>
+        );
+        break;
+
+      case "contact":
+        outputNode = (
+          <div className="space-y-1 text-slate-300">
+            <p className="text-cyan-300 font-bold">Direct Reach Out:</p>
+            <p>📧 Email: <a href="mailto:sre.prateek@gmail.com" className="text-emerald-400 underline font-bold">sre.prateek@gmail.com</a></p>
+            <p>💼 LinkedIn: <a href="https://linkedin.com/in/iprateekgupta13" target="_blank" rel="noreferrer" className="text-azure-400 underline">iprateekgupta13</a></p>
+          </div>
+        );
+        break;
+
+      case "matrix":
+        setIsMatrixMode(true);
+        setTimeout(() => setIsMatrixMode(false), 4500);
+        outputNode = (
+          <p className="text-emerald-400 font-mono animate-pulse font-bold">
+            🟢 CYBERPUNK MATRIX DIGITAL RAIN INITIALIZED (4.5s)...
+          </p>
+        );
+        break;
+
+      case "hire":
+        try {
+          canvasConfetti({
+            particleCount: 80,
+            spread: 70,
+            origin: { y: 0.6 },
+          });
+        } catch (e) {}
+        outputNode = (
+          <div className="space-y-1 text-emerald-400 font-bold">
+            <p>🎉 THANK YOU! Prateek is ready to build high-availability cloud infrastructure with your team!</p>
+            <p className="text-slate-300 font-normal">
+              Reach out directly via email at <span className="text-cyan-300 underline font-bold">sre.prateek@gmail.com</span>
+            </p>
+          </div>
+        );
+        break;
+
+      case "clear":
+        setHistory([]);
+        setInputVal("");
+        return;
+
+      default:
+        outputNode = (
+          <p className="text-rose-400 font-mono">
+            zsh: command not found: {trimmed}. Type <span className="text-emerald-400 font-bold underline cursor-pointer" onClick={() => handleRunCommand("help")}>help</span> to see available commands.
+          </p>
+        );
+    }
+
+    setHistory((prev) => [...prev, { command: trimmed, output: outputNode }]);
+    setInputVal("");
+  };
+
+  const handleCopyLogs = () => {
+    const text = history.map((item) => `$ ${item.command}\n`).join("\n");
+    navigator.clipboard.writeText(text);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   };
 
   return (
-    <div className="w-full max-w-lg lg:max-w-none mx-auto rounded-2xl sm:rounded-3xl bg-dark-950/95 border border-azure-500/30 font-mono text-xs shadow-azure-glow overflow-hidden backdrop-blur-2xl text-slate-200">
-      {/* Header Bar */}
+    <div className="w-full max-w-lg lg:max-w-none mx-auto rounded-2xl sm:rounded-3xl bg-dark-950/95 border border-azure-500/30 font-mono text-xs shadow-azure-glow overflow-hidden backdrop-blur-2xl text-slate-200 relative">
+      {/* Matrix Rain Mode Overlay */}
+      <AnimatePresence>
+        {isMatrixMode && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="absolute inset-0 z-30 bg-black/90 pointer-events-none p-4 font-mono text-emerald-400 text-[10px] overflow-hidden leading-tight flex flex-col justify-between"
+          >
+            <div className="animate-pulse space-y-1">
+              <p>01001000 01100101 01101100 01101100 01101111 00100000 01010011 01010010 01000101</p>
+              <p>AZURE_LANDING_ZONE_ACTIVE = true | TERRAFORM_MODULES = 15+</p>
+              <p>PROMETHEUS_METRICS = HEALTHY | SLA_UPTIME = 99.99%</p>
+              <p>KUBERNETES_POD_STATUS = RUNNING (REPLICAS: 3/3)</p>
+              <p>01101001 01110000 01110010 01100001 01110100 01100101 01100101 01101011 00110001 00110011</p>
+              <p>CHECKOV_SECURITY_GUARDRAILS = PASSED (0 VULNERABILITIES)</p>
+            </div>
+            <div className="text-center font-bold text-cyan-300 text-xs py-2">
+              ⚡ SRE CYBER RAIN MATRIX RUNNING ⚡
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Header Window Bar */}
       <div className="flex items-center justify-between px-3.5 py-2.5 sm:px-4 sm:py-3 bg-dark-900 border-b border-slate-800">
         <div className="flex items-center gap-2">
           <div className="w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full bg-rose-500/90" />
           <div className="w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full bg-amber-400/90" />
           <div className="w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full bg-emerald-500/90" />
           <span className="ml-1.5 sm:ml-2 text-[10px] sm:text-[11px] text-cyan-300 font-semibold flex items-center gap-1.5">
-            <TerminalIcon className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-azure-400" />
-            <span>sre-hybrid-cloud-hub</span>
+            <TerminalIcon className="w-3.5 h-3.5 text-azure-400" />
+            <span>prateek@sre-cloud:~</span>
           </span>
         </div>
 
-        {/* View Mode Mode Selector Tabs */}
-        <div className="flex items-center gap-1 bg-dark-950 p-1 rounded-lg border border-slate-800">
-          <button
-            onClick={() => setViewMode("terminal")}
-            className={`px-2 py-1 rounded text-[10px] sm:text-[11px] font-bold transition-colors flex items-center gap-1 ${
-              viewMode === "terminal" ? "bg-azure-500/30 text-cyan-300 border border-azure-500/50" : "text-slate-400 hover:text-slate-200"
-            }`}
-          >
-            <TerminalIcon className="w-3 h-3" />
-            <span className="hidden xs:inline">CLI</span>
-          </button>
-          <button
-            onClick={() => setViewMode("topology")}
-            className={`px-2 py-1 rounded text-[10px] sm:text-[11px] font-bold transition-colors flex items-center gap-1 ${
-              viewMode === "topology" ? "bg-cyan-500/30 text-cyan-300 border border-cyan-500/50" : "text-slate-400 hover:text-slate-200"
-            }`}
-          >
-            <Network className="w-3 h-3" />
-            <span className="hidden xs:inline">Topology</span>
-          </button>
-          <button
-            onClick={() => setViewMode("telemetry")}
-            className={`px-2 py-1 rounded text-[10px] sm:text-[11px] font-bold transition-colors flex items-center gap-1 ${
-              viewMode === "telemetry" ? "bg-emerald-500/30 text-emerald-300 border border-emerald-500/50" : "text-slate-400 hover:text-slate-200"
-            }`}
-          >
-            <Activity className="w-3 h-3 text-emerald-400 animate-pulse" />
-            <span className="hidden xs:inline">Metrics</span>
-          </button>
-        </div>
+        <button
+          onClick={handleCopyLogs}
+          className="p-1.5 rounded hover:bg-dark-800 text-slate-400 hover:text-cyan-300 transition-colors"
+          title="Copy Terminal Output"
+        >
+          {copied ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
+        </button>
       </div>
 
-      {/* Main Viewport Content Area */}
-      <AnimatePresence mode="wait">
-        {/* VIEW 1: LIVE TERMINAL CLI */}
-        {viewMode === "terminal" && (
-          <motion.div
-            key="terminal"
-            initial={{ opacity: 0, y: 8 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -8 }}
-            transition={{ duration: 0.2 }}
+      {/* Quick Action Command Pills */}
+      <div className="px-3 py-2 bg-dark-900/70 border-b border-slate-800/80 flex items-center gap-1.5 overflow-x-auto no-scrollbar">
+        {["help", "skills", "projects", "whoami", "matrix", "hire", "clear"].map((cmd) => (
+          <button
+            key={cmd}
+            onClick={() => handleRunCommand(cmd)}
+            className={`px-2.5 py-1 rounded-lg text-[10px] sm:text-[11px] font-mono whitespace-nowrap transition-all border ${
+              cmd === "hire"
+                ? "bg-emerald-500/20 text-emerald-300 border-emerald-500/40 font-bold hover:bg-emerald-500/30"
+                : cmd === "matrix"
+                ? "bg-cyan-500/20 text-cyan-300 border-cyan-500/40 font-bold hover:bg-cyan-500/30"
+                : "bg-dark-800 text-slate-300 border-slate-700 hover:bg-azure-500/20 hover:text-cyan-300 hover:border-azure-500/40"
+            }`}
           >
-            {/* Command selector sub-bar */}
-            <div className="flex items-center justify-between p-1.5 sm:p-2 bg-dark-900/60 border-b border-slate-800/80 overflow-x-auto no-scrollbar">
-              <div className="flex items-center gap-1">
-                {sreDevOpsSteps.map((step, idx) => (
-                  <button
-                    key={idx}
-                    onClick={() => setActiveStep(idx)}
-                    className={`px-2.5 py-1 sm:px-3 sm:py-1.5 rounded-lg sm:rounded-xl text-[10px] sm:text-[11px] font-mono whitespace-nowrap transition-all flex items-center gap-1.5 ${
-                      activeStep === idx
-                        ? "bg-azure-500/20 text-cyan-300 border border-cyan-400/40 font-bold"
-                        : "text-slate-400 hover:text-slate-200 hover:bg-dark-800"
-                    }`}
-                  >
-                    <Play className="w-2.5 h-2.5 sm:w-3 sm:h-3 text-emerald-400" />
-                    <span>{step.cmd.split(" ")[0]}</span>
-                  </button>
-                ))}
-              </div>
+            {cmd === "hire" ? "🎉 hire" : cmd === "matrix" ? "🟢 matrix" : `$ ${cmd}`}
+          </button>
+        ))}
+      </div>
 
-              <button
-                onClick={handleCopy}
-                className="p-1.5 rounded hover:bg-dark-800 text-slate-400 hover:text-cyan-300 transition-colors ml-2"
-                title="Copy Terminal Logs"
-              >
-                {copied ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
-              </button>
-            </div>
-
-            {/* Terminal Viewport */}
-            <div className="p-3.5 sm:p-5 min-h-[175px] sm:min-h-[195px] font-mono text-[11px] sm:text-xs space-y-2 leading-relaxed">
-              <div className="flex items-center gap-1.5 text-cyan-400 font-bold flex-wrap">
+      {/* Terminal Output Area */}
+      <div
+        onClick={() => inputRef.current?.focus()}
+        className="p-3.5 sm:p-5 min-h-[210px] max-h-[280px] overflow-y-auto space-y-3 cursor-text font-mono text-[11px] sm:text-xs"
+      >
+        {history.map((item, idx) => (
+          <div key={idx} className="space-y-1">
+            {item.command !== "welcome" && (
+              <div className="flex items-center gap-1.5 text-cyan-400 font-bold">
                 <span className="text-emerald-400">prateek@sre-cloud:~$</span>
-                <span className="text-white">{sreDevOpsSteps[activeStep].cmd}</span>
+                <span className="text-white">{item.command}</span>
               </div>
+            )}
+            <div className="pl-0.5">{item.output}</div>
+          </div>
+        ))}
 
-              <div className="space-y-1 text-slate-300 font-mono">
-                {displayedLogs.map((log, idx) => (
-                  <div
-                    key={idx}
-                    className={`break-words ${
-                      log.includes("PASSED")
-                        ? "text-emerald-400 font-semibold"
-                        : log.includes("15+") || log.includes("ACTIVE") || log.includes("CONNECTED")
-                        ? "text-cyan-300 font-semibold"
-                        : "text-slate-300"
-                    }`}
-                  >
-                    {log}
-                  </div>
-                ))}
-                {isTyping && <span className="inline-block w-1.5 h-3.5 bg-cyan-400 animate-pulse ml-0.5" />}
-              </div>
-            </div>
-          </motion.div>
-        )}
+        {/* Input Prompt */}
+        <form
+          onSubmit={(e) => {
+            e.preventDefault();
+            handleRunCommand(inputVal);
+          }}
+          className="flex items-center gap-1.5 pt-1 text-cyan-400 font-bold"
+        >
+          <span className="text-emerald-400 shrink-0">prateek@sre-cloud:~$</span>
+          <input
+            ref={inputRef}
+            type="text"
+            value={inputVal}
+            onChange={(e) => setInputVal(e.target.value)}
+            className="flex-1 bg-transparent border-none outline-none text-white font-mono text-[11px] sm:text-xs caret-cyan-400 p-0"
+            placeholder="type 'help' or any command..."
+            autoComplete="off"
+            spellCheck="false"
+          />
+          <button type="submit" className="text-slate-500 hover:text-cyan-300 p-1">
+            <CornerDownLeft className="w-3 h-3" />
+          </button>
+        </form>
 
-        {/* VIEW 2: 3D CLOUD ARCHITECTURE TOPOLOGY MAP */}
-        {viewMode === "topology" && (
-          <motion.div
-            key="topology"
-            initial={{ opacity: 0, y: 8 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -8 }}
-            transition={{ duration: 0.2 }}
-            className="p-3.5 sm:p-5 min-h-[220px] flex flex-col justify-between"
-          >
-            <div className="text-[11px] text-slate-400 font-semibold mb-3 flex items-center justify-between">
-              <span className="flex items-center gap-1.5 text-cyan-300">
-                <Layers className="w-3.5 h-3.5 text-azure-400" />
-                <span>Multi-Cloud Architecture Mesh Topology</span>
-              </span>
-              <span className="text-emerald-400 text-[10px] bg-emerald-500/10 px-2 py-0.5 rounded border border-emerald-500/20">
-                ● 15+ Child Modules
-              </span>
-            </div>
-
-            {/* Cloud Topology Node Mesh Cards */}
-            <div className="grid grid-cols-2 gap-2.5 my-auto">
-              <div className="p-2.5 rounded-xl bg-dark-900/90 border border-azure-500/30 flex items-center gap-2.5">
-                <div className="p-2 rounded-lg bg-azure-500/20 text-azure-400 shrink-0">
-                  <Server className="w-4 h-4" />
-                </div>
-                <div>
-                  <span className="text-[11px] font-bold text-white block">Azure Hub VNet</span>
-                  <span className="text-[10px] text-cyan-400 font-mono">Firewall & KeyVault</span>
-                </div>
-              </div>
-
-              <div className="p-2.5 rounded-xl bg-dark-900/90 border border-cyan-500/30 flex items-center gap-2.5">
-                <div className="p-2 rounded-lg bg-cyan-500/20 text-cyan-400 shrink-0">
-                  <Network className="w-4 h-4" />
-                </div>
-                <div>
-                  <span className="text-[11px] font-bold text-white block">AWS VPC Peering</span>
-                  <span className="text-[10px] text-emerald-400 font-mono">Bidi Peered</span>
-                </div>
-              </div>
-
-              <div className="p-2.5 rounded-xl bg-dark-900/90 border border-emerald-500/30 flex items-center gap-2.5">
-                <div className="p-2 rounded-lg bg-emerald-500/20 text-emerald-400 shrink-0">
-                  <Cpu className="w-4 h-4" />
-                </div>
-                <div>
-                  <span className="text-[11px] font-bold text-white block">Kubernetes Pods</span>
-                  <span className="text-[10px] text-slate-300 font-mono">3/3 Replica Running</span>
-                </div>
-              </div>
-
-              <div className="p-2.5 rounded-xl bg-dark-900/90 border border-amber-500/30 flex items-center gap-2.5">
-                <div className="p-2 rounded-lg bg-amber-500/20 text-amber-400 shrink-0">
-                  <ShieldCheck className="w-4 h-4" />
-                </div>
-                <div>
-                  <span className="text-[11px] font-bold text-white block">DevSecOps Gate</span>
-                  <span className="text-[10px] text-emerald-400 font-mono">Checkov 100% OK</span>
-                </div>
-              </div>
-            </div>
-
-            <div className="text-[10px] text-slate-400 text-center font-mono pt-2 border-t border-slate-800/80">
-              ⚡ Automated via Terraform Enterprise & GitHub Actions CI/CD
-            </div>
-          </motion.div>
-        )}
-
-        {/* VIEW 3: LIVE REAL-TIME SRE TELEMETRY METRICS DASHBOARD */}
-        {viewMode === "telemetry" && (
-          <motion.div
-            key="telemetry"
-            initial={{ opacity: 0, y: 8 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -8 }}
-            transition={{ duration: 0.2 }}
-            className="p-3.5 sm:p-5 min-h-[220px] flex flex-col justify-between"
-          >
-            <div className="text-[11px] text-slate-400 font-semibold mb-2 flex items-center justify-between">
-              <span className="flex items-center gap-1.5 text-emerald-400">
-                <Activity className="w-3.5 h-3.5 animate-pulse" />
-                <span>Live SRE Cluster Health & Telemetry</span>
-              </span>
-              <span className="text-cyan-300 text-[10px] font-mono">
-                {healthData?.telemetry?.dbLatencyMs ? `Latency: ${healthData.telemetry.dbLatencyMs}` : "Latency: <3ms"}
-              </span>
-            </div>
-
-            {/* Live Metrics Stats Grid */}
-            <div className="grid grid-cols-3 gap-2 my-auto text-center font-mono">
-              <div className="p-2.5 rounded-xl bg-dark-900/90 border border-emerald-500/40">
-                <span className="text-[10px] text-slate-400 block mb-0.5">SLA Uptime</span>
-                <span className="text-sm font-extrabold text-emerald-400">99.99%</span>
-              </div>
-
-              <div className="p-2.5 rounded-xl bg-dark-900/90 border border-azure-500/40">
-                <span className="text-[10px] text-slate-400 block mb-0.5">MongoDB DB</span>
-                <span className="text-xs font-bold text-cyan-300">
-                  {healthData?.telemetry?.dbStatus || "CONNECTED"}
-                </span>
-              </div>
-
-              <div className="p-2.5 rounded-xl bg-dark-900/90 border border-amber-500/40">
-                <span className="text-[10px] text-slate-400 block mb-0.5">K8s Probes</span>
-                <span className="text-xs font-bold text-amber-300">
-                  {healthData?.k8sProbes?.liveness || "READY"}
-                </span>
-              </div>
-            </div>
-
-            {/* Microservice Info Line */}
-            <div className="p-2 rounded-xl bg-dark-900/60 border border-slate-800 text-[10px] font-mono text-slate-300 flex items-center justify-between mt-2">
-              <span className="flex items-center gap-1 text-azure-400">
-                <Database className="w-3 h-3" />
-                <span>MongoDB Atlas Engine</span>
-              </span>
-              <span className="text-emerald-400 font-bold">● Healthy Service</span>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+        <div ref={bottomRef} />
+      </div>
     </div>
   );
 }
