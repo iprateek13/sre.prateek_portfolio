@@ -22,17 +22,22 @@ function SatelliteNode({
 }) {
   const meshRef = useRef<THREE.Mesh>(null);
   const lineRef = useRef<THREE.Line>(null);
+  const accumulatedTimeRef = useRef(angleOffset);
 
-  useFrame((state) => {
-    const time = state.clock.getElapsedTime() * speed + angleOffset;
+  useFrame((_, delta) => {
+    // Clamp delta to prevent massive jumps on page refresh/tab focus
+    const safeDelta = Math.min(delta, 0.05);
+    accumulatedTimeRef.current += safeDelta * speed;
+    const time = accumulatedTimeRef.current;
+
     const x = Math.cos(time) * radius;
     const z = Math.sin(time) * radius;
     const y = Math.sin(time * 1.5) * (radius * 0.35);
 
     if (meshRef.current) {
       meshRef.current.position.set(x, y, z);
-      meshRef.current.rotation.x += 0.02;
-      meshRef.current.rotation.y += 0.03;
+      meshRef.current.rotation.x += safeDelta * 0.8;
+      meshRef.current.rotation.y += safeDelta * 1.2;
     }
 
     if (lineRef.current) {
@@ -54,12 +59,12 @@ function SatelliteNode({
       {/* Telemetry Data Link Line to Core */}
       {/* @ts-ignore */}
       <line ref={lineRef} geometry={lineGeometry}>
-        <lineBasicMaterial color={color} transparent opacity={0.35} />
+        <lineBasicMaterial color={color} transparent opacity={0.3} />
       </line>
 
       {/* Orbiting Satellite Node Sphere */}
       <mesh ref={meshRef}>
-        <sphereGeometry args={[size, 24, 24]} />
+        <sphereGeometry args={[size, 16, 16]} />
         <meshStandardMaterial
           color={color}
           emissive={color}
@@ -77,32 +82,36 @@ function CloudClusterCore() {
   const outerRingRef = useRef<THREE.Mesh>(null);
   const particlesRef = useRef<THREE.Points>(null);
 
-  useFrame((state, delta) => {
+  useFrame((_, delta) => {
+    const safeDelta = Math.min(delta, 0.05);
     if (innerCoreRef.current) {
-      innerCoreRef.current.rotation.x += delta * 0.25;
-      innerCoreRef.current.rotation.y += delta * 0.35;
+      innerCoreRef.current.rotation.x += safeDelta * 0.25;
+      innerCoreRef.current.rotation.y += safeDelta * 0.35;
     }
     if (outerRingRef.current) {
-      outerRingRef.current.rotation.x -= delta * 0.15;
-      outerRingRef.current.rotation.z += delta * 0.2;
+      outerRingRef.current.rotation.x -= safeDelta * 0.15;
+      outerRingRef.current.rotation.z += safeDelta * 0.2;
     }
     if (particlesRef.current) {
-      particlesRef.current.rotation.y -= delta * 0.05;
+      particlesRef.current.rotation.y -= safeDelta * 0.05;
     }
   });
 
   // Orbital Satellite Node Configuration
-  const satellites = [
-    { radius: 3.2, speed: 0.7, angleOffset: 0, color: "#0284C7", size: 0.18 },
-    { radius: 3.8, speed: 0.5, angleOffset: Math.PI / 3, color: "#22D3EE", size: 0.15 },
-    { radius: 4.4, speed: 0.8, angleOffset: (Math.PI * 2) / 3, color: "#10B981", size: 0.2 },
-    { radius: 3.5, speed: 0.6, angleOffset: Math.PI, color: "#38BDF8", size: 0.16 },
-    { radius: 4.1, speed: 0.75, angleOffset: (Math.PI * 4) / 3, color: "#34D399", size: 0.17 },
-    { radius: 4.8, speed: 0.45, angleOffset: (Math.PI * 5) / 3, color: "#06B6D4", size: 0.19 },
-  ];
+  const satellites = useMemo(
+    () => [
+      { radius: 3.2, speed: 0.7, angleOffset: 0, color: "#0284C7", size: 0.18 },
+      { radius: 3.8, speed: 0.5, angleOffset: Math.PI / 3, color: "#22D3EE", size: 0.15 },
+      { radius: 4.4, speed: 0.8, angleOffset: (Math.PI * 2) / 3, color: "#10B981", size: 0.2 },
+      { radius: 3.5, speed: 0.6, angleOffset: Math.PI, color: "#38BDF8", size: 0.16 },
+      { radius: 4.1, speed: 0.75, angleOffset: (Math.PI * 4) / 3, color: "#34D399", size: 0.17 },
+      { radius: 4.8, speed: 0.45, angleOffset: (Math.PI * 5) / 3, color: "#06B6D4", size: 0.19 },
+    ],
+    []
+  );
 
   // Orbital Particle Field
-  const particleCount = 280;
+  const particleCount = 220;
   const particlePositions = useMemo(() => {
     const pos = new Float32Array(particleCount * 3);
     for (let i = 0; i < particleCount * 3; i += 3) {
@@ -116,7 +125,7 @@ function CloudClusterCore() {
   return (
     <group>
       {/* Central Floating 3D Azure Hub Core */}
-      <Float speed={2.2} rotationIntensity={0.5} floatIntensity={1.2}>
+      <Float speed={1.8} rotationIntensity={0.4} floatIntensity={1.0}>
         <group>
           {/* Inner Geodesic Core */}
           <mesh ref={innerCoreRef}>
@@ -132,7 +141,7 @@ function CloudClusterCore() {
 
           {/* Outer Wireframe Ring */}
           <mesh ref={outerRingRef}>
-            <torusGeometry args={[2.3, 0.08, 16, 100]} />
+            <torusGeometry args={[2.3, 0.08, 16, 80]} />
             <meshStandardMaterial
               color="#22D3EE"
               wireframe
@@ -173,6 +182,7 @@ function CloudClusterCore() {
 export function ThreeCloudScene() {
   const [hasWebGL, setHasWebGL] = useState(true);
   const [mounted, setMounted] = useState(false);
+  const [canvasReady, setCanvasReady] = useState(false);
 
   useEffect(() => {
     setMounted(true);
@@ -186,6 +196,9 @@ export function ThreeCloudScene() {
     } catch (e) {
       setHasWebGL(false);
     }
+
+    const timer = setTimeout(() => setCanvasReady(true), 100);
+    return () => clearTimeout(timer);
   }, []);
 
   if (!mounted) return null;
@@ -195,8 +208,21 @@ export function ThreeCloudScene() {
   }
 
   return (
-    <div className="absolute inset-0 w-full h-full z-0 opacity-85">
-      <Canvas camera={{ position: [0, 0, 8.5], fov: 45 }}>
+    <div
+      className={`absolute inset-0 w-full h-full z-0 transition-opacity duration-700 ${
+        canvasReady ? "opacity-85" : "opacity-0"
+      }`}
+    >
+      <Canvas
+        camera={{ position: [0, 0, 8.5], fov: 45 }}
+        dpr={[1, 1.5]}
+        gl={{
+          powerPreference: "high-performance",
+          antialias: true,
+          alpha: true,
+          precision: "mediump",
+        }}
+      >
         <ambientLight intensity={0.8} />
         <pointLight position={[10, 10, 10]} intensity={2} color="#0284C7" />
         <pointLight position={[-10, -10, -10]} intensity={1.8} color="#10B981" />
@@ -205,9 +231,9 @@ export function ThreeCloudScene() {
         <OrbitControls
           enableZoom={false}
           enablePan={false}
-          rotateSpeed={0.6}
+          rotateSpeed={0.5}
           autoRotate
-          autoRotateSpeed={0.8}
+          autoRotateSpeed={0.7}
           dampingFactor={0.05}
         />
       </Canvas>
