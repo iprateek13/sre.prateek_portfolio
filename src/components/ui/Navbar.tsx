@@ -75,9 +75,9 @@ export function Navbar() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            transition={{ duration: 0.25, ease: "easeInOut" }}
+            transition={{ duration: 0.22, ease: "easeInOut" }}
             onClick={() => setMobileMenuOpen(false)}
-            className="fixed inset-0 z-30 bg-dark-950/40 backdrop-blur-sm md:hidden cursor-pointer"
+            className="fixed inset-0 z-30 bg-dark-950/45 backdrop-blur-sm md:hidden cursor-pointer transform-gpu"
           />
         )}
       </AnimatePresence>
@@ -154,7 +154,7 @@ export function Navbar() {
 
               <ThemeToggle />
 
-              {/* Mobile Hamburger Button with Ultra-Smooth Spring Icon Morphing */}
+              {/* Mobile Hamburger Button with Zero-Jitter Silk Transition */}
               <button
                 onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
                 className="md:hidden p-2.5 rounded-full bg-white/80 dark:bg-dark-900/80 border border-slate-200/80 dark:border-slate-800/80 text-dark-900 dark:text-cream-200 hover:text-azure-600 focus:outline-none touch-manipulation active:scale-90 transition-all duration-300 flex items-center justify-center relative overflow-hidden"
@@ -164,33 +164,31 @@ export function Navbar() {
                   initial={false}
                   animate={{
                     rotate: mobileMenuOpen ? 180 : 0,
-                    scale: mobileMenuOpen ? 1.08 : 1,
                   }}
                   transition={{
-                    type: "spring",
-                    stiffness: 350,
-                    damping: 24,
+                    duration: 0.25,
+                    ease: [0.16, 1, 0.3, 1], // Apple 60fps Liquid Curve
                   }}
                   className="flex items-center justify-center"
                 >
-                  <AnimatePresence mode="wait">
+                  <AnimatePresence mode="wait" initial={false}>
                     {mobileMenuOpen ? (
                       <motion.div
                         key="close"
-                        initial={{ opacity: 0, rotate: -90, scale: 0.8 }}
-                        animate={{ opacity: 1, rotate: 0, scale: 1 }}
-                        exit={{ opacity: 0, rotate: 90, scale: 0.8 }}
-                        transition={{ duration: 0.2 }}
+                        initial={{ opacity: 0, scale: 0.8 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        exit={{ opacity: 0, scale: 0.8 }}
+                        transition={{ duration: 0.18, ease: "easeInOut" }}
                       >
                         <X className="w-5 h-5 text-azure-600 dark:text-cyan-400" />
                       </motion.div>
                     ) : (
                       <motion.div
                         key="menu"
-                        initial={{ opacity: 0, rotate: 90, scale: 0.8 }}
-                        animate={{ opacity: 1, rotate: 0, scale: 1 }}
-                        exit={{ opacity: 0, rotate: -90, scale: 0.8 }}
-                        transition={{ duration: 0.2 }}
+                        initial={{ opacity: 0, scale: 0.8 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        exit={{ opacity: 0, scale: 0.8 }}
+                        transition={{ duration: 0.18, ease: "easeInOut" }}
                       >
                         <Menu className="w-5 h-5" />
                       </motion.div>
@@ -202,29 +200,25 @@ export function Navbar() {
           </div>
         </nav>
 
-        {/* Mobile Drawer Dropdown Menu with Ultra-Smooth Spring Physics */}
+        {/* Mobile Drawer Dropdown Menu with Apple Liquid 60fps Easing & Hardware Isolation */}
         <AnimatePresence>
           {mobileMenuOpen && (
             <motion.div
-              initial={{ opacity: 0, y: -24, scale: 0.93 }}
+              initial={{ opacity: 0, y: -16, scale: 0.96 }}
               animate={{ opacity: 1, y: 0, scale: 1 }}
-              exit={{ opacity: 0, y: -24, scale: 0.93 }}
+              exit={{ opacity: 0, y: -16, scale: 0.96 }}
               transition={{
-                type: "spring",
-                stiffness: 380,
-                damping: 28,
-                mass: 0.8,
+                duration: 0.28,
+                ease: [0.16, 1, 0.3, 1], // Apple 60fps Zero-Jitter Liquid Curve
               }}
+              style={{ transformOrigin: "top center", willChange: "transform, opacity" }}
               className="md:hidden max-w-6xl mx-auto mt-2.5 pointer-events-auto transform-gpu"
             >
-              <div className="p-4 sm:p-5 rounded-3xl glass-mobile-drawer flex flex-col gap-2.5 shadow-2xl">
-                {navLinks.map((link, idx) => (
-                  <motion.a
+              <div className="p-4 sm:p-5 rounded-3xl glass-mobile-drawer flex flex-col gap-2 shadow-2xl">
+                {navLinks.map((link) => (
+                  <a
                     key={link.name}
                     href={link.href}
-                    initial={{ opacity: 0, x: -12 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: idx * 0.035 + 0.05, duration: 0.25, ease: "easeOut" }}
                     onClick={(e) => {
                       e.preventDefault();
                       scrollToSection(link.href);
@@ -233,7 +227,7 @@ export function Navbar() {
                   >
                     <span className="group-hover:translate-x-1 transition-transform">{link.name}</span>
                     <ChevronRight className="w-4 h-4 text-azure-500 dark:text-cyan-400 group-hover:translate-x-1 transition-transform" />
-                  </motion.a>
+                  </a>
                 ))}
 
                 <div className="pt-3 mt-1 border-t border-slate-200/80 dark:border-slate-800/80 flex items-center justify-between gap-3">
