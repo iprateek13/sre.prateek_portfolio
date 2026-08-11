@@ -6,17 +6,20 @@ import { Footer } from "@/components/sections/Footer";
 import { MotionBackground } from "@/components/ui/MotionBackground";
 
 export const metadata: Metadata = {
-  title: "Prateek Gupta | SRE, DevOps & Cloud Engineer",
+  metadataBase: new URL("https://sre-prateek-portfolio.vercel.app"),
+  title: "Prateek Gupta | SRE, DevOps & Cloud Architect",
   description:
-    "Portfolio of Prateek Gupta — SRE & DevOps Engineer specializing in Azure Landing Zones, Terraform IaC, DevSecOps pipelines, Prometheus telemetry, and site reliability.",
+    "Portfolio of Prateek Gupta — Site Reliability & DevOps Specialist. Multi-Cloud Azure & AWS Landing Zones, 15+ Terraform IaC Child Modules, DevSecOps pipelines, and 99.99% SLA reliability.",
   keywords: [
     "Prateek Gupta",
     "SRE Engineer",
     "DevOps Engineer",
-    "DevSecOps",
+    "Cloud Architect",
     "Azure Specialist",
+    "Multi-Cloud AWS & Azure",
     "Terraform IaC",
     "Azure Landing Zone",
+    "DevSecOps Pipelines",
     "Prometheus Monitoring",
   ],
   authors: [{ name: "Prateek Gupta", url: "https://github.com/iprateek13" }],
@@ -26,19 +29,28 @@ export const metadata: Metadata = {
     apple: "/favicon.svg",
   },
   openGraph: {
-    title: "Prateek Gupta | SRE, DevOps & Cloud Engineer",
+    title: "Prateek Gupta | SRE, DevOps & Cloud Architect",
     description:
-      "Architecting resilient cloud infrastructure on Azure with Terraform IaC, DevSecOps pipelines, and 99.99% reliability.",
-    url: "https://github.com/iprateek13",
+      "Enterprise Site Reliability & DevOps Specialist. Multi-Cloud Azure & AWS Landing Zones, 15+ Child Modules, Terraform IaC, DevSecOps Pipelines, and 99.99% SLA Reliability.",
+    url: "https://sre-prateek-portfolio.vercel.app",
     siteName: "Prateek Gupta SRE Portfolio",
     locale: "en_US",
     type: "website",
+    images: [
+      {
+        url: "/favicon.svg",
+        width: 1200,
+        height: 630,
+        alt: "Prateek Gupta - SRE & Cloud Architecture Portfolio",
+      },
+    ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Prateek Gupta | SRE, DevOps & Cloud Engineer",
+    title: "Prateek Gupta | SRE, DevOps & Cloud Architect",
     description:
-      "Architecting resilient cloud infrastructure on Azure with Terraform IaC, DevSecOps pipelines, and 99.99% reliability.",
+      "Enterprise Site Reliability & DevOps Specialist. Multi-Cloud Azure & AWS Landing Zones, 15+ Child Modules, Terraform IaC, DevSecOps Pipelines, and 99.99% SLA Reliability.",
+    images: ["/favicon.svg"],
   },
 };
 
@@ -60,7 +72,7 @@ export default function RootLayout({
           {/* Header Navbar */}
           <Navbar />
 
-          {/* Main Content Area */}
+          {/* Main Page Content */}
           <main className="relative z-10">{children}</main>
 
           {/* Footer */}
