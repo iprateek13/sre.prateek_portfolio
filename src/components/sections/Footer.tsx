@@ -44,9 +44,9 @@ export function Footer() {
             </div>
           </div>
 
-          {/* Copyright & SRE Tech Tag */}
+          {/* Clean Enterprise SRE Tag */}
           <div className="text-xs font-mono text-dark-800/80 dark:text-slate-400 text-center max-w-sm sm:max-w-none">
-            <span>© {currentYear} Prateek Gupta. Built with Next.js 14, TailwindCSS & Three.js.</span>
+            <span>© {currentYear} Prateek Gupta • Enterprise Cloud Infrastructure & SRE</span>
           </div>
 
           {/* Social Links */}
