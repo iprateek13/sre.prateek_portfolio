@@ -1,13 +1,13 @@
 "use client";
 
-import React, { useRef, useState, useEffect, useMemo } from "react";
+import React, { useRef, useState, useEffect, useMemo, memo } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
 import { Float, OrbitControls } from "@react-three/drei";
 import * as THREE from "three";
 import { CloudMeshCanvas } from "./CloudMeshCanvas";
 
 // Orbiting Satellite Node Component (Kubernetes Pods / Cloud VMs)
-function SatelliteNode({
+const SatelliteNode = memo(function SatelliteNode({
   radius,
   speed,
   angleOffset,
@@ -26,7 +26,7 @@ function SatelliteNode({
 
   useFrame((_, delta) => {
     // Clamp delta to prevent massive jumps on page refresh/tab focus
-    const safeDelta = Math.min(delta, 0.05);
+    const safeDelta = Math.min(delta, 0.04);
     accumulatedTimeRef.current += safeDelta * speed;
     const time = accumulatedTimeRef.current;
 
@@ -74,16 +74,16 @@ function SatelliteNode({
       </mesh>
     </group>
   );
-}
+});
 
 // Central 3D Azure Cloud Infrastructure Cluster Hub Core
-function CloudClusterCore() {
+const CloudClusterCore = memo(function CloudClusterCore() {
   const innerCoreRef = useRef<THREE.Mesh>(null);
   const outerRingRef = useRef<THREE.Mesh>(null);
   const particlesRef = useRef<THREE.Points>(null);
 
   useFrame((_, delta) => {
-    const safeDelta = Math.min(delta, 0.05);
+    const safeDelta = Math.min(delta, 0.04);
     if (innerCoreRef.current) {
       innerCoreRef.current.rotation.x += safeDelta * 0.25;
       innerCoreRef.current.rotation.y += safeDelta * 0.35;
@@ -111,7 +111,7 @@ function CloudClusterCore() {
   );
 
   // Orbital Particle Field
-  const particleCount = 220;
+  const particleCount = 200;
   const particlePositions = useMemo(() => {
     const pos = new Float32Array(particleCount * 3);
     for (let i = 0; i < particleCount * 3; i += 3) {
@@ -141,7 +141,7 @@ function CloudClusterCore() {
 
           {/* Outer Wireframe Ring */}
           <mesh ref={outerRingRef}>
-            <torusGeometry args={[2.3, 0.08, 16, 80]} />
+            <torusGeometry args={[2.3, 0.08, 16, 70]} />
             <meshStandardMaterial
               color="#22D3EE"
               wireframe
@@ -177,9 +177,9 @@ function CloudClusterCore() {
       </points>
     </group>
   );
-}
+});
 
-export function ThreeCloudScene() {
+function ThreeCloudSceneComponent() {
   const [hasWebGL, setHasWebGL] = useState(true);
   const [mounted, setMounted] = useState(false);
   const [canvasReady, setCanvasReady] = useState(false);
@@ -197,7 +197,7 @@ export function ThreeCloudScene() {
       setHasWebGL(false);
     }
 
-    const timer = setTimeout(() => setCanvasReady(true), 100);
+    const timer = setTimeout(() => setCanvasReady(true), 80);
     return () => clearTimeout(timer);
   }, []);
 
@@ -209,7 +209,7 @@ export function ThreeCloudScene() {
 
   return (
     <div
-      className={`absolute inset-0 w-full h-full z-0 transition-opacity duration-700 ${
+      className={`absolute inset-0 w-full h-full z-0 transition-opacity duration-700 pointer-events-none ${
         canvasReady ? "opacity-85" : "opacity-0"
       }`}
     >
@@ -240,3 +240,5 @@ export function ThreeCloudScene() {
     </div>
   );
 }
+
+export const ThreeCloudScene = memo(ThreeCloudSceneComponent);

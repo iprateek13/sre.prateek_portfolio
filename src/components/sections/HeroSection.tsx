@@ -1,23 +1,18 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, memo } from "react";
 import { motion } from "framer-motion";
 import { portfolioData } from "@/data/content";
 import { LiveTerminal } from "@/components/ui/LiveTerminal";
 import { ThreeCloudScene } from "@/components/canvas/ThreeCloudScene";
-import { Github, Linkedin, Mail, Download, ArrowRight, Sparkles, Zap, ShieldCheck } from "lucide-react";
+import { Github, Linkedin, Mail, Download, ArrowRight, Zap } from "lucide-react";
 import { trackResumeDownload } from "@/lib/telemetry";
 
-export function HeroSection() {
+// Isolated Typewriter Sub-Component to prevent parent re-renders
+const TypewriterTitle = memo(function TypewriterTitle() {
   const [titleIndex, setTitleIndex] = useState(0);
   const [displayText, setDisplayText] = useState("");
   const [isDeleting, setIsDeleting] = useState(false);
-
-  const socialIconMap: Record<string, React.ReactNode> = {
-    Github: <Github className="w-5 h-5" />,
-    Linkedin: <Linkedin className="w-5 h-5" />,
-    Mail: <Mail className="w-5 h-5" />,
-  };
 
   useEffect(() => {
     const currentTitle = portfolioData.rotatingTitles[titleIndex];
@@ -42,8 +37,24 @@ export function HeroSection() {
   }, [displayText, isDeleting, titleIndex]);
 
   return (
+    <span className="font-heading font-bold text-base xs:text-xl sm:text-3xl text-azure-600 dark:text-cyan-300 tracking-wide flex items-center gap-1.5 sm:gap-2">
+      <Zap className="w-4 h-4 sm:w-6 sm:h-6 text-emerald-500 dark:text-emerald-400 shrink-0" />
+      <span className="truncate">{displayText}</span>
+      <span className="animate-pulse text-azure-500 dark:text-cyan-400 font-normal">|</span>
+    </span>
+  );
+});
+
+export function HeroSection() {
+  const socialIconMap: Record<string, React.ReactNode> = {
+    Github: <Github className="w-5 h-5" />,
+    Linkedin: <Linkedin className="w-5 h-5" />,
+    Mail: <Mail className="w-5 h-5" />,
+  };
+
+  return (
     <section id="hero" className="relative min-h-screen pt-28 pb-16 sm:pt-36 sm:pb-24 flex items-center justify-center overflow-hidden">
-      {/* Dynamic 3D WebGL WebGL Background Canvas */}
+      {/* Dynamic 3D WebGL WebGL Background Canvas (Memoized for 0% render overhead) */}
       <ThreeCloudScene />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 w-full">
@@ -76,18 +87,14 @@ export function HeroSection() {
               </span>
             </motion.h1>
 
-            {/* Dynamic Typewriter Title */}
+            {/* Dynamic Typewriter Title (Isolated) */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.2 }}
               className="h-10 sm:h-14 flex items-center justify-center lg:justify-start mb-4 sm:mb-6 w-full"
             >
-              <span className="font-heading font-bold text-base xs:text-xl sm:text-3xl text-azure-600 dark:text-cyan-300 tracking-wide flex items-center gap-1.5 sm:gap-2">
-                <Zap className="w-4 h-4 sm:w-6 sm:h-6 text-emerald-500 dark:text-emerald-400 shrink-0" />
-                <span className="truncate">{displayText}</span>
-                <span className="animate-pulse text-azure-500 dark:text-cyan-400 font-normal">|</span>
-              </span>
+              <TypewriterTitle />
             </motion.div>
 
             {/* Pitch */}
