@@ -7,9 +7,9 @@
       <stop offset="100%" stop-color="#10B981" />
     </linearGradient>
 
-    <!-- Top Glass Sheen Reflection -->
+    <!-- Top Specular Glass Sheen Reflection -->
     <linearGradient id="topSheen" x1="0%" y1="0%" x2="0%" y2="100%">
-      <stop offset="0%" stop-color="#FFFFFF" stop-opacity="0.32" />
+      <stop offset="0%" stop-color="#FFFFFF" stop-opacity="0.35" />
       <stop offset="100%" stop-color="#FFFFFF" stop-opacity="0" />
     </linearGradient>
 
@@ -23,27 +23,30 @@
   <circle cx="128" cy="128" r="120" fill="url(#footerBtnGrad)" filter="url(#glow)" />
 
   <!-- Top Glass Sheen Reflection -->
-  <ellipse cx="128" cy="70" rx="92" ry="46" fill="url(#topSheen)" />
+  <ellipse cx="128" cy="68" rx="92" ry="46" fill="url(#topSheen)" />
 
   <!-- Inner Concentric Ring Accent -->
-  <circle cx="128" cy="128" r="112" fill="none" stroke="#FFFFFF" stroke-width="2" stroke-opacity="0.3" stroke-dasharray="6 3" />
+  <circle cx="128" cy="128" r="112" fill="none" stroke="#FFFFFF" stroke-width="2" stroke-opacity="0.35" stroke-dasharray="6 3" />
 
-  <!-- Crisp Terminal Prompt Symbol >_ -->
-  <path d="M 36 108 L 58 126 L 36 144" 
-        fill="none" 
-        stroke="#FFFFFF" 
-        stroke-width="10" 
-        stroke-linecap="round" 
-        stroke-linejoin="round" />
+  <!-- Perfectly Centered Composition Group (Horizontal & Vertical Center = 128, 128) -->
+  <g transform="translate(2, 0)">
+    <!-- Terminal Prompt Symbol >_ (Centered at Y=128) -->
+    <path d="M 32 106 L 56 128 L 32 150" 
+          fill="none" 
+          stroke="#FFFFFF" 
+          stroke-width="11" 
+          stroke-linecap="round" 
+          stroke-linejoin="round" />
 
-  <!-- Clean Bold Crisp White "SREng" Typography (Dot Removed) -->
-  <text x="74" y="142" 
-        font-family="system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" 
-        font-weight="900" 
-        font-size="54" 
-        fill="#FFFFFF" 
-        letter-spacing="1">SREng</text>
+    <!-- Terminal Prompt Underline Cursor -->
+    <rect x="32" y="162" width="22" height="6" rx="3" fill="#FFFFFF" opacity="0.9" />
 
-  <!-- Sleek Terminal Cursor Bar Underline -->
-  <rect x="76" y="156" width="32" height="6" rx="3" fill="#FFFFFF" opacity="0.9" />
+    <!-- Crisp White Bold "SREng." Typography (Centered Baseline) -->
+    <text x="68" y="144" 
+          font-family="system-ui, -apple-system, BlinkMacSystemFont, 'Space Grotesk', 'Segoe UI', sans-serif" 
+          font-weight="900" 
+          font-size="48" 
+          fill="#FFFFFF" 
+          letter-spacing="0.5">SREng<tspan fill="#A7F3D0">.</tspan></text>
+  </g>
 </svg>
