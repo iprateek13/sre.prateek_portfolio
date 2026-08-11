@@ -75,7 +75,7 @@ export function Navbar() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            transition={{ duration: 0.25 }}
+            transition={{ duration: 0.25, ease: "easeInOut" }}
             onClick={() => setMobileMenuOpen(false)}
             className="fixed inset-0 z-30 bg-dark-950/40 backdrop-blur-sm md:hidden cursor-pointer"
           />
@@ -154,34 +154,66 @@ export function Navbar() {
 
               <ThemeToggle />
 
-              {/* Mobile Hamburger Button with Icon Rotation */}
+              {/* Mobile Hamburger Button with Ultra-Smooth Spring Icon Morphing */}
               <button
                 onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                className="md:hidden p-2.5 rounded-full bg-white/80 dark:bg-dark-900/80 border border-slate-200/80 dark:border-slate-800/80 text-dark-900 dark:text-cream-200 hover:text-azure-600 focus:outline-none touch-manipulation active:scale-95 transition-all duration-300 flex items-center justify-center relative overflow-hidden"
+                className="md:hidden p-2.5 rounded-full bg-white/80 dark:bg-dark-900/80 border border-slate-200/80 dark:border-slate-800/80 text-dark-900 dark:text-cream-200 hover:text-azure-600 focus:outline-none touch-manipulation active:scale-90 transition-all duration-300 flex items-center justify-center relative overflow-hidden"
                 aria-label="Toggle Navigation Menu"
               >
                 <motion.div
                   initial={false}
-                  animate={{ rotate: mobileMenuOpen ? 180 : 0, scale: mobileMenuOpen ? 1.05 : 1 }}
-                  transition={{ duration: 0.3, ease: [0.32, 0.72, 0, 1] }}
+                  animate={{
+                    rotate: mobileMenuOpen ? 180 : 0,
+                    scale: mobileMenuOpen ? 1.08 : 1,
+                  }}
+                  transition={{
+                    type: "spring",
+                    stiffness: 350,
+                    damping: 24,
+                  }}
+                  className="flex items-center justify-center"
                 >
-                  {mobileMenuOpen ? <X className="w-5 h-5 text-azure-600 dark:text-cyan-400" /> : <Menu className="w-5 h-5" />}
+                  <AnimatePresence mode="wait">
+                    {mobileMenuOpen ? (
+                      <motion.div
+                        key="close"
+                        initial={{ opacity: 0, rotate: -90, scale: 0.8 }}
+                        animate={{ opacity: 1, rotate: 0, scale: 1 }}
+                        exit={{ opacity: 0, rotate: 90, scale: 0.8 }}
+                        transition={{ duration: 0.2 }}
+                      >
+                        <X className="w-5 h-5 text-azure-600 dark:text-cyan-400" />
+                      </motion.div>
+                    ) : (
+                      <motion.div
+                        key="menu"
+                        initial={{ opacity: 0, rotate: 90, scale: 0.8 }}
+                        animate={{ opacity: 1, rotate: 0, scale: 1 }}
+                        exit={{ opacity: 0, rotate: -90, scale: 0.8 }}
+                        transition={{ duration: 0.2 }}
+                      >
+                        <Menu className="w-5 h-5" />
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
                 </motion.div>
               </button>
             </div>
           </div>
         </nav>
 
-        {/* Mobile Drawer Dropdown Menu */}
+        {/* Mobile Drawer Dropdown Menu with Ultra-Smooth Spring Physics */}
         <AnimatePresence>
           {mobileMenuOpen && (
             <motion.div
-              initial={{ opacity: 0, y: -20, scale: 0.94 }}
+              initial={{ opacity: 0, y: -24, scale: 0.93 }}
               animate={{ opacity: 1, y: 0, scale: 1 }}
-              exit={{ opacity: 0, y: -20, scale: 0.94 }}
+              exit={{ opacity: 0, y: -24, scale: 0.93 }}
               transition={{
-                duration: 0.35,
-                ease: [0.32, 0.72, 0, 1], // iOS Spring Physics Cubic Bezier Curve
+                type: "spring",
+                stiffness: 380,
+                damping: 28,
+                mass: 0.8,
               }}
               className="md:hidden max-w-6xl mx-auto mt-2.5 pointer-events-auto transform-gpu"
             >
@@ -190,9 +222,9 @@ export function Navbar() {
                   <motion.a
                     key={link.name}
                     href={link.href}
-                    initial={{ opacity: 0, x: -10 }}
+                    initial={{ opacity: 0, x: -12 }}
                     animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: idx * 0.04, duration: 0.25 }}
+                    transition={{ delay: idx * 0.035 + 0.05, duration: 0.25, ease: "easeOut" }}
                     onClick={(e) => {
                       e.preventDefault();
                       scrollToSection(link.href);
