@@ -4,7 +4,6 @@ import { ThemeProvider } from "@/components/ui/ThemeProvider";
 import { Navbar } from "@/components/ui/Navbar";
 import { Footer } from "@/components/sections/Footer";
 import { MotionBackground } from "@/components/ui/MotionBackground";
-import { FloatingContactWidget } from "@/components/ui/FloatingContactWidget";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://sre-prateek-portfolio.vercel.app"),
@@ -75,9 +74,6 @@ export default function RootLayout({
 
           {/* Main Page Content */}
           <main className="relative z-10">{children}</main>
-
-          {/* Floating Speed Dial Contact Widget */}
-          <FloatingContactWidget />
 
           {/* Footer */}
           <Footer />
