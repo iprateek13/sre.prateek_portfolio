@@ -31,23 +31,11 @@
     color: #0F172A;
     overflow-x: hidden;
     backface-visibility: hidden;
-    transition: background-color 0.52s cubic-bezier(0.22, 1, 0.36, 1), 
-                color 0.52s cubic-bezier(0.22, 1, 0.36, 1);
   }
 
   .dark body {
     background-color: #07090E;
     color: #F8FAFC;
-  }
-
-  /* Ultra-Luxurious 520ms Global Theme Cross-Fade Transition */
-  nav, section, footer, header, main, div, span, h1, h2, h3, h4, p, a, button, svg, path, circle, rect, .glass-card, .glass-navbar-tuf, .glass-mobile-drawer {
-    transition: background-color 0.52s cubic-bezier(0.22, 1, 0.36, 1), 
-                border-color 0.52s cubic-bezier(0.22, 1, 0.36, 1), 
-                color 0.52s cubic-bezier(0.22, 1, 0.36, 1),
-                fill 0.52s cubic-bezier(0.22, 1, 0.36, 1),
-                stroke 0.52s cubic-bezier(0.22, 1, 0.36, 1),
-                box-shadow 0.52s cubic-bezier(0.22, 1, 0.36, 1);
   }
 
   /* Azure & Emerald Scrollbar */
