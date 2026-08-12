@@ -104,24 +104,26 @@ export function SkillsSection() {
           </motion.p>
         </div>
 
-        {/* Category Filter Pills Bar */}
-        <div className="flex items-center justify-start sm:justify-center gap-2 overflow-x-auto pb-4 mb-8 sm:mb-12 no-scrollbar px-1">
-          {categories.map((cat) => {
-            const isActive = selectedCategory === cat.id;
-            return (
-              <button
-                key={cat.id}
-                onClick={() => setSelectedCategory(cat.id)}
-                className={`relative px-4 py-2.5 rounded-2xl text-xs sm:text-sm font-semibold font-heading whitespace-nowrap transition-all duration-300 touch-manipulation cursor-pointer ${
-                  isActive
-                    ? "text-white dark:text-dark-950 bg-gradient-to-r from-azure-500 via-cyan-500 to-emerald-500 shadow-azure-glow scale-105"
-                    : "text-dark-800/80 dark:text-cream-300/80 bg-white/80 dark:bg-dark-900/80 border border-slate-200 dark:border-slate-800 hover:border-azure-500/40 hover:text-azure-600 dark:hover:text-cyan-300"
-                }`}
-              >
-                {cat.label}
-              </button>
-            );
-          })}
+        {/* Category Filter Pills Bar (Padded & Centered with Zero Clipping) */}
+        <div className="w-full overflow-x-auto pb-4 mb-8 sm:mb-12 no-scrollbar">
+          <div className="flex items-center justify-start md:justify-center gap-2.5 px-4 sm:px-6 min-w-max">
+            {categories.map((cat) => {
+              const isActive = selectedCategory === cat.id;
+              return (
+                <button
+                  key={cat.id}
+                  onClick={() => setSelectedCategory(cat.id)}
+                  className={`relative px-4.5 py-2.5 rounded-2xl text-xs sm:text-sm font-bold font-heading whitespace-nowrap transition-all duration-300 touch-manipulation cursor-pointer ${
+                    isActive
+                      ? "text-white dark:text-dark-950 bg-gradient-to-r from-azure-500 via-cyan-500 to-emerald-500 shadow-azure-glow scale-105"
+                      : "text-dark-800/80 dark:text-cream-300/80 bg-white/80 dark:bg-dark-900/80 border border-slate-200 dark:border-slate-800 hover:border-azure-500/40 hover:text-azure-600 dark:hover:text-cyan-300"
+                  }`}
+                >
+                  {cat.label}
+                </button>
+              );
+            })}
+          </div>
         </div>
 
         {/* Animated Skill Cards Grid */}
