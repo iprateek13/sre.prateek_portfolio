@@ -12,13 +12,13 @@ const config: Config = {
       colors: {
         background: "var(--background)",
         foreground: "var(--foreground)",
-        // Deep Obsidian Slate Void Base
+        // TakeUForward (TUF) Style Deep Obsidian Void Base
         dark: {
-          950: "#07090E",
-          900: "#0F172A",
-          850: "#1E293B",
-          800: "#334155",
-          700: "#475569",
+          950: "#05070C",
+          900: "#0B0F19",
+          850: "#141A29",
+          800: "#1E293B",
+          700: "#334155",
         },
         // Deep Azure Cloud Blue Accent
         azure: {
@@ -51,7 +51,7 @@ const config: Config = {
           600: "#911A1D",
           glow: "rgba(145, 15, 63, 0.45)",
         },
-        // Soft Creamy Ivory Text & Light Surfaces
+        // Soft Creamy Ivory Text & Light Surfaces (Preserved 100%)
         cream: {
           100: "#FFFDF5",
           200: "#FAF9E1",
@@ -60,41 +60,17 @@ const config: Config = {
         },
       },
       fontFamily: {
-        heading: ["var(--font-space-grotesk)", "Space Grotesk", "sans-serif"],
-        body: ["var(--font-inter)", "Inter", "sans-serif"],
-        mono: ["var(--font-jetbrains-mono)", "JetBrains Mono", "monospace"],
-      },
-      backgroundImage: {
-        "azure-glow": "radial-gradient(circle at center, rgba(2, 132, 199, 0.25) 0%, rgba(16, 185, 129, 0.2) 50%, transparent 85%)",
-        "azure-cyan-gradient": "linear-gradient(135deg, #0284C7 0%, #22D3EE 50%, #10B981 100%)",
-        "mesh-pattern": "radial-gradient(rgba(15, 23, 42, 0.08) 1px, transparent 1px)",
+        heading: ["Space Grotesk", "sans-serif"],
+        body: ["Inter", "sans-serif"],
+        mono: ["JetBrains Mono", "monospace"],
       },
       boxShadow: {
-        "azure-glow": "0 0 35px -5px rgba(2, 132, 199, 0.45)",
-        "cyan-glow": "0 0 35px -5px rgba(34, 211, 238, 0.45)",
-        "emerald-glow": "0 0 35px -5px rgba(16, 185, 129, 0.45)",
-        "glass": "0 8px 32px 0 rgba(0, 0, 0, 0.65)",
-      },
-      animation: {
-        "pulse-slow": "pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite",
-        "gradient-x": "gradient-x 6s ease infinite",
-        "shimmer": "shimmer 2.5s infinite",
-      },
-      keyframes: {
-        "gradient-x": {
-          "0%, 100%": {
-            "background-size": "200% 200%",
-            "background-position": "left center",
-          },
-          "50%": {
-            "background-size": "200% 200%",
-            "background-position": "right center",
-          },
-        },
+        "azure-glow": "0 0 25px rgba(2, 132, 199, 0.35)",
+        "cyan-glow": "0 0 25px rgba(34, 211, 238, 0.35)",
+        "emerald-glow": "0 0 25px rgba(16, 185, 129, 0.35)",
       },
     },
   },
   plugins: [],
 };
-
 export default config;
