@@ -5,20 +5,7 @@ import { motion } from "framer-motion";
 import { portfolioData } from "@/data/content";
 import { LiveTerminal } from "@/components/ui/LiveTerminal";
 import { ThreeCloudScene } from "@/components/canvas/ThreeCloudScene";
-import {
-  Github,
-  Linkedin,
-  Mail,
-  Download,
-  ArrowRight,
-  Zap,
-  Cloud,
-  Cpu,
-  ShieldCheck,
-  Activity,
-  Container,
-  Terminal,
-} from "lucide-react";
+import { Github, Linkedin, Mail, Download, ArrowRight, Zap } from "lucide-react";
 import { trackResumeDownload } from "@/lib/telemetry";
 
 // Isolated Typewriter Sub-Component to prevent parent re-renders
@@ -172,66 +159,14 @@ export function HeroSection() {
             </motion.div>
           </div>
 
-          {/* Right Column: TakeUForward (TUF) Style Floating Orbital Glass Badges around Terminal */}
+          {/* Right Live Terminal Column */}
           <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.7, delay: 0.3 }}
-            className="lg:col-span-5 w-full mt-4 lg:mt-0 relative"
+            className="lg:col-span-5 w-full mt-4 lg:mt-0"
           >
-            {/* Background Elliptical Orbit Rings */}
-            <svg
-              className="absolute -inset-10 w-[calc(100%+80px)] h-[calc(100%+80px)] pointer-events-none opacity-20 dark:opacity-30 z-0 hidden sm:block"
-              viewBox="0 0 500 400"
-            >
-              <ellipse cx="250" cy="200" rx="230" ry="180" fill="none" stroke="#0284C7" strokeWidth="1.5" strokeDasharray="6 6" />
-              <ellipse cx="250" cy="200" rx="190" ry="140" fill="none" stroke="#10B981" strokeWidth="1.5" strokeDasharray="4 4" />
-            </svg>
-
-            {/* Floating Orbital Badge 1 (Top Left) */}
-            <motion.div
-              animate={{ y: [0, -10, 0] }}
-              transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-              className="absolute -top-6 -left-4 sm:-top-8 sm:-left-8 z-20 hidden sm:flex items-center gap-2 px-3 py-1.5 sm:px-4 sm:py-2 rounded-2xl bg-white/90 dark:bg-dark-900/90 border border-azure-500/40 text-azure-600 dark:text-cyan-300 text-xs font-mono font-bold shadow-lg backdrop-blur-xl pointer-events-none"
-            >
-              <Cloud className="w-4 h-4 text-azure-500 animate-pulse" />
-              <span>Microsoft Azure • Landing Zone</span>
-            </motion.div>
-
-            {/* Floating Orbital Badge 2 (Top Right) */}
-            <motion.div
-              animate={{ y: [0, 10, 0] }}
-              transition={{ duration: 3.8, repeat: Infinity, ease: "easeInOut", delay: 0.5 }}
-              className="absolute -top-6 -right-4 sm:-top-8 sm:-right-6 z-20 hidden sm:flex items-center gap-2 px-3 py-1.5 sm:px-4 sm:py-2 rounded-2xl bg-white/90 dark:bg-dark-900/90 border border-emerald-500/40 text-emerald-600 dark:text-emerald-400 text-xs font-mono font-bold shadow-lg backdrop-blur-xl pointer-events-none"
-            >
-              <Cpu className="w-4 h-4 text-emerald-400" />
-              <span>15+ Terraform Modules</span>
-            </motion.div>
-
-            {/* Central Terminal Hub */}
-            <div className="relative z-10">
-              <LiveTerminal />
-            </div>
-
-            {/* Floating Orbital Badge 3 (Bottom Left) */}
-            <motion.div
-              animate={{ y: [0, 8, 0] }}
-              transition={{ duration: 4.2, repeat: Infinity, ease: "easeInOut", delay: 1 }}
-              className="absolute -bottom-6 -left-4 sm:-bottom-8 sm:-left-6 z-20 hidden sm:flex items-center gap-2 px-3 py-1.5 sm:px-4 sm:py-2 rounded-2xl bg-white/90 dark:bg-dark-900/90 border border-emerald-500/40 text-emerald-600 dark:text-emerald-300 text-xs font-mono font-bold shadow-lg backdrop-blur-xl pointer-events-none"
-            >
-              <ShieldCheck className="w-4 h-4 text-emerald-500" />
-              <span>Checkov & Trivy • 0 Flaws</span>
-            </motion.div>
-
-            {/* Floating Orbital Badge 4 (Bottom Right) */}
-            <motion.div
-              animate={{ y: [0, -8, 0] }}
-              transition={{ duration: 3.5, repeat: Infinity, ease: "easeInOut", delay: 1.5 }}
-              className="absolute -bottom-6 -right-4 sm:-bottom-8 sm:-right-6 z-20 hidden sm:flex items-center gap-2 px-3 py-1.5 sm:px-4 sm:py-2 rounded-2xl bg-white/90 dark:bg-dark-900/90 border border-cyan-500/40 text-cyan-600 dark:text-cyan-300 text-xs font-mono font-bold shadow-lg backdrop-blur-xl pointer-events-none"
-            >
-              <Activity className="w-4 h-4 text-cyan-400 animate-pulse" />
-              <span>Prometheus SLA • 99.99%</span>
-            </motion.div>
+            <LiveTerminal />
           </motion.div>
         </div>
       </div>
