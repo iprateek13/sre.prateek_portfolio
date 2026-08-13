@@ -1,8 +1,10 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
+import { useTheme } from "next-themes";
 import { ThemeToggle } from "@/components/ui/ThemeToggle";
-import { Menu, X, Download, ChevronRight } from "lucide-react";
+import { portfolioData } from "@/data/content";
+import { Menu, X, Download, Terminal, ChevronRight } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { trackResumeDownload } from "@/lib/telemetry";
 
@@ -43,52 +45,55 @@ export function Navbar() {
       <div className="max-w-6xl mx-auto pointer-events-auto">
         <nav
           className={`glass-navbar-tuf rounded-full px-4 sm:px-6 py-2.5 sm:py-3 transition-all duration-300 ${
-            scrolled ? "shadow-2xl border-azure-500/40" : ""
+            scrolled ? "shadow-2xl border-azure-500/30" : ""
           }`}
         >
           <div className="flex items-center justify-between">
-            {/* Left Brand Badge matching screenshot */}
+            {/* Left Brand Badge */}
             <a
               href="#hero"
               onClick={(e) => {
                 e.preventDefault();
                 scrollToSection("#hero");
               }}
-              className="flex items-center gap-2.5 group cursor-pointer shrink-0"
+              className="flex items-center gap-2 group cursor-pointer"
             >
-              {/* Circular black badge with >_ prompt matching screenshot */}
-              <div className="w-8 h-8 rounded-full bg-slate-950 dark:bg-black text-cyan-400 font-mono font-bold text-xs flex items-center justify-center shadow-md group-hover:scale-105 transition-transform border border-cyan-500/30">
-                &gt;_
+              <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-gradient-to-tr from-azure-600 via-cyan-500 to-emerald-500 p-0.5 shadow-md flex items-center justify-center group-hover:scale-105 transition-transform">
+                <div className="w-full h-full rounded-full bg-dark-950 flex items-center justify-center">
+                  <Terminal className="w-4 h-4 text-cyan-300" />
+                </div>
               </div>
-              <span className="font-heading font-extrabold text-sm sm:text-base tracking-tight text-slate-900 dark:text-white">
-                Prateek <span className="text-azure-600 dark:text-cyan-400">Gupta</span>
+              <span className="font-heading font-extrabold text-sm sm:text-base tracking-tight text-dark-900 dark:text-white">
+                Prateek <span className="text-azure-600 dark:text-cyan-300">Gupta</span>
               </span>
             </a>
 
-            {/* Desktop Center Nav Links matching screenshot spacing */}
-            <div className="hidden md:flex items-center justify-center gap-6 lg:gap-8 flex-1 px-4">
-              {navLinks.map((link) => (
-                <a
-                  key={link.name}
-                  href={link.href}
-                  onClick={(e) => {
-                    e.preventDefault();
-                    scrollToSection(link.href);
-                  }}
-                  className="text-xs sm:text-sm font-semibold font-heading text-slate-700 dark:text-cream-200 hover:text-azure-600 dark:hover:text-cyan-300 transition-colors"
-                >
-                  {link.name}
-                </a>
-              ))}
+            {/* Desktop Center Nav Links */}
+            <div className="hidden md:flex items-center gap-1 sm:gap-2">
+              {navLinks.map((link) => {
+                return (
+                  <a
+                    key={link.name}
+                    href={link.href}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      scrollToSection(link.href);
+                    }}
+                    className="relative px-3.5 py-1.5 rounded-full text-xs font-semibold font-heading text-dark-800/90 dark:text-cream-300/90 hover:text-azure-600 dark:hover:text-cyan-300 transition-colors"
+                  >
+                    {link.name}
+                  </a>
+                );
+              })}
             </div>
 
-            {/* Right Action Controls matching screenshot */}
-            <div className="flex items-center gap-2 sm:gap-3 shrink-0">
+            {/* Right Action Controls */}
+            <div className="flex items-center gap-2 sm:gap-3">
               <a
-                href="/resume.pdf"
-                download
+                href="/sre.prateek_resume.pdf"
+                download="sre.prateek_resume.pdf"
                 onClick={trackResumeDownload}
-                className="hidden sm:inline-flex items-center gap-1.5 px-5 py-2 text-xs font-bold rounded-full bg-gradient-to-r from-azure-500 via-cyan-500 to-emerald-500 text-white shadow-azure-glow hover:scale-105 active:scale-98 transition-all duration-300 font-heading"
+                className="hidden sm:inline-flex items-center gap-2 px-5 py-2 text-xs font-extrabold rounded-full bg-gradient-to-r from-azure-500 via-cyan-500 to-emerald-500 text-white shadow-azure-glow hover:scale-105 active:scale-98 transition-all duration-300 font-heading"
               >
                 <Download className="w-3.5 h-3.5" />
                 <span>Resume</span>
@@ -99,7 +104,7 @@ export function Navbar() {
               {/* Mobile Hamburger Button */}
               <button
                 onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                className="md:hidden p-2 rounded-full bg-white/80 dark:bg-dark-900/80 border border-slate-200/80 dark:border-slate-800/80 text-dark-900 dark:text-cream-200 hover:text-azure-600 focus:outline-none touch-manipulation active:scale-90 transition-all duration-300 flex items-center justify-center relative overflow-hidden"
+                className="md:hidden p-2.5 rounded-full bg-white/80 dark:bg-dark-900/80 border border-slate-200/80 dark:border-slate-800/80 text-dark-900 dark:text-cream-200 hover:text-azure-600 focus:outline-none touch-manipulation active:scale-90 transition-all duration-300 flex items-center justify-center relative overflow-hidden"
                 aria-label="Toggle Navigation Menu"
               >
                 <motion.div
@@ -174,8 +179,8 @@ export function Navbar() {
 
                 <div className="pt-3 mt-1 border-t border-slate-200/80 dark:border-slate-800/80 flex items-center justify-between gap-3">
                   <a
-                    href="/resume.pdf"
-                    download
+                    href="/sre.prateek_resume.pdf"
+                    download="sre.prateek_resume.pdf"
                     onClick={() => {
                       setMobileMenuOpen(false);
                       trackResumeDownload();

@@ -114,7 +114,7 @@ export function HeroSection() {
               {portfolioData.pitch}
             </motion.p>
 
-            {/* CTA Buttons (View Projects & Download Resume) */}
+            {/* CTA Buttons (View Projects & Download Resume with sre.prateek_resume.pdf) */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
@@ -134,8 +134,8 @@ export function HeroSection() {
               </a>
 
               <a
-                href="/resume.pdf"
-                download
+                href="/sre.prateek_resume.pdf"
+                download="sre.prateek_resume.pdf"
                 onClick={trackResumeDownload}
                 className="group inline-flex items-center justify-center gap-2.5 px-6 sm:px-8 py-3.5 sm:py-4 text-xs sm:text-sm font-semibold rounded-2xl bg-white/90 dark:bg-dark-900/90 border border-slate-300 dark:border-slate-700/80 hover:border-azure-500 text-dark-900 dark:text-cream-200 hover:text-azure-600 backdrop-blur-xl transition-all duration-300 hover:scale-105 active:scale-98 shadow-md w-full sm:w-auto"
               >
