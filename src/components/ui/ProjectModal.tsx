@@ -1,22 +1,53 @@
 "use client";
 
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Project } from "@/lib/types";
-import { X, Github, ExternalLink, ShieldCheck, Layers, CheckCircle2 } from "lucide-react";
+import { X, Github, ExternalLink, ShieldCheck, Layers, CheckCircle2, Copy, Check, Terminal } from "lucide-react";
 
 interface ProjectModalProps {
   project: Project;
   onClose: () => void;
 }
 
+const sampleTerraformCode: Record<string, string> = {
+  "azure-landing-zone": `# main.tf - Azure Enterprise Hub-and-Spoke Landing Zone
+module "hub_network" {
+  source              = "./modules/network/hub_vnet"
+  resource_group_name = azurerm_resource_group.rg_hub.name
+  location            = "East US 2"
+  vnet_address_space  = ["10.0.0.0/16"]
+
+  subnets = {
+    AzureFirewallSubnet = "10.0.1.0/24"
+    GatewaySubnet       = "10.0.2.0/24"
+  }
+}
+
+module "spoke_network" {
+  source              = "./modules/network/spoke_vnet"
+  vnet_address_space  = ["10.1.0.0/16"]
+  hub_vnet_id         = module.hub_network.vnet_id
+}`,
+  default: `# main.tf - SRE Terraform Infrastructure Module
+module "sre_infrastructure" {
+  source      = "terraform-azure-modules/sre/azurerm"
+  version     = "3.2.0"
+  environment = "production"
+
+  enable_devsecops_gate = true
+  enable_telemetry      = true
+}`,
+};
+
 export function ProjectModal({ project, onClose }: ProjectModalProps) {
+  const [copiedCode, setCopiedCode] = useState(false);
+
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === "Escape") onClose();
     };
 
-    // Add modal-open class to hide navbar and lock scroll
     document.body.style.overflow = "hidden";
     document.body.classList.add("modal-open");
     window.addEventListener("keydown", handleKeyDown);
@@ -28,14 +59,20 @@ export function ProjectModal({ project, onClose }: ProjectModalProps) {
     };
   }, [onClose]);
 
+  const codeSnippet = sampleTerraformCode[project.id] || sampleTerraformCode.default;
+
+  const handleCopyCode = () => {
+    navigator.clipboard.writeText(codeSnippet);
+    setCopiedCode(true);
+    setTimeout(() => setCopiedCode(false), 2000);
+  };
+
   return (
     <AnimatePresence>
-      {/* Outer Backdrop Overlay - Clicking vacant area triggers onClose() */}
       <div
         onClick={onClose}
         className="fixed inset-0 z-[100] flex items-center justify-center p-3 sm:p-6 lg:p-8 overflow-y-auto bg-dark-950/80 backdrop-blur-md cursor-pointer"
       >
-        {/* Inner Modal Card - Stop Propagation to prevent closing on card click */}
         <motion.div
           onClick={(e) => e.stopPropagation()}
           initial={{ opacity: 0, scale: 0.95, y: 20 }}
@@ -92,22 +129,25 @@ export function ProjectModal({ project, onClose }: ProjectModalProps) {
               </div>
             )}
 
-            {/* Architecture Features */}
-            {project.architectureFeatures && project.architectureFeatures.length > 0 && (
-              <div className="p-4 sm:p-5 rounded-2xl bg-azure-500/5 border border-azure-500/20">
-                <h4 className="text-xs font-mono font-bold text-azure-600 dark:text-cyan-400 uppercase tracking-wider mb-3 flex items-center gap-2">
-                  <Layers className="w-4 h-4 text-azure-500" />
-                  <span>Infrastructure Topology Breakdown</span>
-                </h4>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                  {project.architectureFeatures.map((feat, i) => (
-                    <div key={i} className="p-3 rounded-xl bg-white/80 dark:bg-dark-800/80 border border-slate-200/80 dark:border-slate-700/80 text-xs font-mono text-dark-800 dark:text-slate-300">
-                      {feat}
-                    </div>
-                  ))}
-                </div>
+            {/* Terraform HCL Code Snippet Box */}
+            <div className="p-4 sm:p-5 rounded-2xl bg-dark-950 border border-azure-500/30 text-slate-200 font-mono text-xs shadow-inner relative">
+              <div className="flex items-center justify-between pb-3 mb-3 border-b border-slate-800">
+                <span className="flex items-center gap-2 text-cyan-300 font-bold text-xs">
+                  <Terminal className="w-4 h-4 text-azure-400" />
+                  <span>Production Terraform HCL Spec</span>
+                </span>
+                <button
+                  onClick={handleCopyCode}
+                  className="px-3 py-1 rounded-lg bg-dark-900 border border-slate-800 hover:border-cyan-400 text-slate-300 text-[11px] flex items-center gap-1.5 transition-colors"
+                >
+                  {copiedCode ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
+                  <span>{copiedCode ? "Copied HCL" : "Copy Code"}</span>
+                </button>
               </div>
-            )}
+              <pre className="text-[11px] leading-relaxed overflow-x-auto text-cyan-100 no-scrollbar">
+                {codeSnippet}
+              </pre>
+            </div>
 
             {/* Tags */}
             <div>
@@ -137,15 +177,15 @@ export function ProjectModal({ project, onClose }: ProjectModalProps) {
                 className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-gradient-to-r from-azure-500 via-cyan-500 to-emerald-500 text-white font-extrabold text-xs font-heading shadow-azure-glow hover:scale-105 active:scale-95 transition-all"
               >
                 <Github className="w-4 h-4" />
-                <span>View GitHub Profile</span>
+                <span>View GitHub Repo</span>
               </a>
             </div>
 
             <button
               onClick={onClose}
-              className="px-5 py-2.5 rounded-full bg-slate-200 dark:bg-dark-800 text-dark-900 dark:text-slate-200 font-bold text-xs hover:bg-slate-300 dark:hover:bg-dark-700 transition-colors"
+              className="px-5 py-2.5 rounded-full bg-slate-200 dark:bg-dark-800 text-dark-900 dark:text-slate-200 text-xs font-bold font-heading hover:bg-slate-300 dark:hover:bg-dark-700 transition-colors"
             >
-              Close Window
+              Close Spec
             </button>
           </div>
         </motion.div>

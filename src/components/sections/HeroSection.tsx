@@ -1,11 +1,21 @@
 "use client";
 
 import React, { useState, useEffect, memo } from "react";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { portfolioData } from "@/data/content";
 import { LiveTerminal } from "@/components/ui/LiveTerminal";
 import { ThreeCloudScene } from "@/components/canvas/ThreeCloudScene";
-import { Github, Linkedin, Mail, Download, ArrowRight, Zap } from "lucide-react";
+import {
+  Github,
+  Linkedin,
+  Mail,
+  Download,
+  ArrowRight,
+  Zap,
+  Eye,
+  X,
+  FileText,
+} from "lucide-react";
 import { trackResumeDownload } from "@/lib/telemetry";
 
 // Isolated Typewriter Sub-Component to prevent parent re-renders
@@ -46,6 +56,8 @@ const TypewriterTitle = memo(function TypewriterTitle() {
 });
 
 export function HeroSection() {
+  const [showResumeModal, setShowResumeModal] = useState(false);
+
   const socialIconMap: Record<string, React.ReactNode> = {
     Github: <Github className="w-5 h-5" />,
     Linkedin: <Linkedin className="w-5 h-5" />,
@@ -107,7 +119,7 @@ export function HeroSection() {
               {portfolioData.pitch}
             </motion.p>
 
-            {/* CTA Buttons */}
+            {/* CTA Buttons (View Projects, Preview Resume, Download Resume) */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
@@ -120,20 +132,28 @@ export function HeroSection() {
                   e.preventDefault();
                   document.getElementById("projects")?.scrollIntoView({ behavior: "smooth" });
                 }}
-                className="group relative inline-flex items-center justify-center gap-2.5 px-6 sm:px-8 py-3.5 sm:py-4 text-xs sm:text-sm font-extrabold rounded-2xl bg-gradient-to-r from-azure-500 via-cyan-500 to-emerald-500 text-white dark:text-dark-950 font-heading shadow-azure-glow hover:scale-105 active:scale-98 transition-all duration-300 w-full sm:w-auto"
+                className="group relative inline-flex items-center justify-center gap-2.5 px-6 sm:px-8 py-3.5 sm:py-4 text-xs sm:text-sm font-extrabold rounded-2xl bg-gradient-to-r from-azure-500 via-cyan-500 to-emerald-500 text-white dark:text-dark-950 font-heading shadow-azure-glow hover:scale-105 active:scale-98 transition-all duration-300 w-full sm:w-auto cursor-pointer"
               >
                 <span>View SRE & Cloud Projects</span>
                 <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
               </a>
 
+              <button
+                onClick={() => setShowResumeModal(true)}
+                className="group inline-flex items-center justify-center gap-2 px-5 py-3.5 sm:py-4 text-xs sm:text-sm font-semibold rounded-2xl bg-white/90 dark:bg-dark-900/90 border border-azure-500/40 text-azure-600 dark:text-cyan-300 hover:bg-azure-500/10 backdrop-blur-xl transition-all duration-300 hover:scale-105 active:scale-98 shadow-md w-full sm:w-auto cursor-pointer"
+              >
+                <Eye className="w-4 h-4 text-azure-500" />
+                <span>Preview Resume</span>
+              </button>
+
               <a
                 href="/resume.pdf"
                 download
                 onClick={trackResumeDownload}
-                className="group inline-flex items-center justify-center gap-2.5 px-6 sm:px-8 py-3.5 sm:py-4 text-xs sm:text-sm font-semibold rounded-2xl bg-white/90 dark:bg-dark-900/90 border border-slate-300 dark:border-slate-700/80 hover:border-azure-500 text-dark-900 dark:text-cream-200 hover:text-azure-600 backdrop-blur-xl transition-all duration-300 hover:scale-105 active:scale-98 shadow-md w-full sm:w-auto"
+                className="group inline-flex items-center justify-center gap-2 px-5 py-3.5 sm:py-4 text-xs sm:text-sm font-semibold rounded-2xl bg-white/90 dark:bg-dark-900/90 border border-slate-300 dark:border-slate-700/80 hover:border-azure-500 text-dark-900 dark:text-cream-200 hover:text-azure-600 backdrop-blur-xl transition-all duration-300 hover:scale-105 active:scale-98 shadow-md w-full sm:w-auto"
               >
-                <Download className="w-4 h-4 text-azure-500 group-hover:-translate-y-0.5 transition-transform" />
-                <span>Download Resume</span>
+                <Download className="w-4 h-4 text-emerald-500 group-hover:-translate-y-0.5 transition-transform" />
+                <span>Download</span>
               </a>
             </motion.div>
 
@@ -159,7 +179,7 @@ export function HeroSection() {
             </motion.div>
           </div>
 
-          {/* Right Live Terminal Column */}
+          {/* Right Column: Live SRE Terminal Hub */}
           <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
@@ -170,6 +190,63 @@ export function HeroSection() {
           </motion.div>
         </div>
       </div>
+
+      {/* In-Browser PDF Resume Previewer Modal */}
+      <AnimatePresence>
+        {showResumeModal && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-dark-950/80 backdrop-blur-md"
+            onClick={() => setShowResumeModal(false)}
+          >
+            <motion.div
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.9, opacity: 0 }}
+              onClick={(e) => e.stopPropagation()}
+              className="w-full max-w-4xl h-[85vh] rounded-3xl bg-white dark:bg-dark-900 border border-azure-500/40 shadow-2xl flex flex-col overflow-hidden"
+            >
+              {/* Modal Bar */}
+              <div className="px-5 py-4 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between bg-white/90 dark:bg-dark-900/90">
+                <div className="flex items-center gap-2.5 text-dark-900 dark:text-white font-heading font-extrabold text-sm sm:text-base">
+                  <FileText className="w-5 h-5 text-azure-500" />
+                  <span>Prateek Gupta • SRE & DevOps Resume Spec</span>
+                </div>
+
+                <div className="flex items-center gap-3">
+                  <a
+                    href="/resume.pdf"
+                    download
+                    onClick={trackResumeDownload}
+                    className="px-3.5 py-1.5 rounded-xl bg-azure-500 text-white text-xs font-bold font-heading hover:bg-azure-600 transition-colors flex items-center gap-1.5"
+                  >
+                    <Download className="w-3.5 h-3.5" />
+                    <span className="hidden xs:inline">Download PDF</span>
+                  </a>
+
+                  <button
+                    onClick={() => setShowResumeModal(false)}
+                    className="p-2 rounded-xl text-slate-400 hover:text-dark-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-dark-800 transition-colors"
+                  >
+                    <X className="w-5 h-5" />
+                  </button>
+                </div>
+              </div>
+
+              {/* PDF Viewport Iframe */}
+              <div className="flex-1 w-full h-full bg-slate-900">
+                <iframe
+                  src="/resume.pdf"
+                  className="w-full h-full border-none"
+                  title="Prateek Gupta Resume Preview"
+                />
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </section>
   );
 }
