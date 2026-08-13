@@ -5,7 +5,14 @@ import { motion } from "framer-motion";
 import { portfolioData } from "@/data/content";
 import { LiveTerminal } from "@/components/ui/LiveTerminal";
 import { ThreeCloudScene } from "@/components/canvas/ThreeCloudScene";
-import { Github, Linkedin, Mail, Download, ArrowRight, Zap } from "lucide-react";
+import {
+  Github,
+  Linkedin,
+  Mail,
+  Download,
+  ArrowRight,
+  Zap,
+} from "lucide-react";
 import { trackResumeDownload } from "@/lib/telemetry";
 
 // Isolated Typewriter Sub-Component to prevent parent re-renders
@@ -54,7 +61,7 @@ export function HeroSection() {
 
   return (
     <section id="hero" className="relative min-h-screen pt-28 pb-16 sm:pt-36 sm:pb-24 flex items-center justify-center overflow-hidden">
-      {/* Dynamic 3D WebGL WebGL Background Canvas (Memoized for 0% render overhead) */}
+      {/* Dynamic 3D WebGL Background Canvas (Memoized for 0% render overhead) */}
       <ThreeCloudScene />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 w-full">
@@ -107,7 +114,7 @@ export function HeroSection() {
               {portfolioData.pitch}
             </motion.p>
 
-            {/* CTA Buttons */}
+            {/* CTA Buttons (View Projects & Download Resume with sre.prateek_resume.pdf) */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
@@ -120,19 +127,19 @@ export function HeroSection() {
                   e.preventDefault();
                   document.getElementById("projects")?.scrollIntoView({ behavior: "smooth" });
                 }}
-                className="group relative inline-flex items-center justify-center gap-2.5 px-6 sm:px-8 py-3.5 sm:py-4 text-xs sm:text-sm font-extrabold rounded-2xl bg-gradient-to-r from-azure-500 via-cyan-500 to-emerald-500 text-white dark:text-dark-950 font-heading shadow-azure-glow hover:scale-105 active:scale-98 transition-all duration-300 w-full sm:w-auto"
+                className="group relative inline-flex items-center justify-center gap-2.5 px-6 sm:px-8 py-3.5 sm:py-4 text-xs sm:text-sm font-extrabold rounded-2xl bg-gradient-to-r from-azure-500 via-cyan-500 to-emerald-500 text-white dark:text-dark-950 font-heading shadow-azure-glow hover:scale-105 active:scale-98 transition-all duration-300 w-full sm:w-auto cursor-pointer"
               >
                 <span>View SRE & Cloud Projects</span>
                 <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
               </a>
 
               <a
-                href="/resume.pdf"
-                download
+                href="/sre.prateek_resume.pdf"
+                download="sre.prateek_resume.pdf"
                 onClick={trackResumeDownload}
                 className="group inline-flex items-center justify-center gap-2.5 px-6 sm:px-8 py-3.5 sm:py-4 text-xs sm:text-sm font-semibold rounded-2xl bg-white/90 dark:bg-dark-900/90 border border-slate-300 dark:border-slate-700/80 hover:border-azure-500 text-dark-900 dark:text-cream-200 hover:text-azure-600 backdrop-blur-xl transition-all duration-300 hover:scale-105 active:scale-98 shadow-md w-full sm:w-auto"
               >
-                <Download className="w-4 h-4 text-azure-500 group-hover:-translate-y-0.5 transition-transform" />
+                <Download className="w-4 h-4 text-emerald-500 group-hover:-translate-y-0.5 transition-transform" />
                 <span>Download Resume</span>
               </a>
             </motion.div>
@@ -159,7 +166,7 @@ export function HeroSection() {
             </motion.div>
           </div>
 
-          {/* Right Live Terminal Column */}
+          {/* Right Column: Live SRE Terminal Hub */}
           <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
