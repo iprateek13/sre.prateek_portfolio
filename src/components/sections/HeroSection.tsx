@@ -197,7 +197,7 @@ export function HeroSection() {
         </div>
       </div>
 
-      {/* In-Browser PDF Resume Previewer Modal with Navbar Lock */}
+      {/* In-Browser PDF Resume Previewer Modal with Navbar Lock & sre.prateek_resume Title */}
       <AnimatePresence>
         {showResumeModal && (
           <motion.div
@@ -214,17 +214,17 @@ export function HeroSection() {
               onClick={(e) => e.stopPropagation()}
               className="w-full max-w-4xl h-[88vh] rounded-3xl bg-white dark:bg-dark-900 border border-azure-500/40 shadow-2xl flex flex-col overflow-hidden cursor-default my-auto"
             >
-              {/* Modal Bar */}
+              {/* Modal Bar with sre.prateek_resume */}
               <div className="px-5 py-4 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between bg-white/90 dark:bg-dark-900/90">
-                <div className="flex items-center gap-2.5 text-dark-900 dark:text-white font-heading font-extrabold text-sm sm:text-base">
-                  <FileText className="w-5 h-5 text-azure-500" />
-                  <span>Prateek Gupta • SRE & DevOps Resume Spec</span>
+                <div className="flex items-center gap-2.5 text-dark-900 dark:text-white font-mono font-bold text-xs sm:text-sm">
+                  <FileText className="w-4 h-4 text-azure-500" />
+                  <span>sre.prateek_resume</span>
                 </div>
 
                 <div className="flex items-center gap-3">
                   <a
-                    href="/resume.pdf"
-                    download
+                    href="/sre.prateek_resume.pdf"
+                    download="sre.prateek_resume.pdf"
                     onClick={trackResumeDownload}
                     className="px-3.5 py-1.5 rounded-xl bg-azure-500 text-white text-xs font-bold font-heading hover:bg-azure-600 transition-colors flex items-center gap-1.5"
                   >
@@ -245,9 +245,9 @@ export function HeroSection() {
               {/* PDF Viewport Iframe */}
               <div className="flex-1 w-full h-full bg-slate-900">
                 <iframe
-                  src="/resume.pdf"
+                  src="/sre.prateek_resume.pdf"
                   className="w-full h-full border-none"
-                  title="Prateek Gupta Resume Preview"
+                  title="sre.prateek_resume"
                 />
               </div>
             </motion.div>
