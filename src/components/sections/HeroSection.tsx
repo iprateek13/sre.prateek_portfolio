@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, memo } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import { portfolioData } from "@/data/content";
 import { LiveTerminal } from "@/components/ui/LiveTerminal";
 import { ThreeCloudScene } from "@/components/canvas/ThreeCloudScene";
@@ -12,9 +12,6 @@ import {
   Download,
   ArrowRight,
   Zap,
-  Eye,
-  X,
-  FileText,
 } from "lucide-react";
 import { trackResumeDownload } from "@/lib/telemetry";
 
@@ -56,24 +53,6 @@ const TypewriterTitle = memo(function TypewriterTitle() {
 });
 
 export function HeroSection() {
-  const [showResumeModal, setShowResumeModal] = useState(false);
-
-  // Manage modal-open body class and scroll locking for PDF previewer modal
-  useEffect(() => {
-    if (showResumeModal) {
-      document.body.style.overflow = "hidden";
-      document.body.classList.add("modal-open");
-    } else {
-      document.body.style.overflow = "auto";
-      document.body.classList.remove("modal-open");
-    }
-
-    return () => {
-      document.body.style.overflow = "auto";
-      document.body.classList.remove("modal-open");
-    };
-  }, [showResumeModal]);
-
   const socialIconMap: Record<string, React.ReactNode> = {
     Github: <Github className="w-5 h-5" />,
     Linkedin: <Linkedin className="w-5 h-5" />,
@@ -82,7 +61,7 @@ export function HeroSection() {
 
   return (
     <section id="hero" className="relative min-h-screen pt-28 pb-16 sm:pt-36 sm:pb-24 flex items-center justify-center overflow-hidden">
-      {/* Dynamic 3D WebGL WebGL Background Canvas (Memoized for 0% render overhead) */}
+      {/* Dynamic 3D WebGL Background Canvas (Memoized for 0% render overhead) */}
       <ThreeCloudScene />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 w-full">
@@ -135,7 +114,7 @@ export function HeroSection() {
               {portfolioData.pitch}
             </motion.p>
 
-            {/* CTA Buttons (View Projects & Preview Resume) */}
+            {/* CTA Buttons (View Projects & Download Resume with sre.prateek_resume.pdf) */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
@@ -154,13 +133,15 @@ export function HeroSection() {
                 <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
               </a>
 
-              <button
-                onClick={() => setShowResumeModal(true)}
-                className="group inline-flex items-center justify-center gap-2.5 px-6 sm:px-8 py-3.5 sm:py-4 text-xs sm:text-sm font-bold rounded-2xl bg-white/90 dark:bg-dark-900/90 border border-azure-500/40 text-azure-600 dark:text-cyan-300 hover:bg-azure-500/10 backdrop-blur-xl transition-all duration-300 hover:scale-105 active:scale-98 shadow-md w-full sm:w-auto cursor-pointer"
+              <a
+                href="/sre.prateek_resume.pdf"
+                download="sre.prateek_resume.pdf"
+                onClick={trackResumeDownload}
+                className="group inline-flex items-center justify-center gap-2.5 px-6 sm:px-8 py-3.5 sm:py-4 text-xs sm:text-sm font-semibold rounded-2xl bg-white/90 dark:bg-dark-900/90 border border-slate-300 dark:border-slate-700/80 hover:border-azure-500 text-dark-900 dark:text-cream-200 hover:text-azure-600 backdrop-blur-xl transition-all duration-300 hover:scale-105 active:scale-98 shadow-md w-full sm:w-auto"
               >
-                <Eye className="w-4 h-4 text-azure-500" />
-                <span>Preview Resume</span>
-              </button>
+                <Download className="w-4 h-4 text-emerald-500 group-hover:-translate-y-0.5 transition-transform" />
+                <span>Download Resume</span>
+              </a>
             </motion.div>
 
             {/* Social Icons */}
@@ -196,64 +177,6 @@ export function HeroSection() {
           </motion.div>
         </div>
       </div>
-
-      {/* In-Browser PDF Resume Previewer Modal with Navbar Lock & sre.prateek_resume Title */}
-      <AnimatePresence>
-        {showResumeModal && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 z-[100] flex items-center justify-center p-3 sm:p-6 bg-dark-950/80 backdrop-blur-md cursor-pointer"
-            onClick={() => setShowResumeModal(false)}
-          >
-            <motion.div
-              initial={{ scale: 0.95, opacity: 0, y: 20 }}
-              animate={{ scale: 1, opacity: 1, y: 0 }}
-              exit={{ scale: 0.95, opacity: 0, y: 20 }}
-              onClick={(e) => e.stopPropagation()}
-              className="w-full max-w-4xl h-[88vh] rounded-3xl bg-white dark:bg-dark-900 border border-azure-500/40 shadow-2xl flex flex-col overflow-hidden cursor-default my-auto"
-            >
-              {/* Modal Bar with sre.prateek_resume */}
-              <div className="px-5 py-4 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between bg-white/90 dark:bg-dark-900/90">
-                <div className="flex items-center gap-2.5 text-dark-900 dark:text-white font-mono font-bold text-xs sm:text-sm">
-                  <FileText className="w-4 h-4 text-azure-500" />
-                  <span>sre.prateek_resume</span>
-                </div>
-
-                <div className="flex items-center gap-3">
-                  <a
-                    href="/sre.prateek_resume.pdf"
-                    download="sre.prateek_resume.pdf"
-                    onClick={trackResumeDownload}
-                    className="px-3.5 py-1.5 rounded-xl bg-azure-500 text-white text-xs font-bold font-heading hover:bg-azure-600 transition-colors flex items-center gap-1.5"
-                  >
-                    <Download className="w-3.5 h-3.5" />
-                    <span className="hidden xs:inline">Download PDF</span>
-                  </a>
-
-                  <button
-                    onClick={() => setShowResumeModal(false)}
-                    className="p-2 rounded-xl text-slate-400 hover:text-dark-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-dark-800 transition-colors"
-                    aria-label="Close Resume Preview"
-                  >
-                    <X className="w-5 h-5" />
-                  </button>
-                </div>
-              </div>
-
-              {/* PDF Viewport Iframe */}
-              <div className="flex-1 w-full h-full bg-slate-900">
-                <iframe
-                  src="/sre.prateek_resume.pdf"
-                  className="w-full h-full border-none"
-                  title="sre.prateek_resume"
-                />
-              </div>
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
     </section>
   );
 }
