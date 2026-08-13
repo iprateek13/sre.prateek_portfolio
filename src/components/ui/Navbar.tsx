@@ -90,8 +90,8 @@ export function Navbar() {
             {/* Right Action Controls */}
             <div className="flex items-center gap-2 sm:gap-3">
               <a
-                href="/sre.prateek_resume.pdf"
-                download="sre.prateek_resume.pdf"
+                href="/resume.pdf"
+                download
                 onClick={trackResumeDownload}
                 className="hidden sm:inline-flex items-center gap-2 px-5 py-2 text-xs font-extrabold rounded-full bg-gradient-to-r from-azure-500 via-cyan-500 to-emerald-500 text-white shadow-azure-glow hover:scale-105 active:scale-98 transition-all duration-300 font-heading"
               >
@@ -179,8 +179,8 @@ export function Navbar() {
 
                 <div className="pt-3 mt-1 border-t border-slate-200/80 dark:border-slate-800/80 flex items-center justify-between gap-3">
                   <a
-                    href="/sre.prateek_resume.pdf"
-                    download="sre.prateek_resume.pdf"
+                    href="/resume.pdf"
+                    download
                     onClick={() => {
                       setMobileMenuOpen(false);
                       trackResumeDownload();
