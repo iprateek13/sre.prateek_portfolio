@@ -14,8 +14,6 @@ import {
   Database,
   Cpu,
   Layers,
-  AlertTriangle,
-  RotateCcw,
 } from "lucide-react";
 
 interface CommandStep {
@@ -34,16 +32,6 @@ const sreDevOpsSteps: CommandStep[] = [
       "  + module.hub_network.azurerm_firewall [ACTIVE]",
       "  + module.spoke_vnet.vnet_peering [CONNECTED]",
       "  + module.aws_vpc.public_subnet [PROVISIONED]",
-    ],
-  },
-  {
-    cmd: "sre-failover --simulate --region=eastus2",
-    output: [
-      "🔴 CRITICAL ALERT: Node akss-primary High CPU Load (98.4%)",
-      "⚡ K8s HPA Triggered: Auto-scaling pod replicas 3 -> 12...",
-      "🔄 Azure Traffic Manager: Rerouting traffic to secondary region...",
-      "🟢 HEALTH CHECK PASSED: HTTP 200 OK (Latency 4ms)",
-      "🏆 INCIDENT RESOLVED: Zero Data Loss (MTTR: 4.2s)",
     ],
   },
   {
@@ -103,7 +91,7 @@ export function LiveTerminal() {
         setIsTyping(false);
         clearInterval(interval);
       }
-    }, 220);
+    }, 240);
 
     return () => clearInterval(interval);
   }, [activeStep, viewMode]);
@@ -129,7 +117,7 @@ export function LiveTerminal() {
           </span>
         </div>
 
-        {/* View Mode Selector Tabs */}
+        {/* View Mode Mode Selector Tabs */}
         <div className="flex items-center gap-1 bg-dark-950 p-1 rounded-lg border border-slate-800">
           <button
             onClick={() => setViewMode("terminal")}
@@ -181,18 +169,12 @@ export function LiveTerminal() {
                     onClick={() => setActiveStep(idx)}
                     className={`px-2.5 py-1 sm:px-3 sm:py-1.5 rounded-lg sm:rounded-xl text-[10px] sm:text-[11px] font-mono whitespace-nowrap transition-all flex items-center gap-1.5 ${
                       activeStep === idx
-                        ? idx === 1
-                          ? "bg-rose-500/20 text-rose-300 border border-rose-400/40 font-bold"
-                          : "bg-azure-500/20 text-cyan-300 border border-cyan-400/40 font-bold"
+                        ? "bg-azure-500/20 text-cyan-300 border border-cyan-400/40 font-bold"
                         : "text-slate-400 hover:text-slate-200 hover:bg-dark-800"
                     }`}
                   >
-                    {idx === 1 ? (
-                      <AlertTriangle className="w-3 h-3 text-rose-400 animate-pulse" />
-                    ) : (
-                      <Play className="w-2.5 h-2.5 sm:w-3 sm:h-3 text-emerald-400" />
-                    )}
-                    <span>{idx === 1 ? "🚨 Failover Simulator" : step.cmd.split(" ")[0]}</span>
+                    <Play className="w-2.5 h-2.5 sm:w-3 sm:h-3 text-emerald-400" />
+                    <span>{step.cmd.split(" ")[0]}</span>
                   </button>
                 ))}
               </div>
@@ -207,7 +189,7 @@ export function LiveTerminal() {
             </div>
 
             {/* Terminal Viewport */}
-            <div className="p-3.5 sm:p-5 min-h-[185px] sm:min-h-[205px] font-mono text-[11px] sm:text-xs space-y-2 leading-relaxed">
+            <div className="p-3.5 sm:p-5 min-h-[175px] sm:min-h-[195px] font-mono text-[11px] sm:text-xs space-y-2 leading-relaxed">
               <div className="flex items-center gap-1.5 text-cyan-400 font-bold flex-wrap">
                 <span className="text-emerald-400">prateek@sre-cloud:~$</span>
                 <span className="text-white">{sreDevOpsSteps[activeStep].cmd}</span>
@@ -218,12 +200,8 @@ export function LiveTerminal() {
                   <div
                     key={idx}
                     className={`break-words ${
-                      log.includes("PASSED") || log.includes("RESOLVED") || log.includes("HTTP 200")
+                      log.includes("PASSED")
                         ? "text-emerald-400 font-semibold"
-                        : log.includes("CRITICAL ALERT") || log.includes("High CPU")
-                        ? "text-rose-400 font-bold"
-                        : log.includes("Auto-scaling") || log.includes("Rerouting")
-                        ? "text-amber-300 font-semibold"
                         : log.includes("15+") || log.includes("ACTIVE") || log.includes("CONNECTED")
                         ? "text-cyan-300 font-semibold"
                         : "text-slate-300"
