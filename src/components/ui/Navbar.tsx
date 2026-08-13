@@ -90,8 +90,8 @@ export function Navbar() {
             {/* Right Action Controls */}
             <div className="flex items-center gap-2 sm:gap-3">
               <a
-                href="/sre.prateek_resume.pdf"
-                download="sre.prateek_resume.pdf"
+                href="/resume.pdf"
+                download
                 onClick={trackResumeDownload}
                 className="hidden sm:inline-flex items-center gap-2 px-5 py-2 text-xs font-extrabold rounded-full bg-gradient-to-r from-azure-500 via-cyan-500 to-emerald-500 text-white shadow-azure-glow hover:scale-105 active:scale-98 transition-all duration-300 font-heading"
               >
@@ -101,7 +101,7 @@ export function Navbar() {
 
               <ThemeToggle />
 
-              {/* Mobile Hamburger Button with Relaxed Ultra-Smooth Morphing */}
+              {/* Mobile Hamburger Button */}
               <button
                 onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
                 className="md:hidden p-2.5 rounded-full bg-white/80 dark:bg-dark-900/80 border border-slate-200/80 dark:border-slate-800/80 text-dark-900 dark:text-cream-200 hover:text-azure-600 focus:outline-none touch-manipulation active:scale-90 transition-all duration-300 flex items-center justify-center relative overflow-hidden"
@@ -179,8 +179,8 @@ export function Navbar() {
 
                 <div className="pt-3 mt-1 border-t border-slate-200/80 dark:border-slate-800/80 flex items-center justify-between gap-3">
                   <a
-                    href="/sre.prateek_resume.pdf"
-                    download="sre.prateek_resume.pdf"
+                    href="/resume.pdf"
+                    download
                     onClick={() => {
                       setMobileMenuOpen(false);
                       trackResumeDownload();
@@ -188,7 +188,7 @@ export function Navbar() {
                     className="w-full flex items-center justify-center gap-2 px-5 py-3.5 rounded-full bg-gradient-to-r from-azure-500 via-cyan-500 to-emerald-500 text-white font-extrabold text-sm font-heading shadow-azure-glow active:scale-98 transition-all duration-300"
                   >
                     <Download className="w-4 h-4" />
-                    <span>Download sre.prateek_resume.pdf</span>
+                    <span>Download Resume PDF</span>
                   </a>
                 </div>
               </div>
