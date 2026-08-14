@@ -44,8 +44,8 @@ export function ExperienceSection() {
 
         {/* Timeline Container */}
         <div className="relative max-w-4xl mx-auto">
-          {/* Vertical Timeline Bar */}
-          <div className="absolute left-4 sm:left-1/2 top-0 bottom-0 w-0.5 bg-gradient-to-b from-azure-500 via-cyan-500 to-emerald-500 -translate-x-1/2 opacity-40" />
+          {/* Vertical Timeline Bar (Symmetric Center Line) */}
+          <div className="absolute left-6 sm:left-1/2 top-0 bottom-0 w-0.5 bg-gradient-to-b from-azure-500 via-cyan-500 to-emerald-500 -translate-x-1/2 opacity-40" />
 
           <div className="space-y-8 sm:space-y-12">
             {portfolioData.experiences.map((exp, idx) => {
@@ -63,7 +63,7 @@ export function ExperienceSection() {
                   }`}
                 >
                   {/* Timeline Dot Node with Pulsing Ring */}
-                  <div className="absolute left-4 sm:left-1/2 -translate-x-1/2 top-6 z-10 flex items-center justify-center">
+                  <div className="absolute left-6 sm:left-1/2 -translate-x-1/2 top-6 z-10 flex items-center justify-center">
                     <div className="relative flex h-8 w-8 items-center justify-center">
                       <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-cyan-400 opacity-75"></span>
                       <div className="relative w-8 h-8 rounded-full bg-white dark:bg-dark-900 border-2 border-azure-500 dark:border-cyan-400 flex items-center justify-center shadow-azure-glow">
@@ -72,8 +72,12 @@ export function ExperienceSection() {
                     </div>
                   </div>
 
-                  {/* Content Card Container */}
-                  <div className="w-full sm:w-1/2 pl-12 sm:pl-0 sm:px-8">
+                  {/* Content Card Container with Equal Symmetric Gap from Timeline Line */}
+                  <div
+                    className={`w-full sm:w-1/2 pl-14 pr-2 ${
+                      isEven ? "sm:pl-10 sm:pr-0" : "sm:pr-10 sm:pl-0"
+                    }`}
+                  >
                     <div className="p-6 sm:p-7 rounded-3xl bg-white/90 dark:bg-dark-900/90 border border-slate-200/80 dark:border-slate-800/80 backdrop-blur-xl hover:border-azure-500/50 dark:hover:border-cyan-400/50 transition-all duration-300 shadow-lg group">
                       <div className="flex flex-wrap items-center justify-between gap-2 mb-3">
                         <span className="px-3 py-1 rounded-full text-xs font-mono font-bold bg-azure-500/10 text-azure-600 dark:text-cyan-300 border border-azure-500/20">
