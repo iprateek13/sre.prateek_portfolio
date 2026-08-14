@@ -179,10 +179,6 @@ export function SkillsSection() {
                           <div className="p-2 sm:p-3 rounded-xl sm:rounded-2xl bg-azure-500/10 dark:bg-cyan-400/10 border border-azure-500/20 text-azure-600 dark:text-cyan-300 group-hover:scale-110 transition-transform">
                             {skillIconMap[skill.iconName] || <Cloud className="w-5 h-5" />}
                           </div>
-
-                          <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-azure-500/10 text-azure-600 dark:text-cyan-300 border border-azure-500/20 font-bold hidden xs:inline">
-                            ● Production Ready
-                          </span>
                         </div>
 
                         <h3 className="font-heading font-extrabold text-xs sm:text-lg text-dark-900 dark:text-white mb-1 leading-snug">
