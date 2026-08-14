@@ -121,9 +121,9 @@ export function AboutSection() {
               </div>
             </TiltCard>
 
-            {/* Certification Box */}
+            {/* Certification Box (Static Container) */}
             {portfolioData.certifications.map((cert) => (
-              <TiltCard
+              <div
                 key={cert.code}
                 className="p-6 sm:p-7 rounded-3xl bg-gradient-to-br from-white via-cream-100 to-azure-50/50 dark:from-dark-900 dark:via-dark-900 dark:to-azure-950/40 border border-azure-500/30 dark:border-cyan-400/40 backdrop-blur-2xl shadow-md"
               >
@@ -144,7 +144,7 @@ export function AboutSection() {
                     <p className="text-xs text-dark-800/80 dark:text-slate-300 mt-1 leading-relaxed">{cert.description}</p>
                   </div>
                 </div>
-              </TiltCard>
+              </div>
             ))}
           </motion.div>
         </div>
