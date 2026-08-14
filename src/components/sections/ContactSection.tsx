@@ -1,22 +1,9 @@
 "use client";
 
 import React, { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import { portfolioData } from "@/data/content";
-import {
-  Mail,
-  Send,
-  Github,
-  Linkedin,
-  MapPin,
-  CheckCircle2,
-  Sparkles,
-  AlertCircle,
-  Loader2,
-  Copy,
-  Check,
-  Calendar,
-} from "lucide-react";
+import { Mail, Send, Github, Linkedin, MapPin, CheckCircle2, Sparkles, AlertCircle, Loader2 } from "lucide-react";
 
 export function ContactSection() {
   const [formData, setFormData] = useState({
@@ -27,14 +14,6 @@ export function ContactSection() {
   });
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
   const [errorMessage, setErrorMessage] = useState("");
-  const [copiedEmail, setCopiedEmail] = useState(false);
-
-  const handleCopyEmail = (e: React.MouseEvent) => {
-    e.preventDefault();
-    navigator.clipboard.writeText("sre.prateek@gmail.com");
-    setCopiedEmail(true);
-    setTimeout(() => setCopiedEmail(false), 3000);
-  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -65,21 +44,6 @@ export function ContactSection() {
 
   return (
     <section id="contact" className="py-16 sm:py-24 relative bg-cream-100 dark:bg-dark-950 text-dark-900 dark:text-cream-300">
-      {/* Floating 1-Click Copy Toast Alert Notification */}
-      <AnimatePresence>
-        {copiedEmail && (
-          <motion.div
-            initial={{ opacity: 0, y: -20, scale: 0.9 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: -20, scale: 0.9 }}
-            className="fixed top-24 left-1/2 -translate-x-1/2 z-50 px-5 py-3 rounded-2xl bg-dark-900/95 dark:bg-white/95 text-white dark:text-dark-950 text-xs sm:text-sm font-mono font-bold shadow-2xl border border-emerald-500/40 backdrop-blur-xl flex items-center gap-2.5 pointer-events-none"
-          >
-            <CheckCircle2 className="w-4 h-4 text-emerald-400 dark:text-emerald-600 shrink-0" />
-            <span>Copied sre.prateek@gmail.com to clipboard! 📋</span>
-          </motion.div>
-        )}
-      </AnimatePresence>
-
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         {/* Section Header */}
         <div className="text-center max-w-3xl mx-auto mb-12 sm:mb-16">
@@ -127,29 +91,22 @@ export function ContactSection() {
             </h3>
 
             <div className="space-y-4">
-              {/* 1-Click Copyable Email Card */}
-              <button
-                onClick={handleCopyEmail}
-                className="w-full text-left flex items-center justify-between p-4 rounded-2xl bg-slate-50 dark:bg-dark-800/60 border border-slate-200 dark:border-slate-700/80 hover:border-azure-500 transition-colors group cursor-pointer"
-                title="Click to copy email address"
+              <a
+                href="mailto:sre.prateek@gmail.com"
+                className="flex items-center gap-4 p-4 rounded-2xl bg-slate-50 dark:bg-dark-800/60 border border-slate-200 dark:border-slate-700/80 hover:border-azure-500 transition-colors group"
               >
-                <div className="flex items-center gap-4">
-                  <div className="p-3 rounded-xl bg-azure-500/10 text-azure-600 dark:text-cyan-300 group-hover:scale-110 transition-transform">
-                    <Mail className="w-5 h-5" />
-                  </div>
-                  <div>
-                    <span className="text-xs font-mono font-bold text-azure-600 dark:text-cyan-400 uppercase tracking-wider block">
-                      Email Address (1-Click Copy)
-                    </span>
-                    <span className="text-sm font-semibold text-dark-900 dark:text-white">
-                      sre.prateek@gmail.com
-                    </span>
-                  </div>
+                <div className="p-3 rounded-xl bg-azure-500/10 text-azure-600 dark:text-cyan-300 group-hover:scale-110 transition-transform">
+                  <Mail className="w-5 h-5" />
                 </div>
-                <div className="p-2 rounded-lg text-slate-400 group-hover:text-azure-600 dark:group-hover:text-cyan-400 transition-colors">
-                  {copiedEmail ? <Check className="w-4 h-4 text-emerald-500" /> : <Copy className="w-4 h-4" />}
+                <div>
+                  <span className="text-xs font-mono font-bold text-azure-600 dark:text-cyan-400 uppercase tracking-wider block">
+                    Email Address
+                  </span>
+                  <span className="text-sm font-semibold text-dark-900 dark:text-white">
+                    sre.prateek@gmail.com
+                  </span>
                 </div>
-              </button>
+              </a>
 
               <div className="flex items-center gap-4 p-4 rounded-2xl bg-slate-50 dark:bg-dark-800/60 border border-slate-200 dark:border-slate-700/80">
                 <div className="p-3 rounded-xl bg-emerald-500/10 text-emerald-600 dark:text-emerald-400">
@@ -164,17 +121,6 @@ export function ContactSection() {
                   </span>
                 </div>
               </div>
-            </div>
-
-            {/* Quick Scheduler CTA Button */}
-            <div className="pt-2">
-              <a
-                href="mailto:sre.prateek@gmail.com?subject=Technical%20Sync%20Request%20-%20Prateek%20Gupta%20Portfolio&body=Hi%20Prateek,%20I'd%20like%20to%20schedule%20a%20quick%2015-minute%20technical%20chat."
-                className="w-full flex items-center justify-center gap-2 p-3.5 rounded-2xl bg-azure-500/10 dark:bg-cyan-400/10 border border-azure-500/30 text-azure-600 dark:text-cyan-300 font-extrabold text-xs sm:text-sm font-heading hover:bg-azure-500 hover:text-white transition-all shadow-sm"
-              >
-                <Calendar className="w-4 h-4" />
-                <span>Book a 15-Min Technical Sync</span>
-              </a>
             </div>
 
             {/* Social Buttons */}
