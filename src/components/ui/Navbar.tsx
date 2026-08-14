@@ -24,16 +24,21 @@ export function Navbar() {
     const handleScroll = () => {
       setScrolled(window.scrollY > 20);
 
-      // Scroll Spy for active section highlight
-      const sections = ["#hero", "#about", "#skills", "#projects", "#experience", "#contact"];
-      const scrollPosition = window.scrollY + 120;
+      const sections = ["#about", "#skills", "#projects", "#experience", "#contact"];
+      const scrollPosition = window.scrollY + window.innerHeight * 0.35;
 
-      for (const section of sections) {
+      // Bottom of page check -> Contact section active
+      if (window.innerHeight + window.scrollY >= document.body.offsetHeight - 80) {
+        setActiveSection("#contact");
+        return;
+      }
+
+      for (let i = sections.length - 1; i >= 0; i--) {
+        const section = sections[i];
         const el = document.querySelector(section) as HTMLElement | null;
         if (el) {
           const top = el.offsetTop;
-          const height = el.offsetHeight;
-          if (scrollPosition >= top && scrollPosition < top + height) {
+          if (scrollPosition >= top - 60) {
             setActiveSection(section);
             break;
           }
@@ -41,7 +46,8 @@ export function Navbar() {
       }
     };
 
-    window.addEventListener("scroll", handleScroll);
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    handleScroll();
 
     // Track modal open/close to hide navbar smoothly
     const checkModal = () => {
@@ -115,8 +121,8 @@ export function Navbar() {
               </div>
             </a>
 
-            {/* Desktop Navigation Links */}
-            <div className="hidden md:flex items-center gap-1 bg-white/40 dark:bg-dark-900/40 p-1.5 rounded-full border border-slate-200/50 dark:border-slate-800/50 backdrop-blur-md">
+            {/* Desktop Navigation Links with Ultra-Smooth Fluid Spring Sliding Pill */}
+            <div className="hidden md:flex items-center gap-1 bg-white/40 dark:bg-dark-900/40 p-1.5 rounded-full border border-slate-200/50 dark:border-slate-800/50 backdrop-blur-md relative">
               {navLinks.map((link) => {
                 const isActive = activeSection === link.href;
 
@@ -128,13 +134,24 @@ export function Navbar() {
                       e.preventDefault();
                       scrollToSection(link.href);
                     }}
-                    className={`relative px-4 py-1.5 text-xs sm:text-sm font-semibold rounded-full transition-all duration-200 ${
+                    className={`relative px-4 py-1.5 text-xs sm:text-sm font-bold rounded-full transition-colors duration-200 ${
                       isActive
-                        ? "text-azure-600 dark:text-cyan-300 font-bold bg-azure-500/15 dark:bg-cyan-400/15 border border-azure-500/30 dark:border-cyan-400/30 shadow-sm"
-                        : "text-dark-800/80 dark:text-cream-300/80 hover:text-azure-600 dark:hover:text-cyan-300 hover:bg-azure-500/10 dark:hover:bg-azure-500/20"
+                        ? "text-azure-600 dark:text-cyan-300"
+                        : "text-dark-800/80 dark:text-cream-300/80 hover:text-azure-600 dark:hover:text-cyan-300"
                     }`}
                   >
-                    {link.name}
+                    {isActive && (
+                      <motion.div
+                        layoutId="navbarActivePill"
+                        className="absolute inset-0 rounded-full bg-azure-500/15 dark:bg-cyan-400/15 border border-azure-500/35 dark:border-cyan-400/35 shadow-sm"
+                        transition={{
+                          type: "spring",
+                          stiffness: 380,
+                          damping: 30,
+                        }}
+                      />
+                    )}
+                    <span className="relative z-10">{link.name}</span>
                   </a>
                 );
               })}
@@ -167,7 +184,7 @@ export function Navbar() {
                   }}
                   transition={{
                     duration: 0.35,
-                    ease: [0.22, 1, 0.36, 1], // Smooth Relaxed iOS Curve
+                    ease: [0.22, 1, 0.36, 1],
                   }}
                   className="flex items-center justify-center"
                 >
@@ -209,7 +226,7 @@ export function Navbar() {
               exit={{ opacity: 0, y: -20, scale: 0.95 }}
               transition={{
                 duration: 0.42,
-                ease: [0.22, 1, 0.36, 1], // Relaxed Premium iOS Easing Curve
+                ease: [0.22, 1, 0.36, 1],
               }}
               style={{ transformOrigin: "top center", willChange: "transform, opacity" }}
               className="md:hidden max-w-6xl mx-auto mt-2.5 pointer-events-auto transform-gpu"
