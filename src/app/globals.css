@@ -175,3 +175,35 @@
   border: 1px solid rgba(2, 132, 199, 0.25);
   box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.65);
 }
+
+/* Glass Shimmer Metallic Reflection Utilities */
+.relative-shimmer {
+  position: relative;
+  overflow: hidden;
+}
+
+.relative-shimmer::after {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: linear-gradient(
+    60deg,
+    transparent 30%,
+    rgba(255, 255, 255, 0.3) 50%,
+    transparent 70%
+  );
+  transform: rotate(30deg) translateX(-100%);
+  animation: shimmerSweep 6s infinite ease-in-out;
+}
+
+@keyframes shimmerSweep {
+  0% {
+    transform: rotate(30deg) translateX(-150%);
+  }
+  30%, 100% {
+    transform: rotate(30deg) translateX(150%);
+  }
+}

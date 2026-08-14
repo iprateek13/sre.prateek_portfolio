@@ -5,7 +5,7 @@ import { motion } from "framer-motion";
 import { portfolioData } from "@/data/content";
 import { LiveTerminal } from "@/components/ui/LiveTerminal";
 import { ThreeCloudScene } from "@/components/canvas/ThreeCloudScene";
-import { Github, Linkedin, Mail, Download, ArrowRight, Zap } from "lucide-react";
+import { Github, Linkedin, Mail, Download, ArrowRight, Zap, Cloud, Cpu, Layers, ShieldCheck } from "lucide-react";
 import { trackResumeDownload } from "@/lib/telemetry";
 
 // Isolated Typewriter Sub-Component to prevent parent re-renders
@@ -54,7 +54,11 @@ export function HeroSection() {
 
   return (
     <section id="hero" className="relative min-h-screen pt-28 pb-16 sm:pt-36 sm:pb-24 flex items-center justify-center overflow-hidden">
-      {/* Dynamic 3D WebGL WebGL Background Canvas (Memoized for 0% render overhead) */}
+      {/* Ambient Neon Radial Halos */}
+      <div className="absolute top-1/4 left-10 w-96 h-96 bg-azure-500/10 dark:bg-azure-500/20 rounded-full blur-[140px] pointer-events-none" />
+      <div className="absolute bottom-10 right-10 w-96 h-96 bg-cyan-500/10 dark:bg-cyan-500/20 rounded-full blur-[140px] pointer-events-none" />
+
+      {/* Dynamic 3D WebGL Background Canvas */}
       <ThreeCloudScene />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 w-full">
@@ -82,12 +86,12 @@ export function HeroSection() {
               transition={{ duration: 0.6, delay: 0.1 }}
               className="font-heading font-extrabold text-3.5xl xs:text-5xl sm:text-7xl lg:text-8xl tracking-tight text-dark-900 dark:text-white leading-[1.08] mb-3 sm:mb-4"
             >
-              <span className="bg-clip-text text-transparent bg-gradient-to-r from-azure-600 via-cyan-500 to-emerald-500 dark:from-azure-300 dark:via-cyan-300 dark:to-emerald-300 animate-gradient-x">
+              <span className="bg-clip-text text-transparent bg-gradient-to-r from-azure-600 via-cyan-500 to-emerald-500 dark:from-azure-300 dark:via-cyan-300 dark:to-emerald-300">
                 {portfolioData.name}
               </span>
             </motion.h1>
 
-            {/* Dynamic Typewriter Title (Isolated) */}
+            {/* Dynamic Typewriter Title */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
@@ -107,7 +111,42 @@ export function HeroSection() {
               {portfolioData.pitch}
             </motion.p>
 
-            {/* CTA Buttons */}
+            {/* Floating Tech Badges */}
+            <motion.div
+              initial={{ opacity: 0, y: 15 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.35 }}
+              className="flex flex-wrap items-center justify-center lg:justify-start gap-2 mb-6 sm:mb-8"
+            >
+              <motion.span
+                animate={{ y: [-4, 4, -4] }}
+                transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+                className="px-3 py-1.5 rounded-xl bg-azure-500/10 dark:bg-cyan-400/10 border border-azure-500/30 text-azure-600 dark:text-cyan-300 text-xs font-mono font-bold flex items-center gap-1.5 shadow-sm backdrop-blur-md"
+              >
+                <Cloud className="w-3.5 h-3.5 text-cyan-400" />
+                <span>Azure Landing Zones</span>
+              </motion.span>
+
+              <motion.span
+                animate={{ y: [4, -4, 4] }}
+                transition={{ duration: 4.5, repeat: Infinity, ease: "easeInOut" }}
+                className="px-3 py-1.5 rounded-xl bg-emerald-500/10 dark:bg-emerald-400/10 border border-emerald-500/30 text-emerald-600 dark:text-emerald-300 text-xs font-mono font-bold flex items-center gap-1.5 shadow-sm backdrop-blur-md"
+              >
+                <Layers className="w-3.5 h-3.5 text-emerald-400" />
+                <span>Terraform IaC</span>
+              </motion.span>
+
+              <motion.span
+                animate={{ y: [-3, 5, -3] }}
+                transition={{ duration: 3.8, repeat: Infinity, ease: "easeInOut" }}
+                className="px-3 py-1.5 rounded-xl bg-azure-500/10 dark:bg-azure-400/10 border border-azure-500/30 text-azure-600 dark:text-cyan-300 text-xs font-mono font-bold flex items-center gap-1.5 shadow-sm backdrop-blur-md"
+              >
+                <ShieldCheck className="w-3.5 h-3.5 text-emerald-500" />
+                <span>99.99% SLA Uptime</span>
+              </motion.span>
+            </motion.div>
+
+            {/* CTA Buttons with Metallic Reflection Shimmer */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
@@ -120,10 +159,12 @@ export function HeroSection() {
                   e.preventDefault();
                   document.getElementById("projects")?.scrollIntoView({ behavior: "smooth" });
                 }}
-                className="group relative inline-flex items-center justify-center gap-2.5 px-6 sm:px-8 py-3.5 sm:py-4 text-xs sm:text-sm font-extrabold rounded-2xl bg-gradient-to-r from-azure-500 via-cyan-500 to-emerald-500 text-white dark:text-dark-950 font-heading shadow-azure-glow hover:scale-105 active:scale-98 transition-all duration-300 w-full sm:w-auto"
+                className="group relative inline-flex items-center justify-center gap-2.5 px-6 sm:px-8 py-3.5 sm:py-4 text-xs sm:text-sm font-extrabold rounded-2xl bg-gradient-to-r from-azure-500 via-cyan-500 to-emerald-500 text-white font-heading shadow-azure-glow hover:scale-105 active:scale-98 transition-all duration-300 w-full sm:w-auto relative-shimmer"
               >
-                <span>View SRE & Cloud Projects</span>
-                <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
+                <span className="relative z-10 flex items-center gap-2">
+                  <span>View SRE & Cloud Projects</span>
+                  <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
+                </span>
               </a>
 
               <a
@@ -159,12 +200,12 @@ export function HeroSection() {
             </motion.div>
           </div>
 
-          {/* Right Live Terminal Column */}
+          {/* Right Column: Interactive Live Terminal Widget */}
           <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.7, delay: 0.3 }}
-            className="lg:col-span-5 w-full mt-4 lg:mt-0"
+            className="lg:col-span-5 w-full"
           >
             <LiveTerminal />
           </motion.div>
