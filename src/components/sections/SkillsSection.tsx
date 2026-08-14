@@ -30,6 +30,7 @@ import {
   Sparkles,
   Search,
   X,
+  CheckCircle,
 } from "lucide-react";
 
 export function SkillsSection() {
@@ -172,12 +173,16 @@ export function SkillsSection() {
                   key={skill.name}
                 >
                   <TiltCard className="h-full">
-                    <div className="p-3.5 sm:p-6 rounded-2xl sm:rounded-3xl bg-white/90 dark:bg-dark-900/90 border border-slate-200/80 dark:border-slate-800/80 backdrop-blur-xl hover:border-azure-500/50 dark:hover:border-cyan-400/50 transition-all duration-300 shadow-md h-full flex flex-col justify-between group">
+                    <div className="p-3.5 sm:p-6 rounded-2xl sm:rounded-3xl bg-white/90 dark:bg-dark-900/90 border border-slate-200/80 dark:border-slate-800/80 backdrop-blur-xl hover:border-azure-500/50 dark:hover:border-cyan-400/50 transition-all duration-300 shadow-md h-full flex flex-col justify-between group relative overflow-hidden">
                       <div>
                         <div className="flex items-center justify-between mb-2.5 sm:mb-4">
                           <div className="p-2 sm:p-3 rounded-xl sm:rounded-2xl bg-azure-500/10 dark:bg-cyan-400/10 border border-azure-500/20 text-azure-600 dark:text-cyan-300 group-hover:scale-110 transition-transform">
                             {skillIconMap[skill.iconName] || <Cloud className="w-5 h-5" />}
                           </div>
+
+                          <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-azure-500/10 text-azure-600 dark:text-cyan-300 border border-azure-500/20 font-bold hidden xs:inline">
+                            ● Production Ready
+                          </span>
                         </div>
 
                         <h3 className="font-heading font-extrabold text-xs sm:text-lg text-dark-900 dark:text-white mb-1 leading-snug">
@@ -189,8 +194,9 @@ export function SkillsSection() {
                       </div>
 
                       <div className="mt-3 pt-2 sm:mt-4 sm:pt-3 border-t border-slate-100 dark:border-slate-800/80 flex items-center justify-between">
-                        <span className="text-[10px] font-mono text-emerald-600 dark:text-emerald-400 font-bold uppercase tracking-wider">
-                          Enterprise
+                        <span className="text-[10px] font-mono text-emerald-600 dark:text-emerald-400 font-bold uppercase tracking-wider flex items-center gap-1">
+                          <CheckCircle className="w-3 h-3" />
+                          <span>Enterprise</span>
                         </span>
                         <span className="text-[10px] font-mono text-azure-600 dark:text-cyan-400 font-bold">
                           100% Verified

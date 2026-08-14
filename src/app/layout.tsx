@@ -4,6 +4,7 @@ import { ThemeProvider } from "@/components/ui/ThemeProvider";
 import { Navbar } from "@/components/ui/Navbar";
 import { Footer } from "@/components/sections/Footer";
 import { MotionBackground } from "@/components/ui/MotionBackground";
+import { CursorSpotlight } from "@/components/ui/CursorSpotlight";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://sre-prateek-portfolio.vercel.app"),
@@ -63,6 +64,9 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <body className="bg-cream-100 dark:bg-dark-950 text-dark-900 dark:text-cream-300 antialiased font-body min-h-screen selection:bg-azure-500 selection:text-white relative">
         <ThemeProvider attribute="class" defaultTheme="light" enableSystem={false}>
+          {/* Global Cursor Gradient Spotlight Glow */}
+          <CursorSpotlight />
+
           {/* Animated Digital Infrastructure Motion Background */}
           <MotionBackground />
 
