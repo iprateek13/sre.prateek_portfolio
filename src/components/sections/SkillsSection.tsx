@@ -189,15 +189,6 @@ export function SkillsSection() {
                         </p>
                       </div>
 
-                      <div className="mt-3 pt-2 sm:mt-4 sm:pt-3 border-t border-slate-100 dark:border-slate-800/80 flex items-center justify-between">
-                        <span className="text-[10px] font-mono text-emerald-600 dark:text-emerald-400 font-bold uppercase tracking-wider flex items-center gap-1">
-                          <CheckCircle className="w-3 h-3" />
-                          <span>Enterprise</span>
-                        </span>
-                        <span className="text-[10px] font-mono text-azure-600 dark:text-cyan-400 font-bold">
-                          100% Verified
-                        </span>
-                      </div>
                     </div>
                   </TiltCard>
                 </motion.div>
