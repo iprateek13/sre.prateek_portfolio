@@ -14,6 +14,7 @@ export function Navbar() {
 
   const isClickScrollingRef = useRef(false);
   const clickTimerRef = useRef<NodeJS.Timeout | null>(null);
+  const visibleRatiosRef = useRef<Record<string, number>>({});
 
   const navLinks = [
     { name: "About", href: "#about" },
@@ -24,7 +25,7 @@ export function Navbar() {
   ];
 
   useEffect(() => {
-    // 1. Light-weight scroll listener for navbar background state & scroll boundaries
+    // 1. Light-weight scroll listener for navbar background state
     const handleScroll = () => {
       setScrolled(window.scrollY > 20);
     };
@@ -32,16 +33,15 @@ export function Navbar() {
     window.addEventListener("scroll", handleScroll, { passive: true });
     handleScroll();
 
-    // 2. Max-Intersection Ratio Tracking to prevent skipping 2 steps ahead during manual scroll
+    // 2. Max-Intersection Ratio Tracking to prevent skipping steps ahead during manual scroll
     const sectionIds = ["about", "skills", "projects", "experience", "contact"];
     const sectionElements: HTMLElement[] = [];
-    const visibleRatios: Record<string, number> = {};
 
     sectionIds.forEach((id) => {
       const el = document.getElementById(id);
       if (el) {
         sectionElements.push(el);
-        visibleRatios[id] = 0;
+        visibleRatiosRef.current[id] = 0;
       }
     });
 
@@ -55,13 +55,13 @@ export function Navbar() {
       // Ignore scroll spy updates while user clicks a navbar link directly to avoid intermediate glitches
       if (isClickScrollingRef.current) return;
 
-      // Top of page boundary -> About section
-      if (window.scrollY < 120) {
+      // Top of page boundary (Hero / About)
+      if (window.scrollY < 100) {
         setActiveSection("#about");
         return;
       }
 
-      // Bottom of page boundary -> Contact section
+      // Bottom of page boundary (Contact)
       if (window.innerHeight + window.scrollY >= document.body.offsetHeight - 90) {
         setActiveSection("#contact");
         return;
@@ -69,14 +69,14 @@ export function Navbar() {
 
       // Record ratio for each entry
       entries.forEach((entry) => {
-        visibleRatios[entry.target.id] = entry.isIntersecting ? entry.intersectionRatio : 0;
+        visibleRatiosRef.current[entry.target.id] = entry.isIntersecting ? entry.intersectionRatio : 0;
       });
 
       // Find the SINGLE section with maximum visible ratio in focus window
       let maxRatio = 0;
       let bestSection = "";
 
-      Object.entries(visibleRatios).forEach(([id, ratio]) => {
+      Object.entries(visibleRatiosRef.current).forEach(([id, ratio]) => {
         if (ratio > maxRatio) {
           maxRatio = ratio;
           bestSection = `#${id}`;
@@ -120,10 +120,15 @@ export function Navbar() {
       element.scrollIntoView({ behavior: "smooth" });
     }
 
-    // Unlock scroll spy after smooth scroll finishes (800ms)
+    // Sync visible ratios to target section and unlock scroll spy after smooth scroll finishes (1000ms)
     clickTimerRef.current = setTimeout(() => {
+      const targetId = href.replace("#", "");
+      Object.keys(visibleRatiosRef.current).forEach((key) => {
+        visibleRatiosRef.current[key] = key === targetId ? 1 : 0;
+      });
+      setActiveSection(href);
       isClickScrollingRef.current = false;
-    }, 800);
+    }, 1000);
   };
 
   return (
@@ -175,7 +180,7 @@ export function Navbar() {
               </div>
             </a>
 
-            {/* Desktop Navigation Links with Zero-Glitch Direct Click Locking & Spring Pill */}
+            {/* Desktop Navigation Links with Zero-Glitch Sync & Spring Pill */}
             <div className="hidden md:flex items-center gap-1 bg-white/40 dark:bg-dark-900/40 p-1.5 rounded-full border border-slate-200/50 dark:border-slate-800/50 backdrop-blur-md relative">
               {navLinks.map((link) => {
                 const isActive = activeSection === link.href;
