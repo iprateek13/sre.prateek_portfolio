@@ -8,7 +8,7 @@ import { trackResumeDownload } from "@/lib/telemetry";
 
 export function Navbar() {
   const [scrolled, setScrolled] = useState(false);
-  const [activeSection, setActiveSection] = useState("#hero");
+  const [activeSection, setActiveSection] = useState("#about");
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -21,7 +21,7 @@ export function Navbar() {
   ];
 
   useEffect(() => {
-    // 1. Light-weight scroll listener for navbar background state only
+    // 1. Light-weight scroll listener for navbar background state & scroll boundaries
     const handleScroll = () => {
       setScrolled(window.scrollY > 20);
     };
@@ -29,33 +29,57 @@ export function Navbar() {
     window.addEventListener("scroll", handleScroll, { passive: true });
     handleScroll();
 
-    // 2. High-performance Hardware-Accelerated IntersectionObserver for ZERO-LAG section switching
-    const sectionIds = ["hero", "about", "skills", "projects", "experience", "contact"];
+    // 2. Max-Intersection Ratio Tracking to prevent skipping 2 steps ahead
+    const sectionIds = ["about", "skills", "projects", "experience", "contact"];
     const sectionElements: HTMLElement[] = [];
+    const visibleRatios: Record<string, number> = {};
 
     sectionIds.forEach((id) => {
       const el = document.getElementById(id);
-      if (el) sectionElements.push(el);
+      if (el) {
+        sectionElements.push(el);
+        visibleRatios[id] = 0;
+      }
     });
 
     const observerOptions: IntersectionObserverInit = {
       root: null,
-      rootMargin: "-15% 0px -45% 0px",
-      threshold: [0, 0.2, 0.5, 0.8],
+      rootMargin: "-20% 0px -35% 0px",
+      threshold: [0, 0.1, 0.25, 0.4, 0.6, 0.8, 1.0],
     };
 
     const observerCallback: IntersectionObserverCallback = (entries) => {
-      // Check if user scrolled to bottom of page -> activate contact link
-      if (window.innerHeight + window.scrollY >= document.body.offsetHeight - 80) {
+      // Top of page boundary -> About section
+      if (window.scrollY < 120) {
+        setActiveSection("#about");
+        return;
+      }
+
+      // Bottom of page boundary -> Contact section
+      if (window.innerHeight + window.scrollY >= document.body.offsetHeight - 90) {
         setActiveSection("#contact");
         return;
       }
 
+      // Record ratio for each entry
       entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          setActiveSection(`#${entry.target.id}`);
+        visibleRatios[entry.target.id] = entry.isIntersecting ? entry.intersectionRatio : 0;
+      });
+
+      // Find the SINGLE section with maximum visible ratio in focus window
+      let maxRatio = 0;
+      let bestSection = "";
+
+      Object.entries(visibleRatios).forEach(([id, ratio]) => {
+        if (ratio > maxRatio) {
+          maxRatio = ratio;
+          bestSection = `#${id}`;
         }
       });
+
+      if (bestSection && maxRatio > 0.02) {
+        setActiveSection(bestSection);
+      }
     };
 
     const observer = new IntersectionObserver(observerCallback, observerOptions);
@@ -134,7 +158,7 @@ export function Navbar() {
               </div>
             </a>
 
-            {/* Desktop Navigation Links with Zero-Lag Hardware Accelerated Spring Pill */}
+            {/* Desktop Navigation Links with Sequential 1-Step Max-Ratio Sliding Pill */}
             <div className="hidden md:flex items-center gap-1 bg-white/40 dark:bg-dark-900/40 p-1.5 rounded-full border border-slate-200/50 dark:border-slate-800/50 backdrop-blur-md relative">
               {navLinks.map((link) => {
                 const isActive = activeSection === link.href;
@@ -159,9 +183,9 @@ export function Navbar() {
                         className="absolute inset-0 rounded-full bg-azure-500/15 dark:bg-cyan-400/15 border border-azure-500/35 dark:border-cyan-400/35 shadow-sm"
                         transition={{
                           type: "spring",
-                          stiffness: 500,
-                          damping: 35,
-                          mass: 0.5,
+                          stiffness: 420,
+                          damping: 32,
+                          mass: 0.6,
                         }}
                       />
                     )}
