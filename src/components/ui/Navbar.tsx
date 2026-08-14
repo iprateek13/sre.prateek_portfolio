@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ThemeToggle } from "./ThemeToggle";
 import { Terminal, Download, Menu, X, ChevronRight } from "lucide-react";
@@ -11,6 +11,9 @@ export function Navbar() {
   const [activeSection, setActiveSection] = useState("#about");
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const isClickScrollingRef = useRef(false);
+  const clickTimerRef = useRef<NodeJS.Timeout | null>(null);
 
   const navLinks = [
     { name: "About", href: "#about" },
@@ -29,7 +32,7 @@ export function Navbar() {
     window.addEventListener("scroll", handleScroll, { passive: true });
     handleScroll();
 
-    // 2. Max-Intersection Ratio Tracking to prevent skipping 2 steps ahead
+    // 2. Max-Intersection Ratio Tracking to prevent skipping 2 steps ahead during manual scroll
     const sectionIds = ["about", "skills", "projects", "experience", "contact"];
     const sectionElements: HTMLElement[] = [];
     const visibleRatios: Record<string, number> = {};
@@ -49,6 +52,9 @@ export function Navbar() {
     };
 
     const observerCallback: IntersectionObserverCallback = (entries) => {
+      // Ignore scroll spy updates while user clicks a navbar link directly to avoid intermediate glitches
+      if (isClickScrollingRef.current) return;
+
       // Top of page boundary -> About section
       if (window.scrollY < 120) {
         setActiveSection("#about");
@@ -97,16 +103,27 @@ export function Navbar() {
       window.removeEventListener("scroll", handleScroll);
       observer.disconnect();
       mutationObserver.disconnect();
+      if (clickTimerRef.current) clearTimeout(clickTimerRef.current);
     };
   }, []);
 
   const scrollToSection = (href: string) => {
     setMobileMenuOpen(false);
     setActiveSection(href);
+
+    // Lock scroll spy updates during direct navbar link click smooth scrolling
+    isClickScrollingRef.current = true;
+    if (clickTimerRef.current) clearTimeout(clickTimerRef.current);
+
     const element = document.querySelector(href);
     if (element) {
       element.scrollIntoView({ behavior: "smooth" });
     }
+
+    // Unlock scroll spy after smooth scroll finishes (800ms)
+    clickTimerRef.current = setTimeout(() => {
+      isClickScrollingRef.current = false;
+    }, 800);
   };
 
   return (
@@ -158,7 +175,7 @@ export function Navbar() {
               </div>
             </a>
 
-            {/* Desktop Navigation Links with Sequential 1-Step Max-Ratio Sliding Pill */}
+            {/* Desktop Navigation Links with Zero-Glitch Direct Click Locking & Spring Pill */}
             <div className="hidden md:flex items-center gap-1 bg-white/40 dark:bg-dark-900/40 p-1.5 rounded-full border border-slate-200/50 dark:border-slate-800/50 backdrop-blur-md relative">
               {navLinks.map((link) => {
                 const isActive = activeSection === link.href;
