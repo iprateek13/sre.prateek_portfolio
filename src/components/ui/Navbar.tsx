@@ -21,45 +21,58 @@ export function Navbar() {
   ];
 
   useEffect(() => {
+    // 1. Light-weight scroll listener for navbar background state only
     const handleScroll = () => {
       setScrolled(window.scrollY > 20);
-
-      const sections = ["#about", "#skills", "#projects", "#experience", "#contact"];
-      const scrollPosition = window.scrollY + window.innerHeight * 0.35;
-
-      // Bottom of page check -> Contact section active
-      if (window.innerHeight + window.scrollY >= document.body.offsetHeight - 80) {
-        setActiveSection("#contact");
-        return;
-      }
-
-      for (let i = sections.length - 1; i >= 0; i--) {
-        const section = sections[i];
-        const el = document.querySelector(section) as HTMLElement | null;
-        if (el) {
-          const top = el.offsetTop;
-          if (scrollPosition >= top - 60) {
-            setActiveSection(section);
-            break;
-          }
-        }
-      }
     };
 
     window.addEventListener("scroll", handleScroll, { passive: true });
     handleScroll();
 
-    // Track modal open/close to hide navbar smoothly
+    // 2. High-performance Hardware-Accelerated IntersectionObserver for ZERO-LAG section switching
+    const sectionIds = ["hero", "about", "skills", "projects", "experience", "contact"];
+    const sectionElements: HTMLElement[] = [];
+
+    sectionIds.forEach((id) => {
+      const el = document.getElementById(id);
+      if (el) sectionElements.push(el);
+    });
+
+    const observerOptions: IntersectionObserverInit = {
+      root: null,
+      rootMargin: "-15% 0px -45% 0px",
+      threshold: [0, 0.2, 0.5, 0.8],
+    };
+
+    const observerCallback: IntersectionObserverCallback = (entries) => {
+      // Check if user scrolled to bottom of page -> activate contact link
+      if (window.innerHeight + window.scrollY >= document.body.offsetHeight - 80) {
+        setActiveSection("#contact");
+        return;
+      }
+
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          setActiveSection(`#${entry.target.id}`);
+        }
+      });
+    };
+
+    const observer = new IntersectionObserver(observerCallback, observerOptions);
+    sectionElements.forEach((el) => observer.observe(el));
+
+    // 3. Track modal open/close to hide navbar smoothly
     const checkModal = () => {
       setIsModalOpen(document.body.classList.contains("modal-open"));
     };
 
-    const observer = new MutationObserver(checkModal);
-    observer.observe(document.body, { attributes: true, attributeFilter: ["class"] });
+    const mutationObserver = new MutationObserver(checkModal);
+    mutationObserver.observe(document.body, { attributes: true, attributeFilter: ["class"] });
 
     return () => {
       window.removeEventListener("scroll", handleScroll);
       observer.disconnect();
+      mutationObserver.disconnect();
     };
   }, []);
 
@@ -121,7 +134,7 @@ export function Navbar() {
               </div>
             </a>
 
-            {/* Desktop Navigation Links with Ultra-Smooth Fluid Spring Sliding Pill */}
+            {/* Desktop Navigation Links with Zero-Lag Hardware Accelerated Spring Pill */}
             <div className="hidden md:flex items-center gap-1 bg-white/40 dark:bg-dark-900/40 p-1.5 rounded-full border border-slate-200/50 dark:border-slate-800/50 backdrop-blur-md relative">
               {navLinks.map((link) => {
                 const isActive = activeSection === link.href;
@@ -134,7 +147,7 @@ export function Navbar() {
                       e.preventDefault();
                       scrollToSection(link.href);
                     }}
-                    className={`relative px-4 py-1.5 text-xs sm:text-sm font-bold rounded-full transition-colors duration-200 ${
+                    className={`relative px-4 py-1.5 text-xs sm:text-sm font-bold rounded-full transition-colors duration-150 ${
                       isActive
                         ? "text-azure-600 dark:text-cyan-300"
                         : "text-dark-800/80 dark:text-cream-300/80 hover:text-azure-600 dark:hover:text-cyan-300"
@@ -146,8 +159,9 @@ export function Navbar() {
                         className="absolute inset-0 rounded-full bg-azure-500/15 dark:bg-cyan-400/15 border border-azure-500/35 dark:border-cyan-400/35 shadow-sm"
                         transition={{
                           type: "spring",
-                          stiffness: 380,
-                          damping: 30,
+                          stiffness: 500,
+                          damping: 35,
+                          mass: 0.5,
                         }}
                       />
                     )}
