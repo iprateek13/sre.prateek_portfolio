@@ -134,11 +134,18 @@ export function ProjectsSection() {
               {/* Right Column: Code & Specs Preview Box */}
               <div className="lg:col-span-5 p-6 rounded-2xl bg-dark-950 border border-slate-800 space-y-4">
                 <div className="flex items-center justify-between pb-3 border-b border-slate-800 text-xs font-mono text-slate-400">
-                  <div className="flex items-center gap-2">
-                    <Terminal className="w-4 h-4 text-azure-400" />
-                    <span>azure_landing_zone.tf</span>
+                  <div className="flex items-center gap-3">
+                    <div className="flex items-center gap-1.5">
+                      <span className="w-2.5 h-2.5 rounded-full bg-rose-500/80 inline-block shadow-sm"></span>
+                      <span className="w-2.5 h-2.5 rounded-full bg-amber-500/80 inline-block shadow-sm"></span>
+                      <span className="w-2.5 h-2.5 rounded-full bg-emerald-500/80 inline-block shadow-sm"></span>
+                    </div>
+                    <div className="flex items-center gap-1.5 text-slate-300">
+                      <Terminal className="w-3.5 h-3.5 text-azure-400" />
+                      <span>azure_landing_zone.tf</span>
+                    </div>
                   </div>
-                  <span className="text-emerald-400">Validated</span>
+                  <span className="text-emerald-400 px-2.5 py-0.5 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-[10px] font-bold">✓ Validated</span>
                 </div>
 
                 <pre className="text-xs font-mono text-cyan-300 overflow-x-auto p-3 rounded-xl bg-dark-900 border border-slate-800/80 leading-relaxed">
