@@ -107,6 +107,11 @@ export function TerraformModuleExplorerModal({ isOpen, onClose }: TerraformModul
           {/* Header */}
           <div className="p-6 border-b border-slate-800 flex items-center justify-between">
             <div className="flex items-center gap-3">
+              <div className="flex items-center gap-1.5 mr-1">
+                <span className="w-2.5 h-2.5 rounded-full bg-rose-500/80 inline-block shadow-sm"></span>
+                <span className="w-2.5 h-2.5 rounded-full bg-amber-500/80 inline-block shadow-sm"></span>
+                <span className="w-2.5 h-2.5 rounded-full bg-emerald-500/80 inline-block shadow-sm"></span>
+              </div>
               <div className="p-3 rounded-2xl bg-azure-500/20 text-azure-400">
                 <Boxes className="w-6 h-6" />
               </div>
