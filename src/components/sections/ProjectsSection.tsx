@@ -171,7 +171,11 @@ export function ProjectsSection() {
                 {categories.map((cat) => (
                   <button
                     key={cat}
-                    onClick={() => setSelectedCategory(cat)}
+                    type="button"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      setSelectedCategory(cat);
+                    }}
                     className={`px-4 py-2 rounded-xl text-xs font-heading font-semibold transition-all duration-300 whitespace-nowrap shrink-0 ${
                       selectedCategory === cat
                         ? "text-azure-600 dark:text-cyan-300 bg-white dark:bg-dark-850 shadow-md font-bold"
@@ -185,8 +189,8 @@ export function ProjectsSection() {
             </div>
           </div>
 
-          {/* Grid of Other Projects */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {/* Grid of Other Projects with stable min-height */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 min-h-[350px]">
             {filteredProjects.map((project) => (
               <motion.div
                 key={project.id}

@@ -61,7 +61,11 @@ export function SkillsSection() {
             {categories.map((cat) => (
               <button
                 key={cat}
-                onClick={() => setSelectedCategory(cat)}
+                type="button"
+                onClick={(e) => {
+                  e.preventDefault();
+                  setSelectedCategory(cat);
+                }}
                 className={`px-3.5 py-2 rounded-xl text-xs font-heading font-semibold transition-all duration-300 whitespace-nowrap shrink-0 ${
                   selectedCategory === cat
                     ? "text-azure-600 dark:text-cyan-300 bg-white dark:bg-dark-850 shadow-md font-bold"
@@ -86,8 +90,8 @@ export function SkillsSection() {
           </div>
         </div>
 
-        {/* Grid of Skill Categories */}
-        <div className="space-y-8">
+        {/* Grid of Skill Categories with stable min-height */}
+        <div className="space-y-8 min-h-[550px]">
           {filteredCategories.map((catGroup) => (
             <motion.div
               key={catGroup.id}
