@@ -21,9 +21,9 @@ export function TechMarquee() {
   const marqueeItems = [...sreTechList, ...sreTechList, ...sreTechList];
 
   return (
-    <div className="w-full overflow-hidden py-6 sm:py-8 bg-white/80 dark:bg-dark-950/90 border-y border-azure-500/20 backdrop-blur-md relative z-10">
-      <div className="pointer-events-none absolute left-0 top-0 bottom-0 w-16 sm:w-24 bg-gradient-to-r from-cream-100 dark:from-dark-950 to-transparent z-10" />
-      <div className="pointer-events-none absolute right-0 top-0 bottom-0 w-16 sm:w-24 bg-gradient-to-l from-cream-100 dark:from-dark-950 to-transparent z-10" />
+    <div className="w-full overflow-hidden py-6 sm:py-8 bg-[#F7F3E9]/90 dark:bg-dark-950/90 border-y border-amber-900/10 dark:border-azure-500/20 backdrop-blur-md relative z-10">
+      <div className="pointer-events-none absolute left-0 top-0 bottom-0 w-16 sm:w-24 bg-gradient-to-r from-[#F7F3E9] dark:from-dark-950 to-transparent z-10" />
+      <div className="pointer-events-none absolute right-0 top-0 bottom-0 w-16 sm:w-24 bg-gradient-to-l from-[#F7F3E9] dark:from-dark-950 to-transparent z-10" />
 
       <motion.div
         className="flex items-center gap-4 sm:gap-6 whitespace-nowrap transform-gpu"
