@@ -96,14 +96,18 @@ export function AboutSection() {
             ))}
 
             {/* Certification Badge Box */}
-            <div className="sm:col-span-2 p-6 rounded-3xl bg-gradient-to-br from-azure-900/60 via-dark-900 to-cyan-950/60 border border-azure-500/40 text-white shadow-xl flex items-center justify-between">
+            <div className="sm:col-span-2 p-6 rounded-3xl bg-white dark:bg-dark-900 border border-azure-500/30 dark:border-azure-500/40 shadow-xl flex items-center justify-between transition-all">
               <div className="flex items-center gap-4">
-                <div className="p-3 rounded-2xl bg-azure-500/20 border border-azure-500/40 text-cyan-300">
+                <div className="p-3 rounded-2xl bg-azure-500/10 dark:bg-azure-500/20 border border-azure-500/30 text-azure-600 dark:text-cyan-300">
                   <Award className="w-7 h-7" />
                 </div>
                 <div>
-                  <div className="text-xs font-mono text-cyan-300 font-bold">MICROSOFT CERTIFIED</div>
-                  <div className="font-heading font-bold text-base">Azure Fundamentals (AZ-900)</div>
+                  <div className="text-xs font-mono text-azure-600 dark:text-cyan-300 font-bold uppercase tracking-wider">
+                    MICROSOFT CERTIFIED
+                  </div>
+                  <div className="font-heading font-extrabold text-base text-slate-900 dark:text-white mt-0.5">
+                    Azure Fundamentals (AZ-900)
+                  </div>
                 </div>
               </div>
 
@@ -111,8 +115,9 @@ export function AboutSection() {
                 href={portfolioData.certifications[0].credentialUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="p-2.5 rounded-xl bg-azure-500/20 hover:bg-azure-500/40 border border-azure-500/40 text-white transition-colors"
+                className="p-3 rounded-2xl bg-azure-500/10 dark:bg-azure-500/20 hover:bg-azure-500/20 border border-azure-500/30 text-azure-600 dark:text-cyan-300 transition-all hover:scale-105 active:scale-95"
                 title="Verify Certification"
+                aria-label="Verify AZ-900 Certification"
               >
                 <ExternalLink className="w-4 h-4" />
               </a>

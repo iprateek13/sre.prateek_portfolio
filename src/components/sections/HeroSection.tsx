@@ -3,7 +3,7 @@
 import React, { useState, useEffect, memo } from "react";
 import { motion } from "framer-motion";
 import { portfolioData } from "@/data/content";
-import { LiveTerminal } from "@/components/ui/LiveTerminal";
+import { SreMetricsCard } from "@/components/ui/SreMetricsCard";
 import { ThreeCloudScene } from "@/components/canvas/ThreeCloudScene";
 import { ArchitectureVisualizer } from "@/components/ui/ArchitectureVisualizer";
 import { TerraformModuleExplorerModal } from "@/components/ui/TerraformModuleExplorerModal";
@@ -207,14 +207,14 @@ export function HeroSection() {
               </motion.div>
             </div>
 
-            {/* Right Column: Live Terminal Widget */}
+            {/* Right Column: SRE Live Command Center Dashboard */}
             <motion.div
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.7, delay: 0.3 }}
               className="lg:col-span-5 w-full"
             >
-              <LiveTerminal />
+              <SreMetricsCard />
             </motion.div>
           </div>
 
