@@ -96,17 +96,20 @@ export function AboutSection() {
             ))}
 
             {/* Certification Badge Box */}
-            <div className="sm:col-span-2 p-6 rounded-3xl bg-white dark:bg-dark-900 border border-azure-500/30 dark:border-azure-500/40 shadow-xl flex items-center justify-between transition-all">
+            <div className="sm:col-span-2 p-6 rounded-3xl bg-white/90 dark:bg-dark-900/90 border border-slate-200/80 dark:border-slate-800 backdrop-blur-xl shadow-xl flex items-center justify-between hover:border-azure-500/40 transition-all hover:-translate-y-1">
               <div className="flex items-center gap-4">
-                <div className="p-3 rounded-2xl bg-azure-500/10 dark:bg-azure-500/20 border border-azure-500/30 text-azure-600 dark:text-cyan-300">
-                  <Award className="w-7 h-7" />
+                <div className="p-3.5 rounded-2xl bg-azure-500/10 dark:bg-azure-500/20 border border-azure-500/30 text-azure-500 dark:text-cyan-300">
+                  <Award className="w-6 h-6" />
                 </div>
                 <div>
-                  <div className="text-xs font-mono text-azure-600 dark:text-cyan-300 font-bold uppercase tracking-wider">
+                  <div className="text-[10px] font-mono font-bold text-azure-500 uppercase tracking-wider mb-1">
                     MICROSOFT CERTIFIED
                   </div>
-                  <div className="font-heading font-extrabold text-base text-slate-900 dark:text-white mt-0.5">
-                    Azure Fundamentals (AZ-900)
+                  <div className="text-lg sm:text-xl font-heading font-extrabold mb-1">
+                    <span className="text-gradient-sre">Azure Fundamentals (AZ-900)</span>
+                  </div>
+                  <div className="text-xs text-slate-500 dark:text-slate-400 font-mono">
+                    Verified Cloud Concepts, Security Governance & Architecture
                   </div>
                 </div>
               </div>
@@ -115,7 +118,7 @@ export function AboutSection() {
                 href={portfolioData.certifications[0].credentialUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="p-3 rounded-2xl bg-azure-500/10 dark:bg-azure-500/20 hover:bg-azure-500/20 border border-azure-500/30 text-azure-600 dark:text-cyan-300 transition-all hover:scale-105 active:scale-95"
+                className="p-3 rounded-2xl bg-azure-500/10 dark:bg-azure-500/20 hover:bg-azure-500/20 border border-azure-500/30 text-azure-500 dark:text-cyan-300 transition-all hover:scale-105 active:scale-95 shrink-0"
                 title="Verify Certification"
                 aria-label="Verify AZ-900 Certification"
               >

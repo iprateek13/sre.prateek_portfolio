@@ -15,6 +15,17 @@ export function CmdKModal({ isOpen, onClose }: CmdKModalProps) {
   const [query, setQuery] = useState("");
 
   useEffect(() => {
+    if (isOpen) {
+      document.body.classList.add("modal-open");
+    } else {
+      document.body.classList.remove("modal-open");
+    }
+    return () => {
+      document.body.classList.remove("modal-open");
+    };
+  }, [isOpen]);
+
+  useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "k") {
         e.preventDefault();
@@ -52,13 +63,17 @@ export function CmdKModal({ isOpen, onClose }: CmdKModalProps) {
 
   return (
     <AnimatePresence>
-      <div className="fixed inset-0 z-50 flex items-start justify-center pt-16 sm:pt-24 px-4 bg-black/60 backdrop-blur-md">
+      <div 
+        onClick={onClose}
+        className="fixed inset-0 z-50 flex items-start justify-center pt-16 sm:pt-24 px-4 bg-black/60 backdrop-blur-md cursor-pointer"
+      >
         <motion.div
+          onClick={(e) => e.stopPropagation()}
           initial={{ opacity: 0, scale: 0.95, y: -20 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
           exit={{ opacity: 0, scale: 0.95, y: -20 }}
           transition={{ duration: 0.2 }}
-          className="relative w-full max-w-2xl overflow-hidden rounded-3xl bg-white/95 dark:bg-dark-900/95 border border-azure-500/30 shadow-2xl backdrop-blur-2xl"
+          className="relative w-full max-w-2xl overflow-hidden rounded-3xl bg-white/95 dark:bg-dark-900/95 border border-azure-500/30 shadow-2xl backdrop-blur-2xl cursor-default"
         >
           {/* Header Input */}
           <div className="relative flex items-center px-5 py-4 border-b border-slate-200 dark:border-slate-800">

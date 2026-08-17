@@ -38,6 +38,18 @@
     color: #F8FAFC;
   }
 
+  /* Hide fixed navbar header and lock scroll when any modal is open */
+  body.modal-open {
+    overflow: hidden !important;
+  }
+
+  body.modal-open header {
+    opacity: 0 !important;
+    pointer-events: none !important;
+    transform: translateY(-20px) !important;
+    transition: all 0.25s ease-out !important;
+  }
+
   /* Azure & Emerald Scrollbar */
   ::-webkit-scrollbar {
     width: 8px;

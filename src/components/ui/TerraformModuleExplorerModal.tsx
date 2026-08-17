@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, Boxes, ShieldCheck, Code, Layers, Check, Copy, Terminal } from "lucide-react";
 
@@ -20,6 +20,17 @@ interface ModuleInfo {
 export function TerraformModuleExplorerModal({ isOpen, onClose }: TerraformModuleExplorerModalProps) {
   const [copiedIndex, setCopiedIndex] = useState<number | null>(null);
   const [activeCategory, setActiveCategory] = useState<string>("All");
+
+  useEffect(() => {
+    if (isOpen) {
+      document.body.classList.add("modal-open");
+    } else {
+      document.body.classList.remove("modal-open");
+    }
+    return () => {
+      document.body.classList.remove("modal-open");
+    };
+  }, [isOpen]);
 
   if (!isOpen) return null;
 
@@ -78,13 +89,17 @@ export function TerraformModuleExplorerModal({ isOpen, onClose }: TerraformModul
 
   return (
     <AnimatePresence>
-      <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-black/70 backdrop-blur-md">
+      <div 
+        onClick={onClose}
+        className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-black/70 backdrop-blur-md cursor-pointer"
+      >
         <motion.div
+          onClick={(e) => e.stopPropagation()}
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
           exit={{ opacity: 0, scale: 0.95 }}
           transition={{ duration: 0.2 }}
-          className="relative w-full max-w-4xl max-h-[85vh] overflow-hidden rounded-3xl bg-dark-900 border border-azure-500/30 shadow-2xl backdrop-blur-2xl flex flex-col"
+          className="relative w-full max-w-4xl max-h-[85vh] overflow-hidden rounded-3xl bg-dark-900 border border-azure-500/30 shadow-2xl backdrop-blur-2xl flex flex-col cursor-default"
         >
           {/* Header */}
           <div className="p-6 border-b border-slate-800 flex items-center justify-between">
