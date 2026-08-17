@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { portfolioData } from "@/data/content";
 import { 
   Cloud, Cpu, Layers, ShieldCheck, Activity, Code, Search, 
@@ -90,16 +90,22 @@ export function SkillsSection() {
           </div>
         </div>
 
-        {/* Grid of Skill Categories with stable min-height */}
+        {/* Grid of Skill Categories with stable min-height & AnimatePresence for zero scroll jump */}
         <div className="space-y-8 min-h-[550px]">
-          {filteredCategories.map((catGroup) => (
+          <AnimatePresence mode="wait">
             <motion.div
-              key={catGroup.id}
-              initial={{ opacity: 0, y: 10 }}
+              key={selectedCategory + (searchQuery || "")}
+              initial={{ opacity: 0, y: 8 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.3 }}
-              className="p-6 sm:p-8 rounded-3xl bg-white/90 dark:bg-dark-900/90 border border-slate-200/80 dark:border-slate-800 backdrop-blur-xl shadow-xl"
+              exit={{ opacity: 0, y: -8 }}
+              transition={{ duration: 0.25, ease: "easeOut" }}
+              className="space-y-8"
             >
+              {filteredCategories.map((catGroup) => (
+                <div
+                  key={catGroup.id}
+                  className="p-6 sm:p-8 rounded-3xl bg-white/90 dark:bg-dark-900/90 border border-slate-200/80 dark:border-slate-800 backdrop-blur-xl shadow-xl"
+                >
               {/* Category Title */}
               <div className="flex items-center gap-3 mb-6 pb-4 border-b border-slate-200 dark:border-slate-800">
                 <div className="p-2.5 rounded-2xl bg-azure-500/10 border border-azure-500/30">
@@ -157,8 +163,10 @@ export function SkillsSection() {
                   </div>
                 ))}
               </div>
-            </motion.div>
+            </div>
           ))}
+        </motion.div>
+      </AnimatePresence>
         </div>
       </div>
     </section>
