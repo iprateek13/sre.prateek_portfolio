@@ -69,12 +69,14 @@ export function ProjectsSection() {
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center relative z-10">
               {/* Left Column: Flagship Details */}
               <div className="lg:col-span-7 space-y-5">
-                <div className="flex items-center gap-3">
-                  <span className="px-3.5 py-1 rounded-full bg-gradient-to-r from-azure-500 to-cyan-500 text-white text-xs font-mono font-bold shadow-azure-glow flex items-center gap-1.5">
+                <div className="flex flex-wrap items-center gap-2 sm:gap-3">
+                  <span className="px-3.5 py-1 rounded-full bg-gradient-to-r from-azure-500 to-cyan-500 text-white text-xs font-mono font-bold shadow-azure-glow flex items-center gap-1.5 shrink-0">
                     <Sparkles className="w-3.5 h-3.5" />
                     <span>FLAGSHIP ARCHITECTURE</span>
                   </span>
-                  <span className="text-xs font-mono text-cyan-400">{flagshipProject.subtitle}</span>
+                  <span className="text-xs font-mono text-cyan-400 font-semibold truncate max-w-full">
+                    {flagshipProject.subtitle}
+                  </span>
                 </div>
 
                 <h3 className="text-2xl sm:text-4xl font-heading font-extrabold text-white">
