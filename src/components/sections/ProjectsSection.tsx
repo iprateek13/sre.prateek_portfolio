@@ -1,239 +1,234 @@
 "use client";
 
 import React, { useState } from "react";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { portfolioData } from "@/data/content";
-import { Project } from "@/lib/types";
 import { ProjectModal } from "@/components/ui/ProjectModal";
-import { Github, ExternalLink, ShieldCheck, Cpu, Activity, Sparkles, Layers, ArrowUpRight } from "lucide-react";
+import { TerraformModuleExplorerModal } from "@/components/ui/TerraformModuleExplorerModal";
+import { 
+  Folder, ExternalLink, Github, ArrowRight, Sparkles, ShieldCheck, 
+  Layers, Terminal, CheckCircle2, Boxes, Code, Cpu 
+} from "lucide-react";
 
 export function ProjectsSection() {
-  const [selectedCategory, setSelectedCategory] = useState<string>("all");
-  const [activeModalProject, setActiveModalProject] = useState<Project | null>(null);
+  const [selectedCategory, setSelectedCategory] = useState("All");
+  const [selectedProject, setSelectedProject] = useState<any>(null);
+  const [isExplorerOpen, setIsExplorerOpen] = useState(false);
 
-  const categories = [
-    { id: "all", label: "All Architecture Projects" },
-    { id: "Cloud/DevOps", label: "Cloud & DevOps" },
-    { id: "DevSecOps", label: "DevSecOps & Security" },
-    { id: "SRE/Monitoring", label: "SRE & Telemetry" },
-  ];
+  const categories = ["All", "Cloud/DevOps", "DevSecOps", "SRE/Monitoring"];
 
-  const filteredProjects =
-    selectedCategory === "all"
-      ? portfolioData.projects
-      : portfolioData.projects.filter((p) => p.category === selectedCategory);
+  const filteredProjects = selectedCategory === "All"
+    ? portfolioData.projects
+    : portfolioData.projects.filter((p) => p.category === selectedCategory);
 
   const flagshipProject = portfolioData.projects.find((p) => p.isFlagship) || portfolioData.projects[0];
-  const otherProjects = filteredProjects.filter((p) => p.id !== flagshipProject.id);
 
   return (
-    <section id="projects" className="py-16 sm:py-24 relative bg-cream-100 dark:bg-dark-950 text-dark-900 dark:text-cream-300">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        {/* Section Header */}
-        <div className="text-center max-w-3xl mx-auto mb-10 sm:mb-16">
-          <motion.div
-            initial={{ opacity: 0, y: 15 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-azure-500/10 dark:bg-azure-500/20 border border-azure-500/30 text-azure-600 dark:text-cyan-300 text-xs font-mono tracking-wider uppercase mb-3 shadow-md"
-          >
-            <Sparkles className="w-3.5 h-3.5 text-emerald-500 dark:text-emerald-400" />
-            <span>Featured Case Studies</span>
-          </motion.div>
-          <motion.h2
-            initial={{ opacity: 0, y: 15 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.1 }}
-            className="font-heading font-extrabold text-3xl sm:text-5xl tracking-tight text-dark-900 dark:text-white mb-3 sm:mb-4"
-          >
-            <span className="bg-clip-text text-transparent bg-gradient-to-r from-azure-600 via-cyan-500 to-emerald-500 dark:from-azure-300 dark:via-cyan-300 dark:to-emerald-300">
-              Cloud Infrastructure & DevSecOps
-            </span>
-          </motion.h2>
-          <motion.p
-            initial={{ opacity: 0, y: 15 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.2 }}
-            className="text-dark-800/90 dark:text-cream-300/90 text-sm sm:text-base px-2"
-          >
-            Production Azure Landing Zones, Terraform modular architectures, Trivy security pipelines, and SRE telemetry.
-          </motion.p>
-        </div>
+    <>
+      <ProjectModal
+        project={selectedProject}
+        isOpen={!!selectedProject}
+        onClose={() => setSelectedProject(null)}
+      />
 
-        {/* Touch Scrollable Category Tabs Wrapper (Prevents 1st button clipping) */}
-        <div className="w-full overflow-x-auto no-scrollbar pb-4 mb-8 sm:mb-12">
-          <div className="flex items-center justify-start sm:justify-center gap-2.5 min-w-max px-2 sm:px-4">
-            {categories.map((cat) => (
-              <button
-                key={cat.id}
-                onClick={() => setSelectedCategory(cat.id)}
-                className={`px-4 py-2.5 sm:px-5 sm:py-2.5 rounded-xl sm:rounded-2xl text-xs sm:text-sm font-semibold whitespace-nowrap transition-all duration-300 touch-manipulation active:scale-95 shrink-0 ${
-                  selectedCategory === cat.id
-                    ? "bg-gradient-to-r from-azure-500 via-cyan-500 to-emerald-500 text-white shadow-azure-glow font-bold scale-102"
-                    : "bg-white/90 dark:bg-dark-900/90 text-dark-800 dark:text-cream-300 hover:text-azure-600 border border-slate-200 dark:border-slate-800 backdrop-blur-md"
-                }`}
-              >
-                {cat.label}
-              </button>
-            ))}
+      <TerraformModuleExplorerModal
+        isOpen={isExplorerOpen}
+        onClose={() => setIsExplorerOpen(false)}
+      />
+
+      <section id="projects" className="py-20 sm:py-32 relative overflow-hidden bg-mesh-gradient">
+        {/* Ambient Halo */}
+        <div className="absolute top-1/3 left-0 w-96 h-96 bg-cyan-500/10 rounded-full blur-[160px] pointer-events-none" />
+
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+          {/* Section Header */}
+          <div className="text-center max-w-3xl mx-auto mb-12 sm:mb-16">
+            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-azure-500/10 border border-azure-500/30 text-azure-600 dark:text-cyan-300 text-xs font-mono mb-4 shadow-sm">
+              <Folder className="w-4 h-4 text-cyan-400" />
+              <span>Multi-Cloud Portfolio Implementations</span>
+            </div>
+            <h2 className="text-3xl sm:text-5xl font-heading font-extrabold text-dark-900 dark:text-white tracking-tight mb-4">
+              Featured <span className="text-gradient-sre">SRE & IaC Projects</span>
+            </h2>
+            <p className="text-sm sm:text-base text-slate-600 dark:text-slate-300 leading-relaxed font-body">
+              Enterprise Azure Landing Zones, automated DevSecOps pipelines, and Prometheus observability stacks.
+            </p>
           </div>
-        </div>
 
-        {/* Flagship Featured Project Card */}
-        {(selectedCategory === "all" || selectedCategory === "Cloud/DevOps") && (
+          {/* FLAGSHIP PROJECT SPOTLIGHT SHOWCASE */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="mb-8 sm:mb-12"
+            transition={{ duration: 0.6 }}
+            className="mb-16 rounded-3xl bg-dark-900 border border-azure-500/40 p-6 sm:p-10 shadow-2xl backdrop-blur-2xl relative overflow-hidden group"
           >
-            <div className="p-6 sm:p-8 lg:p-10 rounded-3xl bg-white/95 dark:bg-dark-900/95 border-2 border-azure-500/40 dark:border-cyan-400/40 backdrop-blur-2xl shadow-xl relative overflow-hidden group">
-              <div className="absolute top-0 right-0 px-6 py-2 bg-gradient-to-l from-azure-500 via-cyan-500 to-emerald-500 text-white text-xs font-mono font-extrabold rounded-bl-2xl shadow-md uppercase tracking-wider">
-                Flagship Case Study
-              </div>
+            {/* Glowing Backdrop Mesh */}
+            <div className="absolute -right-20 -top-20 w-96 h-96 bg-azure-500/20 rounded-full blur-3xl pointer-events-none" />
 
-              <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-10 items-center">
-                <div className="lg:col-span-7">
-                  <span className="text-xs font-mono font-extrabold text-azure-600 dark:text-cyan-400 uppercase tracking-widest block mb-2">
-                    {flagshipProject.subtitle}
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center relative z-10">
+              {/* Left Column: Flagship Details */}
+              <div className="lg:col-span-7 space-y-5">
+                <div className="flex items-center gap-3">
+                  <span className="px-3.5 py-1 rounded-full bg-gradient-to-r from-azure-500 to-cyan-500 text-white text-xs font-mono font-bold shadow-azure-glow flex items-center gap-1.5">
+                    <Sparkles className="w-3.5 h-3.5" />
+                    <span>FLAGSHIP ARCHITECTURE</span>
                   </span>
-                  <h3 className="font-heading font-extrabold text-2xl sm:text-4xl text-dark-900 dark:text-white mb-4 leading-tight">
-                    {flagshipProject.title}
-                  </h3>
-                  <p className="text-dark-800 dark:text-cream-300/90 text-sm sm:text-base font-body leading-relaxed mb-6">
-                    {flagshipProject.description}
-                  </p>
-
-                  <div className="space-y-2 mb-6">
-                    {flagshipProject.highlights.map((h, i) => (
-                      <div key={i} className="flex items-center gap-2 text-xs sm:text-sm font-body text-dark-800 dark:text-slate-200">
-                        <Layers className="w-4 h-4 text-azure-500 shrink-0" />
-                        <span>{h}</span>
-                      </div>
-                    ))}
-                  </div>
-
-                  <div className="flex flex-wrap gap-2 mb-8">
-                    {flagshipProject.tags.map((tag) => (
-                      <span
-                        key={tag}
-                        className="px-3 py-1 rounded-xl bg-azure-500/10 dark:bg-cyan-400/10 border border-azure-500/20 text-azure-700 dark:text-cyan-300 text-xs font-mono font-semibold"
-                      >
-                        {tag}
-                      </span>
-                    ))}
-                  </div>
-
-                  <div className="flex flex-wrap items-center gap-3">
-                    <button
-                      onClick={() => setActiveModalProject(flagshipProject)}
-                      className="px-6 py-3 rounded-2xl bg-gradient-to-r from-azure-500 via-cyan-500 to-emerald-500 text-white font-extrabold text-xs sm:text-sm font-heading shadow-azure-glow hover:scale-102 active:scale-98 transition-all flex items-center gap-2"
-                    >
-                      <span>View Architecture Spec</span>
-                      <ArrowUpRight className="w-4 h-4" />
-                    </button>
-                    <a
-                      href={flagshipProject.githubUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="px-5 py-3 rounded-2xl bg-slate-100 dark:bg-dark-800 text-dark-900 dark:text-white text-xs sm:text-sm font-bold border border-slate-200 dark:border-slate-700 hover:border-azure-500 transition-colors flex items-center gap-2"
-                    >
-                      <Github className="w-4 h-4" />
-                      <span>GitHub</span>
-                    </a>
-                  </div>
+                  <span className="text-xs font-mono text-cyan-400">{flagshipProject.subtitle}</span>
                 </div>
 
-                <div className="lg:col-span-5 flex flex-col gap-3 p-6 rounded-2xl bg-slate-50 dark:bg-dark-800/80 border border-slate-200 dark:border-slate-700/80 font-mono text-xs">
-                  <div className="flex items-center justify-between pb-3 border-b border-slate-200 dark:border-slate-700">
-                    <span className="text-azure-600 dark:text-cyan-400 font-bold">IaC Framework</span>
-                    <span className="text-dark-900 dark:text-white font-bold">Terraform v1.9</span>
-                  </div>
-                  <div className="flex items-center justify-between pb-3 border-b border-slate-200 dark:border-slate-700">
-                    <span className="text-azure-600 dark:text-cyan-400 font-bold">Cloud Provider</span>
-                    <span className="text-dark-900 dark:text-white font-bold">Microsoft Azure</span>
-                  </div>
-                  <div className="flex items-center justify-between pb-3 border-b border-slate-200 dark:border-slate-700">
-                    <span className="text-azure-600 dark:text-cyan-400 font-bold">Topology</span>
-                    <span className="text-dark-900 dark:text-white font-bold">Hub-and-Spoke</span>
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <span className="text-azure-600 dark:text-cyan-400 font-bold">Security Gate</span>
-                    <span className="text-emerald-600 dark:text-emerald-400 font-bold flex items-center gap-1">
-                      <ShieldCheck className="w-4 h-4" />
-                      <span>tfsec Passed</span>
+                <h3 className="text-2xl sm:text-4xl font-heading font-extrabold text-white">
+                  {flagshipProject.title}
+                </h3>
+
+                <p className="text-sm sm:text-base text-slate-300 leading-relaxed">
+                  {flagshipProject.longDescription}
+                </p>
+
+                {/* Highlights List */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 pt-2">
+                  {flagshipProject.highlights.map((h, idx) => (
+                    <div key={idx} className="flex items-start gap-2 text-xs text-slate-300 font-mono">
+                      <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" />
+                      <span>{h}</span>
+                    </div>
+                  ))}
+                </div>
+
+                {/* Tag Pills */}
+                <div className="flex flex-wrap gap-2 pt-2">
+                  {flagshipProject.tags.map((tag) => (
+                    <span
+                      key={tag}
+                      className="px-3 py-1 rounded-xl bg-azure-500/10 border border-azure-500/30 text-azure-300 text-xs font-mono"
+                    >
+                      {tag}
                     </span>
+                  ))}
+                </div>
+
+                {/* Action Buttons */}
+                <div className="flex flex-wrap items-center gap-4 pt-4">
+                  <button
+                    onClick={() => setIsExplorerOpen(true)}
+                    className="px-6 py-3.5 rounded-2xl bg-gradient-to-r from-azure-500 via-cyan-500 to-emerald-500 text-white font-heading font-extrabold text-xs sm:text-sm shadow-azure-glow hover:scale-105 active:scale-95 transition-all flex items-center gap-2"
+                  >
+                    <Boxes className="w-4 h-4" />
+                    <span>Explore 15+ Child Modules</span>
+                  </button>
+
+                  <a
+                    href={flagshipProject.githubUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="px-5 py-3.5 rounded-2xl bg-dark-800 border border-slate-700 hover:border-azure-400 text-white text-xs font-semibold flex items-center gap-2 transition-all hover:scale-105"
+                  >
+                    <Github className="w-4 h-4" />
+                    <span>GitHub Repo</span>
+                  </a>
+                </div>
+              </div>
+
+              {/* Right Column: Code & Specs Preview Box */}
+              <div className="lg:col-span-5 p-6 rounded-2xl bg-dark-950 border border-slate-800 space-y-4">
+                <div className="flex items-center justify-between pb-3 border-b border-slate-800 text-xs font-mono text-slate-400">
+                  <div className="flex items-center gap-2">
+                    <Terminal className="w-4 h-4 text-azure-400" />
+                    <span>azure_landing_zone.tf</span>
                   </div>
+                  <span className="text-emerald-400">Validated</span>
+                </div>
+
+                <pre className="text-xs font-mono text-cyan-300 overflow-x-auto p-3 rounded-xl bg-dark-900 border border-slate-800/80 leading-relaxed">
+                  <code>{`module "landing_zone" {
+  source           = "./modules/azure_hub_spoke"
+  resource_group   = "rg-devopsinsiders-hub"
+  vnet_hub_cidr    = ["10.0.0.0/16"]
+  firewall_sku     = "Standard"
+  enable_bastion   = true
+  
+  spoke_vnets = {
+    aks_cluster    = { cidr = ["10.1.0.0/16"] }
+    database_tier  = { cidr = ["10.2.0.0/16"] }
+  }
+}`}</code>
+                </pre>
+
+                <div className="p-3 rounded-xl bg-azure-500/10 border border-azure-500/30 text-xs font-mono text-azure-300 flex items-center justify-between">
+                  <span>CAF-Aligned Architecture</span>
+                  <span className="text-emerald-400 font-bold">100% Policy Pass</span>
                 </div>
               </div>
             </div>
           </motion.div>
-        )}
 
-        {/* Other Projects Grid */}
-        <motion.div layout className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
-          {otherProjects.map((project, idx) => (
-            <motion.div
-              layout
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: idx * 0.1 }}
-              key={project.id}
-            >
-              <div className="p-6 sm:p-7 rounded-3xl bg-white/90 dark:bg-dark-900/90 border border-slate-200/80 dark:border-slate-800/80 backdrop-blur-xl hover:border-azure-500/50 dark:hover:border-cyan-400/50 transition-all duration-300 shadow-lg flex flex-col justify-between h-full group">
+          {/* Category Filter Tabs */}
+          <div className="flex justify-center mb-10">
+            <div className="inline-flex p-1.5 rounded-2xl bg-white/80 dark:bg-dark-900/80 border border-slate-200 dark:border-slate-800 backdrop-blur-xl">
+              {categories.map((cat) => (
+                <button
+                  key={cat}
+                  onClick={() => setSelectedCategory(cat)}
+                  className={`px-4 py-2 rounded-xl text-xs font-heading font-semibold transition-all ${
+                    selectedCategory === cat
+                      ? "bg-azure-500 text-white shadow-azure-glow"
+                      : "text-slate-600 dark:text-slate-400 hover:text-dark-900 dark:hover:text-white"
+                  }`}
+                >
+                  {cat}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* Grid of Other Projects */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {filteredProjects.map((project) => (
+              <motion.div
+                key={project.id}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5 }}
+                onClick={() => setSelectedProject(project)}
+                className="p-6 rounded-3xl bg-white/90 dark:bg-dark-900/90 border border-slate-200/80 dark:border-slate-800 backdrop-blur-xl shadow-xl hover:border-azure-500/50 transition-all duration-300 hover:-translate-y-1.5 cursor-pointer flex flex-col justify-between group"
+              >
                 <div>
-                  <div className="flex items-center justify-between mb-4">
-                    <span className="px-3 py-1 rounded-full text-[10px] font-mono font-extrabold bg-azure-500/10 dark:bg-cyan-400/10 text-azure-700 dark:text-cyan-300 border border-azure-500/20 uppercase tracking-wider">
+                  <div className="flex items-center justify-between mb-3">
+                    <span className="text-xs font-mono px-2.5 py-1 rounded-xl bg-azure-500/10 text-azure-600 dark:text-cyan-300 font-semibold">
                       {project.category}
                     </span>
-                    <a
-                      href={project.githubUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="p-2 rounded-xl bg-slate-100 dark:bg-dark-800 text-dark-800 dark:text-slate-300 hover:text-azure-600 transition-colors"
-                    >
-                      <Github className="w-4 h-4" />
-                    </a>
+                    <Github className="w-4 h-4 text-slate-400 group-hover:text-azure-500 transition-colors" />
                   </div>
 
-                  <h3 className="font-heading font-extrabold text-xl text-dark-900 dark:text-white mb-2 leading-tight group-hover:text-azure-600 dark:group-hover:text-cyan-400 transition-colors">
+                  <h4 className="text-lg font-heading font-bold text-dark-900 dark:text-white group-hover:text-azure-500 transition-colors mb-2">
                     {project.title}
-                  </h3>
-                  <p className="text-xs sm:text-sm text-dark-800/80 dark:text-slate-300 font-body leading-relaxed mb-6">
+                  </h4>
+
+                  <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed mb-4">
                     {project.description}
                   </p>
                 </div>
 
                 <div>
-                  <div className="flex flex-wrap gap-1.5 mb-6">
-                    {project.tags.map((t) => (
-                      <span key={t} className="px-2.5 py-0.5 rounded-lg bg-slate-100 dark:bg-dark-800 text-[10px] font-mono text-slate-600 dark:text-slate-400">
-                        {t}
+                  <div className="flex flex-wrap gap-1.5 mb-4">
+                    {project.tags.slice(0, 3).map((tag) => (
+                      <span key={tag} className="text-[10px] font-mono px-2 py-0.5 rounded bg-slate-100 dark:bg-dark-850 text-slate-500 dark:text-slate-400">
+                        {tag}
                       </span>
                     ))}
                   </div>
 
-                  <button
-                    onClick={() => setActiveModalProject(project)}
-                    className="w-full py-2.5 rounded-xl bg-azure-500/10 dark:bg-azure-500/20 text-azure-600 dark:text-cyan-300 font-bold text-xs font-mono hover:bg-azure-500 hover:text-white transition-all flex items-center justify-center gap-1.5 border border-azure-500/30"
-                  >
-                    <span>Architecture Details</span>
-                    <ArrowUpRight className="w-3.5 h-3.5" />
-                  </button>
+                  <div className="pt-3 border-t border-slate-200 dark:border-slate-800 flex items-center justify-between text-xs font-heading font-bold text-azure-500 group-hover:translate-x-1 transition-transform">
+                    <span>View Specifications</span>
+                    <ArrowRight className="w-4 h-4" />
+                  </div>
                 </div>
-              </div>
-            </motion.div>
-          ))}
-        </motion.div>
-      </div>
-
-      {/* Project Architecture Modal */}
-      {activeModalProject && (
-        <ProjectModal project={activeModalProject} onClose={() => setActiveModalProject(null)} />
-      )}
-    </section>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+    </>
   );
 }

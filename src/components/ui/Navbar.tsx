@@ -1,331 +1,221 @@
 "use client";
 
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { portfolioData } from "@/data/content";
 import { ThemeToggle } from "./ThemeToggle";
-import { Terminal, Download, Menu, X, ChevronRight } from "lucide-react";
+import { CmdKModal } from "./CmdKModal";
+import { 
+  Terminal, Menu, X, Download, Search, ShieldCheck, Folder, 
+  Cpu, Layers, Mail, User, Sparkles 
+} from "lucide-react";
 import { trackResumeDownload } from "@/lib/telemetry";
 
 export function Navbar() {
-  const [scrolled, setScrolled] = useState(false);
-  const [activeSection, setActiveSection] = useState("#about");
+  const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [isModalOpen, setIsModalOpen] = useState(false);
-
-  const isClickScrollingRef = useRef(false);
-  const clickTimerRef = useRef<NodeJS.Timeout | null>(null);
-  const visibleRatiosRef = useRef<Record<string, number>>({});
-
-  const navLinks = [
-    { name: "About", href: "#about" },
-    { name: "Skills", href: "#skills" },
-    { name: "Projects", href: "#projects" },
-    { name: "Experience", href: "#experience" },
-    { name: "Contact", href: "#contact" },
-  ];
+  const [activeSection, setActiveSection] = useState("hero");
+  const [cmdKOpen, setCmdKOpen] = useState(false);
 
   useEffect(() => {
-    // 1. Light-weight scroll listener for navbar background state
     const handleScroll = () => {
-      setScrolled(window.scrollY > 20);
-    };
+      setIsScrolled(window.scrollY > 20);
 
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    handleScroll();
+      const sections = ["hero", "about", "skills", "projects", "experience", "contact"];
+      const scrollPosition = window.scrollY + 200;
 
-    // 2. Max-Intersection Ratio Tracking to prevent skipping steps ahead during manual scroll
-    const sectionIds = ["about", "skills", "projects", "experience", "contact"];
-    const sectionElements: HTMLElement[] = [];
-
-    sectionIds.forEach((id) => {
-      const el = document.getElementById(id);
-      if (el) {
-        sectionElements.push(el);
-        visibleRatiosRef.current[id] = 0;
-      }
-    });
-
-    const observerOptions: IntersectionObserverInit = {
-      root: null,
-      rootMargin: "-20% 0px -35% 0px",
-      threshold: [0, 0.1, 0.25, 0.4, 0.6, 0.8, 1.0],
-    };
-
-    const observerCallback: IntersectionObserverCallback = (entries) => {
-      // Ignore scroll spy updates while user clicks a navbar link directly to avoid intermediate glitches
-      if (isClickScrollingRef.current) return;
-
-      // Top of page boundary (Hero / About)
-      if (window.scrollY < 100) {
-        setActiveSection("#about");
-        return;
-      }
-
-      // Bottom of page boundary (Contact)
-      if (window.innerHeight + window.scrollY >= document.body.offsetHeight - 90) {
-        setActiveSection("#contact");
-        return;
-      }
-
-      // Record ratio for each entry
-      entries.forEach((entry) => {
-        visibleRatiosRef.current[entry.target.id] = entry.isIntersecting ? entry.intersectionRatio : 0;
-      });
-
-      // Find the SINGLE section with maximum visible ratio in focus window
-      let maxRatio = 0;
-      let bestSection = "";
-
-      Object.entries(visibleRatiosRef.current).forEach(([id, ratio]) => {
-        if (ratio > maxRatio) {
-          maxRatio = ratio;
-          bestSection = `#${id}`;
+      for (const section of sections) {
+        const el = document.getElementById(section);
+        if (el) {
+          const top = el.offsetTop;
+          const height = el.offsetHeight;
+          if (scrollPosition >= top && scrollPosition < top + height) {
+            setActiveSection(section);
+            break;
+          }
         }
-      });
-
-      if (bestSection && maxRatio > 0.02) {
-        setActiveSection(bestSection);
       }
     };
 
-    const observer = new IntersectionObserver(observerCallback, observerOptions);
-    sectionElements.forEach((el) => observer.observe(el));
-
-    // 3. Track modal open/close to hide navbar smoothly
-    const checkModal = () => {
-      setIsModalOpen(document.body.classList.contains("modal-open"));
-    };
-
-    const mutationObserver = new MutationObserver(checkModal);
-    mutationObserver.observe(document.body, { attributes: true, attributeFilter: ["class"] });
-
-    return () => {
-      window.removeEventListener("scroll", handleScroll);
-      observer.disconnect();
-      mutationObserver.disconnect();
-      if (clickTimerRef.current) clearTimeout(clickTimerRef.current);
-    };
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  const scrollToSection = (href: string) => {
+  const navLinks = [
+    { name: "About", href: "#about", id: "about", icon: User },
+    { name: "Skills", href: "#skills", id: "skills", icon: Cpu },
+    { name: "Projects", href: "#projects", id: "projects", icon: Folder },
+    { name: "Experience", href: "#experience", id: "experience", icon: Layers },
+    { name: "Contact", href: "#contact", id: "contact", icon: Mail },
+  ];
+
+  const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
+    e.preventDefault();
+    const targetId = href.replace("#", "");
     setMobileMenuOpen(false);
-    setActiveSection(href);
-
-    // Lock scroll spy updates during direct navbar link click smooth scrolling
-    isClickScrollingRef.current = true;
-    if (clickTimerRef.current) clearTimeout(clickTimerRef.current);
-
-    const element = document.querySelector(href);
+    const element = document.getElementById(targetId);
     if (element) {
       element.scrollIntoView({ behavior: "smooth" });
     }
-
-    // Sync visible ratios to target section and unlock scroll spy after smooth scroll finishes (1000ms)
-    clickTimerRef.current = setTimeout(() => {
-      const targetId = href.replace("#", "");
-      Object.keys(visibleRatiosRef.current).forEach((key) => {
-        visibleRatiosRef.current[key] = key === targetId ? 1 : 0;
-      });
-      setActiveSection(href);
-      isClickScrollingRef.current = false;
-    }, 1000);
   };
 
   return (
     <>
-      {/* Mobile Menu Backdrop Overlay - Tapping outside closes drawer immediately */}
-      <AnimatePresence>
-        {mobileMenuOpen && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.35, ease: "easeInOut" }}
-            onClick={() => setMobileMenuOpen(false)}
-            className="fixed inset-0 z-30 bg-dark-950/45 backdrop-blur-sm md:hidden cursor-pointer transform-gpu"
-          />
-        )}
-      </AnimatePresence>
+      <CmdKModal isOpen={cmdKOpen} onClose={() => setCmdKOpen(false)} />
 
-      <header
-        className={`fixed top-0 left-0 right-0 z-40 px-3 sm:px-6 lg:px-8 pt-3 sm:pt-4 transition-all duration-300 ${
-          isModalOpen ? "opacity-0 pointer-events-none -translate-y-8 scale-95" : "opacity-100 translate-y-0 scale-100"
-        }`}
-      >
-        <nav
-          className={`max-w-6xl mx-auto rounded-full transition-all duration-300 pointer-events-auto px-4 py-2.5 sm:px-6 sm:py-3 glass-navbar-tuf ${
-            scrolled ? "shadow-2xl border-azure-500/40 dark:border-cyan-400/40" : ""
-          }`}
-        >
-          <div className="flex items-center justify-between">
-            {/* Brand Logo */}
+      <header className="fixed top-0 left-0 right-0 z-40 px-3 sm:px-6 py-3 transition-all duration-500">
+        <div className="max-w-7xl mx-auto">
+          <nav
+            className={`w-full rounded-2xl sm:rounded-3xl transition-all duration-500 px-4 sm:px-6 py-2.5 sm:py-3.5 flex items-center justify-between ${
+              isScrolled
+                ? "glass-navbar-tuf shadow-2xl"
+                : "bg-white/70 dark:bg-dark-900/70 border border-slate-200/60 dark:border-slate-800/60 backdrop-blur-xl"
+            }`}
+          >
+            {/* Logo Brand */}
             <a
               href="#hero"
-              onClick={(e) => {
-                e.preventDefault();
-                scrollToSection("#hero");
-              }}
-              className="flex items-center gap-2.5 group active:scale-95 transition-transform touch-manipulation"
+              onClick={(e) => handleNavClick(e, "#hero")}
+              className="flex items-center gap-2.5 group cursor-pointer"
             >
-              <div className="p-2 sm:p-2.5 rounded-full bg-gradient-to-tr from-azure-600 via-cyan-500 to-emerald-500 text-white shadow-azure-glow group-hover:scale-105 transition-all duration-300">
-                <Terminal className="w-4 h-4 sm:w-4.5 sm:h-4.5" />
+              <div className="p-2 rounded-xl bg-gradient-to-tr from-azure-500 via-cyan-500 to-emerald-500 text-white shadow-azure-glow group-hover:scale-110 transition-transform">
+                <Terminal className="w-4 h-4 sm:w-5 sm:h-5" />
               </div>
               <div className="flex flex-col">
-                <span className="font-heading font-extrabold text-base sm:text-lg tracking-tight text-dark-900 dark:text-white flex items-center gap-1">
-                  Prateek<span className="text-azure-600 dark:text-cyan-400">Gupta</span>
+                <span className="font-heading font-extrabold text-sm sm:text-base tracking-tight text-dark-900 dark:text-white flex items-center gap-1.5">
+                  <span>Prateek Gupta</span>
+                  <span className="text-[10px] font-mono px-1.5 py-0.2 rounded bg-azure-500/10 text-azure-500 dark:text-cyan-300">
+                    SRE
+                  </span>
                 </span>
-                <span className="text-[10px] font-mono font-bold text-azure-600 dark:text-cyan-300 tracking-wider uppercase -mt-1 hidden sm:inline-block">
-                  SRE & Cloud Architecture
+                <span className="text-[10px] font-mono text-slate-400 hidden sm:inline-block">
+                  Azure & AWS Multi-Cloud
                 </span>
               </div>
             </a>
 
-            {/* Desktop Navigation Links with Zero-Glitch Sync & Spring Pill */}
-            <div className="hidden md:flex items-center gap-1 bg-white/40 dark:bg-dark-900/40 p-1.5 rounded-full border border-slate-200/50 dark:border-slate-800/50 backdrop-blur-md relative">
+            {/* Desktop Navigation */}
+            <div className="hidden lg:flex items-center gap-1 bg-slate-100/60 dark:bg-dark-950/60 p-1.5 rounded-2xl border border-slate-200/50 dark:border-slate-800/50 backdrop-blur-md">
               {navLinks.map((link) => {
-                const isActive = activeSection === link.href;
-
+                const Icon = link.icon;
+                const isActive = activeSection === link.id;
                 return (
                   <a
                     key={link.name}
                     href={link.href}
-                    onClick={(e) => {
-                      e.preventDefault();
-                      scrollToSection(link.href);
-                    }}
-                    className={`relative px-4 py-1.5 text-xs sm:text-sm font-bold rounded-full transition-colors duration-150 ${
+                    onClick={(e) => handleNavClick(e, link.href)}
+                    className={`relative px-4 py-2 rounded-xl text-xs font-heading font-semibold transition-all duration-300 flex items-center gap-1.5 ${
                       isActive
-                        ? "text-azure-600 dark:text-cyan-300"
-                        : "text-dark-800/80 dark:text-cream-300/80 hover:text-azure-600 dark:hover:text-cyan-300"
+                        ? "text-azure-600 dark:text-cyan-300 bg-white dark:bg-dark-850 shadow-md"
+                        : "text-slate-600 dark:text-slate-400 hover:text-dark-900 dark:hover:text-white"
                     }`}
                   >
-                    {isActive && (
-                      <motion.div
-                        layoutId="navbarActivePill"
-                        className="absolute inset-0 rounded-full bg-azure-500/15 dark:bg-cyan-400/15 border border-azure-500/35 dark:border-cyan-400/35 shadow-sm"
-                        transition={{
-                          type: "spring",
-                          stiffness: 420,
-                          damping: 32,
-                          mass: 0.6,
-                        }}
-                      />
-                    )}
-                    <span className="relative z-10">{link.name}</span>
+                    <Icon className="w-3.5 h-3.5" />
+                    <span>{link.name}</span>
                   </a>
                 );
               })}
             </div>
 
-            {/* Right Action Controls */}
+            {/* Right Action Bar */}
             <div className="flex items-center gap-2 sm:gap-3">
+              {/* Cmd+K Search Trigger Button */}
+              <button
+                onClick={() => setCmdKOpen(true)}
+                className="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-xl bg-slate-100 dark:bg-dark-850 hover:bg-slate-200 dark:hover:bg-dark-800 border border-slate-200 dark:border-slate-800 text-xs font-mono text-slate-500 dark:text-slate-400 transition-colors"
+                title="Search projects & skills"
+              >
+                <Search className="w-3.5 h-3.5 text-azure-500" />
+                <span>Search</span>
+                <kbd className="px-1.5 py-0.5 text-[10px] rounded bg-white dark:bg-dark-950 border border-slate-300 dark:border-slate-800 text-slate-600 dark:text-slate-300 font-sans">
+                  ⌘K
+                </kbd>
+              </button>
+
+              {/* Theme Toggle */}
+              <ThemeToggle />
+
+              {/* Resume Download Action */}
               <a
                 href="/sre.prateek_resume.pdf"
                 download="sre.prateek_resume.pdf"
                 onClick={trackResumeDownload}
-                className="hidden sm:inline-flex items-center gap-2 px-5 py-2 text-xs font-extrabold rounded-full bg-gradient-to-r from-azure-500 via-cyan-500 to-emerald-500 text-white shadow-azure-glow hover:scale-105 active:scale-98 transition-all duration-300 font-heading"
+                className="hidden sm:inline-flex items-center gap-2 px-4 py-2 text-xs font-heading font-bold rounded-xl bg-gradient-to-r from-azure-500 to-cyan-500 text-white shadow-azure-glow hover:scale-105 active:scale-95 transition-all"
               >
                 <Download className="w-3.5 h-3.5" />
                 <span>Resume</span>
               </a>
 
-              <ThemeToggle />
-
-              {/* Mobile Hamburger Button with Relaxed Ultra-Smooth Morphing */}
+              {/* Mobile Menu Toggle */}
               <button
                 onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                className="md:hidden p-2.5 rounded-full bg-white/80 dark:bg-dark-900/80 border border-slate-200/80 dark:border-slate-800/80 text-dark-900 dark:text-cream-200 hover:text-azure-600 focus:outline-none touch-manipulation active:scale-90 transition-all duration-300 flex items-center justify-center relative overflow-hidden"
+                className="lg:hidden p-2 rounded-xl bg-slate-100 dark:bg-dark-850 border border-slate-200 dark:border-slate-800 text-dark-900 dark:text-white"
                 aria-label="Toggle Navigation Menu"
               >
-                <motion.div
-                  initial={false}
-                  animate={{
-                    rotate: mobileMenuOpen ? 180 : 0,
-                  }}
-                  transition={{
-                    duration: 0.35,
-                    ease: [0.22, 1, 0.36, 1],
-                  }}
-                  className="flex items-center justify-center"
-                >
-                  <AnimatePresence mode="wait" initial={false}>
-                    {mobileMenuOpen ? (
-                      <motion.div
-                        key="close"
-                        initial={{ opacity: 0, scale: 0.8 }}
-                        animate={{ opacity: 1, scale: 1 }}
-                        exit={{ opacity: 0, scale: 0.8 }}
-                        transition={{ duration: 0.25, ease: "easeInOut" }}
-                      >
-                        <X className="w-5 h-5 text-azure-600 dark:text-cyan-400" />
-                      </motion.div>
-                    ) : (
-                      <motion.div
-                        key="menu"
-                        initial={{ opacity: 0, scale: 0.8 }}
-                        animate={{ opacity: 1, scale: 1 }}
-                        exit={{ opacity: 0, scale: 0.8 }}
-                        transition={{ duration: 0.25, ease: "easeInOut" }}
-                      >
-                        <Menu className="w-5 h-5" />
-                      </motion.div>
-                    )}
-                  </AnimatePresence>
-                </motion.div>
+                {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
               </button>
             </div>
-          </div>
-        </nav>
+          </nav>
+        </div>
+      </header>
 
-        {/* Mobile Drawer Dropdown Menu with Relaxed 0.42s Premium Easing */}
-        <AnimatePresence>
-          {mobileMenuOpen && (
-            <motion.div
-              initial={{ opacity: 0, y: -20, scale: 0.95 }}
-              animate={{ opacity: 1, y: 0, scale: 1 }}
-              exit={{ opacity: 0, y: -20, scale: 0.95 }}
-              transition={{
-                duration: 0.42,
-                ease: [0.22, 1, 0.36, 1],
+      {/* Mobile Drawer */}
+      <AnimatePresence>
+        {mobileMenuOpen && (
+          <motion.div
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            transition={{ duration: 0.2 }}
+            className="fixed inset-x-3 top-20 z-30 lg:hidden p-5 rounded-3xl glass-mobile-drawer border border-azure-500/30 shadow-2xl flex flex-col gap-3"
+          >
+            {/* Search Trigger for Mobile */}
+            <button
+              onClick={() => {
+                setMobileMenuOpen(false);
+                setCmdKOpen(true);
               }}
-              style={{ transformOrigin: "top center", willChange: "transform, opacity" }}
-              className="md:hidden max-w-6xl mx-auto mt-2.5 pointer-events-auto transform-gpu"
+              className="flex items-center justify-between p-3 rounded-2xl bg-azure-500/10 border border-azure-500/30 text-xs font-mono text-azure-400"
             >
-              <div className="p-4 sm:p-5 rounded-3xl glass-mobile-drawer flex flex-col gap-2 shadow-2xl">
-                {navLinks.map((link) => (
+              <div className="flex items-center gap-2">
+                <Search className="w-4 h-4" />
+                <span>Search Projects & Skills</span>
+              </div>
+              <kbd className="px-2 py-0.5 rounded bg-dark-900 border border-slate-800 text-[10px]">⌘K</kbd>
+            </button>
+
+            <div className="space-y-1">
+              {navLinks.map((link) => {
+                const Icon = link.icon;
+                return (
                   <a
                     key={link.name}
                     href={link.href}
-                    onClick={(e) => {
-                      e.preventDefault();
-                      scrollToSection(link.href);
-                    }}
-                    className="flex items-center justify-between px-4.5 py-3.5 rounded-2xl text-sm font-bold text-dark-900 dark:text-white hover:bg-azure-500/10 dark:hover:bg-azure-500/20 active:bg-azure-500/25 transition-all touch-manipulation group"
+                    onClick={(e) => handleNavClick(e, link.href)}
+                    className="flex items-center gap-3 p-3 rounded-2xl hover:bg-azure-500/10 text-sm font-heading font-semibold text-dark-900 dark:text-white transition-colors"
                   >
-                    <span className="group-hover:translate-x-1 transition-transform">{link.name}</span>
-                    <ChevronRight className="w-4 h-4 text-azure-500 dark:text-cyan-400 group-hover:translate-x-1 transition-transform" />
+                    <Icon className="w-4 h-4 text-azure-500" />
+                    <span>{link.name}</span>
                   </a>
-                ))}
+                );
+              })}
+            </div>
 
-                <div className="pt-3 mt-1 border-t border-slate-200/80 dark:border-slate-800/80 flex items-center justify-between gap-3">
-                  <a
-                    href="/sre.prateek_resume.pdf"
-                    download="sre.prateek_resume.pdf"
-                    onClick={() => {
-                      setMobileMenuOpen(false);
-                      trackResumeDownload();
-                    }}
-                    className="w-full flex items-center justify-center gap-2 px-5 py-3.5 rounded-full bg-gradient-to-r from-azure-500 via-cyan-500 to-emerald-500 text-white font-extrabold text-sm font-heading shadow-azure-glow active:scale-98 transition-all duration-300"
-                  >
-                    <Download className="w-4 h-4" />
-                    <span>Download Resume PDF</span>
-                  </a>
-                </div>
-              </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
-      </header>
+            <a
+              href="/sre.prateek_resume.pdf"
+              download="sre.prateek_resume.pdf"
+              onClick={() => {
+                trackResumeDownload();
+                setMobileMenuOpen(false);
+              }}
+              className="flex items-center justify-center gap-2 p-3.5 rounded-2xl bg-gradient-to-r from-azure-500 via-cyan-500 to-emerald-500 text-white font-heading font-bold text-xs shadow-azure-glow"
+            >
+              <Download className="w-4 h-4" />
+              <span>Download Resume PDF</span>
+            </a>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </>
   );
 }

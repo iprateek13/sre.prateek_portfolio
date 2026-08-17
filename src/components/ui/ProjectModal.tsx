@@ -6,11 +6,14 @@ import { Project } from "@/lib/types";
 import { X, Github, ExternalLink, ShieldCheck, Layers, CheckCircle2 } from "lucide-react";
 
 interface ProjectModalProps {
-  project: Project;
+  project: Project | null;
+  isOpen?: boolean;
   onClose: () => void;
 }
 
-export function ProjectModal({ project, onClose }: ProjectModalProps) {
+export function ProjectModal({ project, isOpen, onClose }: ProjectModalProps) {
+  if (!project || (isOpen === false)) return null;
+
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === "Escape") onClose();

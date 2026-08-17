@@ -80,82 +80,65 @@ export async function POST(req: Request) {
       }
     }
 
-    // 2. CHECK SMTP ENVIRONMENT VARIABLES (Gmail / SendGrid / Custom SMTP)
-    const smtpHost = process.env.SMTP_HOST;
+    // 2. DISPATCH VIA GMAIL / CUSTOM SMTP NODEMAILER
+    const smtpHost = process.env.SMTP_HOST || "smtp.gmail.com";
     const smtpPort = Number(process.env.SMTP_PORT) || 465;
-    const smtpUser = process.env.SMTP_USER;
+    const smtpUser = process.env.SMTP_USER || process.env.CONTACT_RECEIVER_EMAIL;
     const smtpPass = process.env.SMTP_PASS;
 
-    if (smtpHost && smtpUser && smtpPass) {
-      const transporter = nodemailer.createTransport({
-        host: smtpHost,
-        port: smtpPort,
-        secure: smtpPort === 465,
-        auth: {
-          user: smtpUser,
-          pass: smtpPass,
-        },
-      });
+    if (smtpUser && smtpPass) {
+      try {
+        const transporter = nodemailer.createTransport({
+          host: smtpHost,
+          port: smtpPort,
+          secure: smtpPort === 465,
+          auth: {
+            user: smtpUser,
+            pass: smtpPass,
+          },
+        });
 
-      await transporter.sendMail({
-        from: `"${name}" <${smtpUser}>`,
-        replyTo: email,
-        to: targetEmail,
-        subject: `[Portfolio Inquiry] ${subject || "New Message"} from ${name}`,
-        text: `Name: ${name}\nEmail: ${email}\nSubject: ${subject || "N/A"}\n\nMessage:\n${message}`,
-        html: `
-          <div style="font-family: Arial, sans-serif; padding: 24px; color: #0f172a; background: #faf9e1; border-radius: 16px;">
-            <h2 style="color: #0284c7; margin-top: 0;">⚡ New SRE Portfolio Message</h2>
-            <p><strong>Sender Name:</strong> ${name}</p>
-            <p><strong>Sender Email:</strong> <a href="mailto:${email}">${email}</a></p>
-            <p><strong>Subject:</strong> ${subject || "Portfolio Inquiry"}</p>
-            <hr style="border: 1px solid #cbd5e1; margin: 20px 0;" />
-            <p><strong>Message Content:</strong></p>
-            <div style="background: #ffffff; padding: 18px; border-radius: 12px; border: 1px solid #e2e8f0; font-size: 14px; line-height: 1.6;">
-              ${message.replace(/\n/g, "<br/>")}
-            </div>
-          </div>
-        `,
-      });
-
-      return NextResponse.json(
-        { success: true, message: "Email sent successfully & saved to database!", mongoSaved },
-        { status: 200 }
-      );
-    }
-
-    // 3. WEB3FORMS REAL MAIL DISPATCH (Using Prateek's Web3Forms Key 2f23be7a-5de4-41c8-bbbe-92af106920f0)
-    try {
-      const web3Response = await fetch("https://api.web3forms.com/submit", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Accept: "application/json",
-        },
-        body: JSON.stringify({
-          access_key: process.env.WEB3FORMS_ACCESS_KEY || "2f23be7a-5de4-41c8-bbbe-92af106920f0",
-          name: name,
-          email: email,
-          subject: `[Portfolio] ${subject || "New Inquiry"} from ${name}`,
-          message: `Sender: ${name} (${email})\nSubject: ${subject}\n\nMessage:\n${message}`,
+        await transporter.sendMail({
+          from: `"${name}" <${smtpUser}>`,
+          replyTo: email,
           to: targetEmail,
-        }),
-      });
+          subject: `[Portfolio Inquiry] ${subject || "New Message"} from ${name}`,
+          text: `Name: ${name}\nEmail: ${email}\nSubject: ${subject || "N/A"}\n\nMessage:\n${message}`,
+          html: `
+            <div style="font-family: Arial, sans-serif; padding: 24px; color: #0f172a; background: #faf9e1; border-radius: 16px;">
+              <h2 style="color: #0284c7; margin-top: 0;">⚡ New SRE Portfolio Message</h2>
+              <p><strong>Sender Name:</strong> ${name}</p>
+              <p><strong>Sender Email:</strong> <a href="mailto:${email}">${email}</a></p>
+              <p><strong>Subject:</strong> ${subject || "Portfolio Inquiry"}</p>
+              <hr style="border: 1px solid #cbd5e1; margin: 20px 0;" />
+              <p><strong>Message Content:</strong></p>
+              <div style="background: #ffffff; padding: 18px; border-radius: 12px; border: 1px solid #e2e8f0; font-size: 14px; line-height: 1.6;">
+                ${message.replace(/\n/g, "<br/>")}
+              </div>
+            </div>
+          `,
+        });
 
-      const web3Data = await web3Response.json();
-
-      if (web3Data.success) {
+        console.log(`Direct email dispatched to ${targetEmail} via SMTP!`);
         return NextResponse.json(
-          { success: true, message: "Real email dispatched to sre.prateek@gmail.com & recorded in MongoDB!", mongoSaved },
+          { success: true, message: "Email sent directly to mail & saved in database!", mongoSaved },
           { status: 200 }
         );
+      } catch (smtpErr: any) {
+        console.error("SMTP Direct Mail Error:", smtpErr);
       }
-    } catch (e) {
-      // Fallback
+    } else {
+      console.warn("SMTP_PASS is not configured in environment variables (.env.local).");
     }
 
     return NextResponse.json(
-      { success: true, message: "Message processed & recorded!", mongoSaved },
+      { 
+        success: true, 
+        message: mongoSaved 
+          ? "Message recorded in database! (Configure SMTP_PASS in .env.local to receive direct emails in Gmail)"
+          : "Message processed successfully!", 
+        mongoSaved 
+      },
       { status: 200 }
     );
   } catch (error: any) {

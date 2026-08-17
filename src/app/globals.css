@@ -176,34 +176,73 @@
   box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.65);
 }
 
-/* Glass Shimmer Metallic Reflection Utilities */
-.relative-shimmer {
-  position: relative;
-  overflow: hidden;
+/* Modern Cyber Mesh & Ambient Gradient Backgrounds */
+.bg-mesh-gradient {
+  background: 
+    radial-gradient(at 0% 0%, rgba(2, 132, 199, 0.15) 0px, transparent 50%),
+    radial-gradient(at 100% 0%, rgba(34, 211, 238, 0.12) 0px, transparent 50%),
+    radial-gradient(at 50% 50%, rgba(16, 185, 129, 0.08) 0px, transparent 50%),
+    radial-gradient(at 100% 100%, rgba(168, 85, 247, 0.1) 0px, transparent 50%);
 }
 
-.relative-shimmer::after {
-  content: '';
-  position: absolute;
-  top: -50%;
-  left: -50%;
-  width: 200%;
-  height: 200%;
-  background: linear-gradient(
-    60deg,
-    transparent 30%,
-    rgba(255, 255, 255, 0.3) 50%,
-    transparent 70%
-  );
-  transform: rotate(30deg) translateX(-100%);
-  animation: shimmerSweep 6s infinite ease-in-out;
+.dark .bg-mesh-gradient {
+  background: 
+    radial-gradient(at 0% 0%, rgba(2, 132, 199, 0.25) 0px, transparent 50%),
+    radial-gradient(at 100% 0%, rgba(34, 211, 238, 0.2) 0px, transparent 50%),
+    radial-gradient(at 50% 50%, rgba(16, 185, 129, 0.15) 0px, transparent 50%),
+    radial-gradient(at 100% 100%, rgba(168, 85, 247, 0.18) 0px, transparent 50%);
 }
 
-@keyframes shimmerSweep {
+/* Glowing Accent Utilities */
+.shadow-azure-glow {
+  box-shadow: 0 0 25px -5px rgba(2, 132, 199, 0.45);
+}
+
+.shadow-cyan-glow {
+  box-shadow: 0 0 25px -5px rgba(34, 211, 238, 0.45);
+}
+
+.shadow-emerald-glow {
+  box-shadow: 0 0 25px -5px rgba(16, 185, 129, 0.45);
+}
+
+.shadow-violet-glow {
+  box-shadow: 0 0 25px -5px rgba(168, 85, 247, 0.45);
+}
+
+/* Animated Border Beam */
+@keyframes borderBeam {
   0% {
-    transform: rotate(30deg) translateX(-150%);
+    offset-distance: 0%;
   }
-  30%, 100% {
-    transform: rotate(30deg) translateX(150%);
+  100% {
+    offset-distance: 100%;
   }
 }
+
+.animate-border-beam {
+  animation: borderBeam 6s linear infinite;
+}
+
+/* Glassmorphism Ultra Cards */
+.glass-card-hover {
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.glass-card-hover:hover {
+  transform: translateY(-4px) scale(1.01);
+  border-color: rgba(34, 211, 238, 0.45);
+  box-shadow: 0 20px 40px -15px rgba(2, 132, 199, 0.25);
+}
+
+/* Cyber Dot Matrix */
+.bg-dot-matrix {
+  background-image: radial-gradient(rgba(2, 132, 199, 0.18) 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+
+.dark .bg-dot-matrix {
+  background-image: radial-gradient(rgba(56, 189, 248, 0.25) 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+
