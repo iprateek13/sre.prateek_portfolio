@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { portfolioData } from "@/data/content";
 import { 
   Cloud, Cpu, Layers, ShieldCheck, Activity, Code, Search, 
-  Sparkles, CheckCircle2, Terminal, BarChart3, Boxes, Award 
+  Sparkles, CheckCircle2, Terminal, BarChart3, Boxes, Award, X 
 } from "lucide-react";
 
 export function SkillsSection() {
@@ -77,7 +77,7 @@ export function SkillsSection() {
             ))}
           </div>
 
-          {/* Interactive Search Box matching Navbar Input */}
+          {/* Interactive Search Box with Clear (X) Icon Button */}
           <div className="relative w-full md:w-72">
             <Search className="w-4 h-4 text-azure-500 absolute left-3.5 top-1/2 -translate-y-1/2" />
             <input
@@ -85,8 +85,18 @@ export function SkillsSection() {
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Search e.g. Azure, Terraform..."
-              className="w-full pl-10 pr-4 py-2 rounded-xl bg-white/80 dark:bg-dark-950/80 border border-slate-200/80 dark:border-slate-800/80 text-xs text-dark-900 dark:text-white placeholder-slate-400 focus:outline-none focus:border-azure-500 shadow-sm"
+              className="w-full pl-10 pr-9 py-2 rounded-xl bg-white/80 dark:bg-dark-950/80 border border-slate-200/80 dark:border-slate-800/80 text-xs text-dark-900 dark:text-white placeholder-slate-400 focus:outline-none focus:border-azure-500 shadow-sm"
             />
+            {searchQuery && (
+              <button
+                type="button"
+                onClick={() => setSearchQuery("")}
+                className="absolute right-2.5 top-1/2 -translate-y-1/2 p-1 rounded-lg text-slate-400 hover:text-rose-500 hover:bg-rose-500/10 transition-colors"
+                title="Clear search"
+              >
+                <X className="w-3.5 h-3.5" />
+              </button>
+            )}
           </div>
         </div>
 
