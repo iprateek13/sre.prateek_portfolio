@@ -121,45 +121,41 @@ export function SkillsSection() {
                 </div>
               </div>
 
-              {/* Skill Cards Grid */}
+              {/* Skill Cards Grid with 100% uniform card styling */}
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                 {catGroup.skills.map((skill, idx) => (
                   <div
                     key={idx}
-                    className={`p-4 rounded-2xl border transition-all duration-300 relative group hover:-translate-y-1 ${
-                      skill.isKey
-                        ? "bg-slate-50/90 dark:bg-dark-850/90 border-azure-500/30 dark:border-azure-500/30 hover:border-azure-500 shadow-md"
-                        : "bg-white dark:bg-dark-950/80 border-slate-200/60 dark:border-slate-800/80 hover:border-cyan-500/40"
-                    }`}
+                    className="p-4 rounded-2xl border transition-all duration-300 relative group hover:-translate-y-1 flex flex-col justify-between bg-slate-50/90 dark:bg-dark-850/90 border-azure-500/30 dark:border-azure-500/30 hover:border-azure-500 shadow-md"
                   >
-                    <div className="flex items-center justify-between mb-2">
-                      <span className="font-heading font-bold text-sm text-dark-900 dark:text-white flex items-center gap-1.5">
-                        {skill.name}
-                      </span>
-                      <span
-                        className={`text-[10px] font-mono font-semibold px-2 py-0.5 rounded-full ${
-                          skill.level === "Advanced"
-                            ? "bg-azure-500/15 text-azure-600 dark:text-cyan-300 border border-azure-500/30"
-                            : "bg-emerald-500/15 text-emerald-600 dark:text-emerald-300 border border-emerald-500/30"
-                        }`}
-                      >
-                        {skill.level}
-                      </span>
+                    <div>
+                      <div className="flex items-center justify-between mb-2">
+                        <span className="font-heading font-bold text-sm text-dark-900 dark:text-white flex items-center gap-1.5">
+                          {skill.name}
+                        </span>
+                        <span
+                          className={`text-[10px] font-mono font-semibold px-2 py-0.5 rounded-full shrink-0 ${
+                            skill.level === "Advanced"
+                              ? "bg-azure-500/15 text-azure-600 dark:text-cyan-300 border border-azure-500/30"
+                              : "bg-emerald-500/15 text-emerald-600 dark:text-emerald-300 border border-emerald-500/30"
+                          }`}
+                        >
+                          {skill.level}
+                        </span>
+                      </div>
+
+                      <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed mb-3">
+                        {skill.description}
+                      </p>
                     </div>
 
-                    <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
-                      {skill.description}
-                    </p>
-
-                    {skill.isKey && (
-                      <div className="mt-3 pt-2.5 border-t border-slate-200 dark:border-slate-800 flex items-center justify-between text-[11px] font-mono text-azure-500">
-                        <span className="flex items-center gap-1">
-                          <Sparkles className="w-3 h-3 text-amber-400" />
-                          <span>Core Competency</span>
-                        </span>
-                        <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />
-                      </div>
-                    )}
+                    <div className="mt-3 pt-2.5 border-t border-slate-200 dark:border-slate-800 flex items-center justify-between text-[11px] font-mono text-azure-500">
+                      <span className="flex items-center gap-1">
+                        <Sparkles className="w-3 h-3 text-amber-400" />
+                        <span>Core Competency</span>
+                      </span>
+                      <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />
+                    </div>
                   </div>
                 ))}
               </div>

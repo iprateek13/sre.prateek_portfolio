@@ -88,7 +88,7 @@ export const portfolioData: PortfolioData = {
         { name: "Terraform (azurerm & aws)", level: "Advanced", iconName: "Cpu", isKey: true, description: "Multi-cloud providers, workspace management, remote state locking" },
         { name: "15+ Modular Child Modules", level: "Advanced", iconName: "Boxes", isKey: true, description: "15+ Reusable modules for VNets, VPCs, Subnets, VMs, Key Vaults, and Storage" },
         { name: "Dynamic Blocks & Loops", level: "Advanced", iconName: "Repeat", isKey: true, description: "for_each, count, dynamic blocks, map(object(...)) schema design" },
-        { name: "Remote State Backend", level: "Advanced", iconName: "ShieldCheck", isKey: false, description: "Azure Blob & AWS S3 state backends with lease locking and encryption" },
+        { name: "Remote State Backend", level: "Advanced", iconName: "ShieldCheck", isKey: true, description: "Azure Blob & AWS S3 state backends with lease locking and encryption" },
       ],
     },
     {
@@ -100,7 +100,7 @@ export const portfolioData: PortfolioData = {
         { name: "DevSecOps Scanning", level: "Advanced", iconName: "ShieldCheck", isKey: true, description: "tfsec, tflint, Checkov, Trivy vulnerability & policy scanning in CI/CD" },
         { name: "GitHub Actions & Azure Pipelines", level: "Advanced", iconName: "GitBranch", isKey: true, description: "Automated Terraform plan/apply workflows, secret management" },
         { name: "Infracost & OPA Policy-as-Code", level: "Proficient", iconName: "Workflow", isKey: true, description: "Shift-left cost estimation and Open Policy Agent guardrail enforcement" },
-        { name: "Secrets & Vault Governance", level: "Proficient", iconName: "Key", isKey: false, description: "Azure Key Vault, GitHub Secrets, environment isolation" },
+        { name: "Secrets & Vault Governance", level: "Proficient", iconName: "Key", isKey: true, description: "Azure Key Vault, GitHub Secrets, environment isolation" },
       ],
     },
     {
@@ -112,7 +112,7 @@ export const portfolioData: PortfolioData = {
         { name: "Prometheus & Grafana", level: "Proficient", iconName: "BarChart3", isKey: true, description: "Cluster telemetry dashboards, metric scrapers, alert rules" },
         { name: "Docker & Kubernetes (AKS)", level: "Proficient", iconName: "Container", isKey: true, description: "Containerizing microservices, AKS pod health monitoring" },
         { name: "SLO/SLA Error Budgets", level: "Proficient", iconName: "Gauge", isKey: true, description: "Tracking reliability budgets, alert escalation policies" },
-        { name: "Linux System Admin & Shell", level: "Advanced", iconName: "Terminal", isKey: false, description: "Linux admin, systemd services, automated Bash & PowerShell scripting" },
+        { name: "Linux System Admin & Shell", level: "Advanced", iconName: "Terminal", isKey: true, description: "Linux admin, systemd services, automated Bash & PowerShell scripting" },
       ],
     },
     {
@@ -123,7 +123,7 @@ export const portfolioData: PortfolioData = {
       skills: [
         { name: "Python & Bash Scripting", level: "Advanced", iconName: "Terminal", isKey: true, description: "Linux shell automation, system cron jobs, CLI scripts" },
         { name: "PowerShell & Az / AWS CLI", level: "Proficient", iconName: "TerminalSquare", isKey: true, description: "Azure CLI & AWS CLI automation routines" },
-        { name: "Java & DSA Fundamentals", level: "Proficient", iconName: "FileSpreadsheet", isKey: false, description: "Object-oriented programming and DSA fundamentals" },
+        { name: "Java & DSA Fundamentals", level: "Proficient", iconName: "FileSpreadsheet", isKey: true, description: "Object-oriented programming and DSA fundamentals" },
       ],
     },
   ],
