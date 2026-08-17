@@ -204,7 +204,7 @@ export function ProjectsSection() {
                   <div
                     key={project.id}
                     onClick={() => setSelectedProject(project)}
-                    className="p-6 rounded-3xl bg-white/90 dark:bg-dark-900/90 border border-slate-200/80 dark:border-slate-800 backdrop-blur-xl shadow-xl hover:border-azure-500/50 transition-all duration-300 hover:-translate-y-1.5 cursor-pointer flex flex-col justify-between group"
+                    className="p-6 rounded-3xl bg-white/90 dark:bg-dark-900/90 border border-slate-200/80 dark:border-slate-800 backdrop-blur-xl shadow-xl hover:border-azure-500/50 glass-card-hover cursor-pointer flex flex-col justify-between group"
                   >
                     <div>
                       <div className="flex items-center justify-between mb-3">

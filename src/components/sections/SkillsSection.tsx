@@ -136,7 +136,7 @@ export function SkillsSection() {
                 {catGroup.skills.map((skill, idx) => (
                   <div
                     key={idx}
-                    className="p-4 rounded-2xl border transition-all duration-300 relative group hover:-translate-y-1 flex flex-col justify-between bg-slate-50/90 dark:bg-dark-850/90 border-azure-500/30 dark:border-azure-500/30 hover:border-azure-500 shadow-md"
+                    className="p-4 rounded-2xl border transition-all duration-300 relative group flex flex-col justify-between bg-slate-50/90 dark:bg-dark-850/90 border-azure-500/30 dark:border-azure-500/30 hover:border-azure-500 glass-card-hover shadow-md"
                   >
                     <div>
                       <div className="flex items-center justify-between mb-2">
