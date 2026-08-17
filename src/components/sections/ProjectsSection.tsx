@@ -164,22 +164,24 @@ export function ProjectsSection() {
             </div>
           </motion.div>
 
-          {/* Category Filter Tabs */}
-          <div className="flex justify-center mb-10">
-            <div className="inline-flex p-1.5 rounded-2xl bg-white/80 dark:bg-dark-900/80 border border-slate-200 dark:border-slate-800 backdrop-blur-xl">
-              {categories.map((cat) => (
-                <button
-                  key={cat}
-                  onClick={() => setSelectedCategory(cat)}
-                  className={`px-4 py-2 rounded-xl text-xs font-heading font-semibold transition-all ${
-                    selectedCategory === cat
-                      ? "bg-azure-500 text-white shadow-azure-glow"
-                      : "text-slate-600 dark:text-slate-400 hover:text-dark-900 dark:hover:text-white"
-                  }`}
-                >
-                  {cat}
-                </button>
-              ))}
+          {/* Category Filter Tabs matching top main Navbar design */}
+          <div className="w-full max-w-full overflow-x-auto no-scrollbar py-2 mb-10 px-4 sm:px-0 flex justify-start sm:justify-center">
+            <div className="glass-navbar-tuf shadow-2xl p-1.5 rounded-2xl sm:rounded-3xl flex items-center shrink-0">
+              <div className="flex items-center gap-1 bg-slate-100/60 dark:bg-dark-950/60 p-1.5 rounded-2xl border border-slate-200/50 dark:border-slate-800/50 backdrop-blur-md">
+                {categories.map((cat) => (
+                  <button
+                    key={cat}
+                    onClick={() => setSelectedCategory(cat)}
+                    className={`px-4 py-2 rounded-xl text-xs font-heading font-semibold transition-all duration-300 whitespace-nowrap shrink-0 ${
+                      selectedCategory === cat
+                        ? "text-azure-600 dark:text-cyan-300 bg-white dark:bg-dark-850 shadow-md font-bold"
+                        : "text-slate-600 dark:text-slate-400 hover:text-dark-900 dark:hover:text-white"
+                    }`}
+                  >
+                    {cat}
+                  </button>
+                ))}
+              </div>
             </div>
           </div>
 

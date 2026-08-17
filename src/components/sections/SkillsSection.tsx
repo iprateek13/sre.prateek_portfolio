@@ -54,18 +54,18 @@ export function SkillsSection() {
           </p>
         </div>
 
-        {/* Search & Category Filter Bar */}
-        <div className="mb-10 flex flex-col md:flex-row items-center justify-between gap-4 p-4 rounded-3xl bg-white/80 dark:bg-dark-900/80 border border-slate-200/80 dark:border-slate-800 backdrop-blur-xl shadow-xl">
-          {/* Category Pills */}
-          <div className="flex flex-wrap items-center gap-2 w-full md:w-auto">
+        {/* Search & Category Filter Bar matching top main Navbar design */}
+        <div className="mb-10 flex flex-col md:flex-row items-center justify-between gap-4 p-3 sm:p-3.5 rounded-2xl sm:rounded-3xl glass-navbar-tuf shadow-2xl">
+          {/* Category Pills matching Navbar Button Group */}
+          <div className="flex items-center gap-1 bg-slate-100/60 dark:bg-dark-950/60 p-1.5 rounded-2xl border border-slate-200/50 dark:border-slate-800/50 backdrop-blur-md overflow-x-auto no-scrollbar w-full md:w-auto">
             {categories.map((cat) => (
               <button
                 key={cat}
                 onClick={() => setSelectedCategory(cat)}
-                className={`px-3.5 py-2 rounded-2xl text-xs font-heading font-semibold transition-all duration-300 ${
+                className={`px-3.5 py-2 rounded-xl text-xs font-heading font-semibold transition-all duration-300 whitespace-nowrap shrink-0 ${
                   selectedCategory === cat
-                    ? "bg-gradient-to-r from-azure-500 to-cyan-500 text-white shadow-azure-glow scale-105"
-                    : "bg-slate-100 dark:bg-dark-850 text-slate-600 dark:text-slate-400 hover:text-dark-900 dark:hover:text-white"
+                    ? "text-azure-600 dark:text-cyan-300 bg-white dark:bg-dark-850 shadow-md font-bold"
+                    : "text-slate-600 dark:text-slate-400 hover:text-dark-900 dark:hover:text-white"
                 }`}
               >
                 {cat === "All" ? "All Stack" : cat.split(" ")[0]}
@@ -73,15 +73,15 @@ export function SkillsSection() {
             ))}
           </div>
 
-          {/* Interactive Search Box */}
+          {/* Interactive Search Box matching Navbar Input */}
           <div className="relative w-full md:w-72">
             <Search className="w-4 h-4 text-azure-500 absolute left-3.5 top-1/2 -translate-y-1/2" />
             <input
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Search e.g. Azure, Terraform, Prometheus..."
-              className="w-full pl-10 pr-4 py-2 rounded-2xl bg-slate-50 dark:bg-dark-950 border border-slate-200 dark:border-slate-800 text-xs text-dark-900 dark:text-white placeholder-slate-400 focus:outline-none focus:border-azure-500"
+              placeholder="Search e.g. Azure, Terraform..."
+              className="w-full pl-10 pr-4 py-2 rounded-xl bg-white/80 dark:bg-dark-950/80 border border-slate-200/80 dark:border-slate-800/80 text-xs text-dark-900 dark:text-white placeholder-slate-400 focus:outline-none focus:border-azure-500 shadow-sm"
             />
           </div>
         </div>
