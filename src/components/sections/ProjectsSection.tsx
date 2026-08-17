@@ -164,8 +164,8 @@ export function ProjectsSection() {
             </div>
           </motion.div>
 
-          {/* Category Filter Tabs matching top main Navbar design */}
-          <div className="w-full max-w-full overflow-x-auto no-scrollbar py-2 mb-10 px-4 sm:px-0 flex justify-start sm:justify-center">
+          {/* Category Filter Tabs matching top main Navbar design & flush card alignment */}
+          <div className="w-full max-w-full overflow-x-auto no-scrollbar py-2 mb-8 sm:mb-10 flex justify-start sm:justify-center">
             <div className="glass-navbar-tuf shadow-2xl p-1.5 rounded-2xl sm:rounded-3xl flex items-center shrink-0">
               <div className="flex items-center gap-1 bg-slate-100/60 dark:bg-dark-950/60 p-1.5 rounded-2xl border border-slate-200/50 dark:border-slate-800/50 backdrop-blur-md">
                 {categories.map((cat) => (
