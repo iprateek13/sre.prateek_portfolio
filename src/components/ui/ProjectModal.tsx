@@ -12,16 +12,20 @@ interface ProjectModalProps {
 }
 
 export function ProjectModal({ project, isOpen, onClose }: ProjectModalProps) {
-  if (!project || (isOpen === false)) return null;
+  const isVisible = Boolean(project && isOpen !== false);
 
   useEffect(() => {
+    if (isVisible) {
+      document.body.style.overflow = "hidden";
+      document.body.classList.add("modal-open");
+    } else {
+      document.body.style.overflow = "auto";
+      document.body.classList.remove("modal-open");
+    }
+
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === "Escape") onClose();
     };
-
-    // Add modal-open class to hide navbar and lock scroll
-    document.body.style.overflow = "hidden";
-    document.body.classList.add("modal-open");
     window.addEventListener("keydown", handleKeyDown);
 
     return () => {
@@ -29,24 +33,28 @@ export function ProjectModal({ project, isOpen, onClose }: ProjectModalProps) {
       document.body.classList.remove("modal-open");
       window.removeEventListener("keydown", handleKeyDown);
     };
-  }, [onClose]);
+  }, [isVisible, onClose]);
 
   return (
     <AnimatePresence>
-      {/* Outer Backdrop Overlay - Clicking vacant area triggers onClose() */}
-      <div
-        onClick={onClose}
-        className="fixed inset-0 z-[100] flex items-center justify-center p-3 sm:p-6 lg:p-8 overflow-y-auto bg-dark-950/80 backdrop-blur-md cursor-pointer"
-      >
-        {/* Inner Modal Card - Stop Propagation to prevent closing on card click */}
+      {isVisible && project && (
         <motion.div
-          onClick={(e) => e.stopPropagation()}
-          initial={{ opacity: 0, scale: 0.95, y: 20 }}
-          animate={{ opacity: 1, scale: 1, y: 0 }}
-          exit={{ opacity: 0, scale: 0.95, y: 20 }}
-          transition={{ duration: 0.25, ease: "easeOut" }}
-          className="relative w-full max-w-3xl rounded-3xl bg-white dark:bg-dark-900 border border-slate-200 dark:border-slate-800 shadow-2xl overflow-hidden my-auto max-h-[88vh] flex flex-col cursor-default"
+          onClick={onClose}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
+          className="fixed inset-0 z-[100] flex items-center justify-center p-3 sm:p-6 lg:p-8 overflow-y-auto bg-dark-950/80 backdrop-blur-md cursor-pointer"
         >
+          {/* Inner Modal Card - Stop Propagation to prevent closing on card click */}
+          <motion.div
+            onClick={(e) => e.stopPropagation()}
+            initial={{ opacity: 0, scale: 0.94, y: 20 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.94, y: 20 }}
+            transition={{ duration: 0.32, ease: [0.16, 1, 0.3, 1] }}
+            className="relative w-full max-w-3xl rounded-3xl bg-white dark:bg-dark-900 border border-slate-200 dark:border-slate-800 shadow-2xl overflow-hidden my-auto max-h-[88vh] flex flex-col cursor-default"
+          >
           {/* Header Bar */}
           <div className="p-5 sm:p-6 border-b border-slate-200/80 dark:border-slate-800/80 flex items-center justify-between bg-cream-100/50 dark:bg-dark-950/50">
             <div>
@@ -152,7 +160,8 @@ export function ProjectModal({ project, isOpen, onClose }: ProjectModalProps) {
             </button>
           </div>
         </motion.div>
-      </div>
-    </AnimatePresence>
+      </motion.div>
+    )}
+  </AnimatePresence>
   );
 }

@@ -40,8 +40,6 @@ export function CmdKModal({ isOpen, onClose }: CmdKModalProps) {
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [isOpen, onClose]);
 
-  if (!isOpen) return null;
-
   const filteredProjects = portfolioData.projects.filter(
     (p) =>
       p.title.toLowerCase().includes(query.toLowerCase()) ||
@@ -63,18 +61,23 @@ export function CmdKModal({ isOpen, onClose }: CmdKModalProps) {
 
   return (
     <AnimatePresence>
-      <div 
-        onClick={onClose}
-        className="fixed inset-0 z-50 flex items-start justify-center pt-16 sm:pt-24 px-4 bg-black/60 backdrop-blur-md cursor-pointer"
-      >
-        <motion.div
-          onClick={(e) => e.stopPropagation()}
-          initial={{ opacity: 0, scale: 0.95, y: -20 }}
-          animate={{ opacity: 1, scale: 1, y: 0 }}
-          exit={{ opacity: 0, scale: 0.95, y: -20 }}
-          transition={{ duration: 0.2 }}
-          className="relative w-full max-w-2xl overflow-hidden rounded-3xl bg-white/95 dark:bg-dark-900/95 border border-azure-500/30 shadow-2xl backdrop-blur-2xl cursor-default"
+      {isOpen && (
+        <motion.div 
+          onClick={onClose}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
+          className="fixed inset-0 z-50 flex items-start justify-center pt-16 sm:pt-24 px-4 bg-black/60 backdrop-blur-md cursor-pointer"
         >
+          <motion.div
+            onClick={(e) => e.stopPropagation()}
+            initial={{ opacity: 0, scale: 0.94, y: -16 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.94, y: -16 }}
+            transition={{ duration: 0.32, ease: [0.16, 1, 0.3, 1] }}
+            className="relative w-full max-w-2xl overflow-hidden rounded-3xl bg-white/95 dark:bg-dark-900/95 border border-azure-500/30 shadow-2xl backdrop-blur-2xl cursor-default"
+          >
           {/* Header Input */}
           <div className="relative flex items-center px-5 py-4 border-b border-slate-200 dark:border-slate-800">
             <Search className="w-5 h-5 text-azure-500 mr-3 shrink-0" />
@@ -207,7 +210,8 @@ export function CmdKModal({ isOpen, onClose }: CmdKModalProps) {
             <span className="text-azure-400">SRE Multi-Cloud Portfolio</span>
           </div>
         </motion.div>
-      </div>
-    </AnimatePresence>
+      </motion.div>
+    )}
+  </AnimatePresence>
   );
 }

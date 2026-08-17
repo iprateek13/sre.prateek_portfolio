@@ -32,8 +32,6 @@ export function TerraformModuleExplorerModal({ isOpen, onClose }: TerraformModul
     };
   }, [isOpen]);
 
-  if (!isOpen) return null;
-
   const modules: ModuleInfo[] = [
     {
       name: "azurerm_virtual_network_hub",
@@ -89,18 +87,23 @@ export function TerraformModuleExplorerModal({ isOpen, onClose }: TerraformModul
 
   return (
     <AnimatePresence>
-      <div 
-        onClick={onClose}
-        className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-black/70 backdrop-blur-md cursor-pointer"
-      >
-        <motion.div
-          onClick={(e) => e.stopPropagation()}
-          initial={{ opacity: 0, scale: 0.95 }}
-          animate={{ opacity: 1, scale: 1 }}
-          exit={{ opacity: 0, scale: 0.95 }}
-          transition={{ duration: 0.2 }}
-          className="relative w-full max-w-4xl max-h-[85vh] overflow-hidden rounded-3xl bg-dark-900 border border-azure-500/30 shadow-2xl backdrop-blur-2xl flex flex-col cursor-default"
+      {isOpen && (
+        <motion.div 
+          onClick={onClose}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-black/70 backdrop-blur-md cursor-pointer"
         >
+          <motion.div
+            onClick={(e) => e.stopPropagation()}
+            initial={{ opacity: 0, scale: 0.94, y: 20 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.94, y: 20 }}
+            transition={{ duration: 0.32, ease: [0.16, 1, 0.3, 1] }}
+            className="relative w-full max-w-4xl max-h-[85vh] overflow-hidden rounded-3xl bg-dark-900 border border-azure-500/30 shadow-2xl backdrop-blur-2xl flex flex-col cursor-default"
+          >
           {/* Header */}
           <div className="p-6 border-b border-slate-800 flex items-center justify-between">
             <div className="flex items-center gap-3">
@@ -194,7 +197,8 @@ export function TerraformModuleExplorerModal({ isOpen, onClose }: TerraformModul
             </button>
           </div>
         </motion.div>
-      </div>
-    </AnimatePresence>
+      </motion.div>
+    )}
+  </AnimatePresence>
   );
 }
