@@ -8,8 +8,6 @@ import {
   Sparkles, CheckCircle2, Terminal, BarChart3, Boxes, Award, X 
 } from "lucide-react";
 
-import { BrandIcon } from "@/components/ui/BrandIcon";
-
 export function SkillsSection() {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("All");
@@ -176,8 +174,8 @@ export function SkillsSection() {
                     >
                       <div>
                         <div className="flex items-center justify-between mb-2">
-                          <span className="font-heading font-bold text-sm text-dark-900 dark:text-white flex items-center gap-2">
-                            <BrandIcon name={skill.name} className="w-4.5 h-4.5 shrink-0" />
+                          <span className="font-heading font-bold text-sm text-dark-900 dark:text-white flex items-center gap-1.5">
+                            <span>{brandIcon}</span>
                             <span>{skill.name}</span>
                           </span>
                           <span
