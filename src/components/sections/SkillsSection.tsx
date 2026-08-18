@@ -131,43 +131,75 @@ export function SkillsSection() {
                 </div>
               </div>
 
-              {/* Skill Cards Grid with 100% uniform card styling */}
+              {/* Skill Cards Grid with Brand Palette Accent Colors */}
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                {catGroup.skills.map((skill, idx) => (
-                  <div
-                    key={idx}
-                    className="p-4 rounded-2xl border transition-all duration-300 relative group flex flex-col justify-between bg-slate-50/90 dark:bg-dark-850/90 border-azure-500/30 dark:border-azure-500/30 hover:border-azure-500 glass-card-hover shadow-md"
-                  >
-                    <div>
-                      <div className="flex items-center justify-between mb-2">
-                        <span className="font-heading font-bold text-sm text-dark-900 dark:text-white flex items-center gap-1.5">
-                          {skill.name}
-                        </span>
-                        <span
-                          className={`text-[10px] font-mono font-semibold px-2 py-0.5 rounded-full shrink-0 ${
-                            skill.level === "Advanced"
-                              ? "bg-azure-500/15 text-azure-600 dark:text-cyan-300 border border-azure-500/30"
-                              : "bg-emerald-500/15 text-emerald-600 dark:text-emerald-300 border border-emerald-500/30"
-                          }`}
-                        >
-                          {skill.level}
-                        </span>
+                {catGroup.skills.map((skill, idx) => {
+                  const lowerName = skill.name.toLowerCase();
+                  let brandBadgeStyle = "bg-azure-500/15 text-azure-600 dark:text-cyan-300 border-azure-500/30";
+                  let borderHoverStyle = "hover:border-azure-500 hover:shadow-[0_0_15px_rgba(2,132,199,0.2)]";
+                  let brandIcon = "✨";
+                  let brandDotColor = "bg-azure-500";
+
+                  if (lowerName.includes("azure")) {
+                    brandBadgeStyle = "bg-[#0284C7]/15 text-[#0284C7] dark:text-[#38BDF8] border-[#0284C7]/40";
+                    borderHoverStyle = "hover:border-[#0284C7] hover:shadow-[0_0_18px_rgba(2,132,199,0.3)]";
+                    brandIcon = "🔷";
+                    brandDotColor = "bg-[#0284C7]";
+                  } else if (lowerName.includes("aws")) {
+                    brandBadgeStyle = "bg-[#F59E0B]/15 text-[#D97706] dark:text-[#FBBF24] border-[#F59E0B]/40";
+                    borderHoverStyle = "hover:border-[#F59E0B] hover:shadow-[0_0_18px_rgba(245,158,11,0.3)]";
+                    brandIcon = "🟧";
+                    brandDotColor = "bg-[#F59E0B]";
+                  } else if (lowerName.includes("terraform") || lowerName.includes("iac")) {
+                    brandBadgeStyle = "bg-[#845EF7]/15 text-[#7950F2] dark:text-[#A580FF] border-[#845EF7]/40";
+                    borderHoverStyle = "hover:border-[#845EF7] hover:shadow-[0_0_18px_rgba(132,94,247,0.3)]";
+                    brandIcon = "💜";
+                    brandDotColor = "bg-[#845EF7]";
+                  } else if (lowerName.includes("kubernetes") || lowerName.includes("k8s") || lowerName.includes("aks")) {
+                    brandBadgeStyle = "bg-[#326CE5]/15 text-[#2563EB] dark:text-[#60A5FA] border-[#326CE5]/40";
+                    borderHoverStyle = "hover:border-[#326CE5] hover:shadow-[0_0_18px_rgba(50,108,229,0.3)]";
+                    brandIcon = "☸️";
+                    brandDotColor = "bg-[#326CE5]";
+                  } else if (lowerName.includes("prometheus") || lowerName.includes("telemetry") || lowerName.includes("grafana") || lowerName.includes("sre")) {
+                    brandBadgeStyle = "bg-[#E6522C]/15 text-[#EA580C] dark:text-[#FB923C] border-[#E6522C]/40";
+                    borderHoverStyle = "hover:border-[#E6522C] hover:shadow-[0_0_18px_rgba(230,82,44,0.3)]";
+                    brandIcon = "🟧";
+                    brandDotColor = "bg-[#E6522C]";
+                  }
+
+                  return (
+                    <div
+                      key={idx}
+                      className={`p-4 rounded-2xl border transition-all duration-300 relative group flex flex-col justify-between bg-slate-50/90 dark:bg-dark-850/90 border-slate-200/80 dark:border-slate-800 ${borderHoverStyle} glass-card-hover shadow-md`}
+                    >
+                      <div>
+                        <div className="flex items-center justify-between mb-2">
+                          <span className="font-heading font-bold text-sm text-dark-900 dark:text-white flex items-center gap-1.5">
+                            <span>{brandIcon}</span>
+                            <span>{skill.name}</span>
+                          </span>
+                          <span
+                            className={`text-[10px] font-mono font-bold px-2.5 py-0.5 rounded-full shrink-0 ${brandBadgeStyle}`}
+                          >
+                            {skill.level}
+                          </span>
+                        </div>
+
+                        <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed mb-3">
+                          {skill.description}
+                        </p>
                       </div>
 
-                      <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed mb-3">
-                        {skill.description}
-                      </p>
+                      <div className="mt-3 pt-2.5 border-t border-slate-200 dark:border-slate-800 flex items-center justify-between text-[11px] font-mono">
+                        <span className="flex items-center gap-1.5 text-slate-600 dark:text-slate-300 font-semibold">
+                          <span className={`w-2 h-2 rounded-full ${brandDotColor} inline-block animate-pulse`}></span>
+                          <span>Core Competency</span>
+                        </span>
+                        <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />
+                      </div>
                     </div>
-
-                    <div className="mt-3 pt-2.5 border-t border-slate-200 dark:border-slate-800 flex items-center justify-between text-[11px] font-mono text-azure-500">
-                      <span className="flex items-center gap-1">
-                        <Sparkles className="w-3 h-3 text-amber-400" />
-                        <span>Core Competency</span>
-                      </span>
-                      <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />
-                    </div>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
             </div>
           ))}
