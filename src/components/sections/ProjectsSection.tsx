@@ -6,9 +6,10 @@ import { portfolioData } from "@/data/content";
 import { ProjectModal } from "@/components/ui/ProjectModal";
 import { TerraformModuleExplorerModal } from "@/components/ui/TerraformModuleExplorerModal";
 import { 
-  Folder, ExternalLink, Github, ArrowRight, Sparkles, ShieldCheck, 
-  Layers, Terminal, CheckCircle2, Boxes, Code, Cpu 
+  Folder, Layers, ExternalLink, Github, Terminal, 
+  CheckCircle2, Sparkles, Code2, ArrowRight, Boxes 
 } from "lucide-react";
+import { BrandIcon } from "@/components/ui/BrandIcon";
 
 export function ProjectsSection() {
   const [selectedCategory, setSelectedCategory] = useState("All");
@@ -102,9 +103,10 @@ export function ProjectsSection() {
                   {flagshipProject.tags.map((tag) => (
                     <span
                       key={tag}
-                      className="px-3 py-1 rounded-xl bg-azure-500/10 border border-azure-500/30 text-azure-300 text-xs font-mono"
+                      className="px-3 py-1 rounded-xl bg-azure-500/10 border border-azure-500/30 text-azure-300 text-xs font-mono flex items-center gap-1.5"
                     >
-                      {tag}
+                      <BrandIcon name={tag} className="w-3.5 h-3.5 shrink-0" />
+                      <span>{tag}</span>
                     </span>
                   ))}
                 </div>
@@ -233,8 +235,9 @@ export function ProjectsSection() {
                     <div>
                       <div className="flex flex-wrap gap-1.5 mb-4">
                         {project.tags.slice(0, 3).map((tag) => (
-                          <span key={tag} className="text-[10px] font-mono px-2 py-0.5 rounded bg-slate-100 dark:bg-dark-850 text-slate-500 dark:text-slate-400">
-                            {tag}
+                          <span key={tag} className="text-[10px] font-mono px-2 py-0.5 rounded bg-slate-100 dark:bg-dark-850 text-slate-500 dark:text-slate-400 flex items-center gap-1">
+                            <BrandIcon name={tag} className="w-3 h-3 shrink-0" />
+                            <span>{tag}</span>
                           </span>
                         ))}
                       </div>
