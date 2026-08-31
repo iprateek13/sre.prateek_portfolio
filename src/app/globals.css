@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Space+Grotesk:wght@500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Space+Grotesk:wght@500;600;700;800&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -27,18 +27,18 @@
   }
 
   body {
-    background-color: #07090E;
-    color: #F8FAFC;
+    background-color: #F7F3E9;
+    color: #1E293B;
     overflow-x: hidden;
     backface-visibility: hidden;
   }
 
-  .light body {
-    background-color: #F8FAFC;
-    color: #0F172A;
+  .dark body {
+    background-color: #07090E;
+    color: #F8FAFC;
   }
 
-  /* Lock scroll when modal is open */
+  /* Hide fixed navbar header and lock scroll when any modal is open */
   body.modal-open {
     overflow: hidden !important;
   }
@@ -50,18 +50,27 @@
     transition: all 0.25s ease-out !important;
   }
 
-  /* Cyberpunk Glowing Scrollbar */
+  /* Azure & Emerald Scrollbar */
   ::-webkit-scrollbar {
     width: 8px;
   }
 
   ::-webkit-scrollbar-track {
+    background: #F7F3E9;
+  }
+
+  .dark ::-webkit-scrollbar-track {
     background: #07090E;
   }
 
   ::-webkit-scrollbar-thumb {
-    background: linear-gradient(180deg, #38BDF8 0%, #22D3EE 50%, #34D399 100%);
+    background: linear-gradient(180deg, #0284C7 0%, #06B6D4 50%, #10B981 100%);
     border-radius: 4px;
+    border: 2px solid #F7F3E9;
+  }
+
+  .dark ::-webkit-scrollbar-thumb {
+    background: linear-gradient(180deg, #0284C7 0%, #22D3EE 50%, #10B981 100%);
     border: 2px solid #07090E;
   }
 
@@ -70,91 +79,206 @@
   }
 }
 
-/* GPU Layer Acceleration for Smooth Motion */
+/* GPU Hardware Layer Isolation for Smooth 60fps Scrolling */
 * {
   -webkit-tap-highlight-color: transparent;
 }
 
-/* Cyberpunk Text Gradient Utilities */
+/* Enterprise Azure & Emerald Gradient Utilities */
 .text-gradient-sre {
+  background: linear-gradient(135deg, #0284C7 0%, #0D9488 50%, #059669 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.dark .text-gradient-sre {
   background: linear-gradient(135deg, #38BDF8 0%, #22D3EE 50%, #34D399 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 
-.text-gradient-neon {
-  background: linear-gradient(135deg, #A855F7 0%, #38BDF8 50%, #34D399 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
+/* Noise Grain Overlay */
+.bg-noise {
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.035'/%3E%3C/svg%3E");
 }
 
-.text-gradient-gold {
-  background: linear-gradient(135deg, #F59E0B 0%, #FBBF24 50%, #34D399 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
+/* Animated Digital Infrastructure Tech Grid */
+.bg-tech-grid {
+  background-image: linear-gradient(to right, rgba(180, 160, 135, 0.1) 1px, transparent 1px),
+                    linear-gradient(to bottom, rgba(180, 160, 135, 0.1) 1px, transparent 1px);
+  background-size: 40px 40px;
+  animation: gridShift 30s linear infinite;
+}
+
+.dark .bg-tech-grid {
+  background-image: linear-gradient(to right, rgba(2, 132, 199, 0.12) 1px, transparent 1px),
+                    linear-gradient(to bottom, rgba(2, 132, 199, 0.12) 1px, transparent 1px);
+  background-size: 40px 40px;
+}
+
+@keyframes gridShift {
+  0% {
+    background-position: 0 0;
+  }
+  100% {
+    background-position: 40px 40px;
+  }
+}
+
+/* 54px+ Ultra-Blur Glassmorphism Navbar Utility */
+.glass-navbar-tuf {
+  background: rgba(247, 243, 233, 0.82);
+  backdrop-filter: blur(54px) saturate(220%) contrast(105%);
+  -webkit-backdrop-filter: blur(54px) saturate(220%) contrast(105%);
+  border: 1px solid rgba(220, 208, 188, 0.7);
+  border-top: 1.5px solid rgba(255, 255, 255, 0.95);
+  box-shadow: 
+    0 16px 40px -10px rgba(120, 100, 75, 0.1),
+    inset 0 1.5px 1px 0 rgba(255, 255, 255, 0.95);
+}
+
+.dark .glass-navbar-tuf {
+  background: rgba(15, 23, 42, 0.65);
+  backdrop-filter: blur(54px) saturate(240%) contrast(108%);
+  -webkit-backdrop-filter: blur(54px) saturate(240%) contrast(108%);
+  border: 1px solid rgba(2, 132, 199, 0.32);
+  border-top: 1.5px solid rgba(255, 255, 255, 0.35);
+  box-shadow: 
+    0 20px 50px -10px rgba(0, 0, 0, 0.85),
+    inset 0 1.5px 1px 0 rgba(255, 255, 255, 0.25);
+}
+
+/* Ultra-Specular Liquid Glass Mobile Drawer Utility */
+.glass-mobile-drawer {
+  background: rgba(247, 243, 233, 0.92);
+  backdrop-filter: blur(48px) saturate(220%) contrast(105%);
+  -webkit-backdrop-filter: blur(48px) saturate(220%) contrast(105%);
+  border: 1px solid rgba(220, 208, 188, 0.8);
+  border-top: 2px solid rgba(255, 255, 255, 0.98);
+  box-shadow: 
+    0 24px 60px -15px rgba(120, 100, 75, 0.12),
+    0 12px 30px -10px rgba(15, 23, 42, 0.08),
+    inset 0 2px 1px 0 rgba(255, 255, 255, 0.95);
+}
+
+.dark .glass-mobile-drawer {
+  background: rgba(15, 23, 42, 0.82);
+  backdrop-filter: blur(48px) saturate(240%) contrast(110%);
+  -webkit-backdrop-filter: blur(48px) saturate(240%) contrast(110%);
+  border: 1px solid rgba(2, 132, 199, 0.35);
+  border-top: 2px solid rgba(255, 255, 255, 0.4);
+  box-shadow: 
+    0 28px 70px -15px rgba(0, 0, 0, 0.9),
+    0 12px 35px -10px rgba(2, 132, 199, 0.25),
+    inset 0 2px 1px 0 rgba(255, 255, 255, 0.25);
 }
 
 /* Glassmorphism Card Utilities */
-.glass-panel {
-  background: rgba(15, 23, 42, 0.65);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(56, 189, 248, 0.15);
-  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.4);
-}
-
-.glass-panel-hover {
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.glass-panel-hover:hover {
-  border-color: rgba(34, 211, 238, 0.4);
-  box-shadow: 0 0 25px rgba(34, 211, 238, 0.25), 0 8px 32px 0 rgba(0, 0, 0, 0.5);
-  transform: translateY(-3px);
-}
-
-.glass-pill {
-  background: rgba(15, 23, 42, 0.8);
+.glass-card {
+  background: rgba(255, 253, 248, 0.92);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(226, 215, 196, 0.8);
+  box-shadow: 0 10px 30px 0 rgba(120, 100, 75, 0.07);
 }
 
-/* Cyber Grid & Glowing Dot Background Overlay */
-.bg-cyber-grid {
-  background-size: 40px 40px;
-  background-image: 
-    linear-gradient(to right, rgba(56, 189, 248, 0.05) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(56, 189, 248, 0.05) 1px, transparent 1px);
+.dark .glass-card {
+  background: rgba(15, 23, 42, 0.85);
+  border: 1px solid rgba(2, 132, 199, 0.25);
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.65);
 }
 
-.bg-dot-grid {
-  background-size: 24px 24px;
-  background-image: radial-gradient(circle, rgba(56, 189, 248, 0.12) 1px, transparent 1px);
+/* Modern Cyber Mesh & Ambient Gradient Backgrounds */
+.bg-mesh-gradient {
+  background: 
+    radial-gradient(at 0% 0%, rgba(2, 132, 199, 0.08) 0px, transparent 50%),
+    radial-gradient(at 100% 0%, rgba(217, 119, 6, 0.07) 0px, transparent 50%),
+    radial-gradient(at 50% 50%, rgba(16, 185, 129, 0.06) 0px, transparent 50%),
+    radial-gradient(at 100% 100%, rgba(147, 51, 234, 0.06) 0px, transparent 50%);
 }
 
-/* Shimmer Light Effect */
-@keyframes shimmer {
-  0% { transform: translateX(-100%); }
-  100% { transform: translateX(100%); }
+.dark .bg-mesh-gradient {
+  background: 
+    radial-gradient(at 0% 0%, rgba(2, 132, 199, 0.25) 0px, transparent 50%),
+    radial-gradient(at 100% 0%, rgba(34, 211, 238, 0.2) 0px, transparent 50%),
+    radial-gradient(at 50% 50%, rgba(16, 185, 129, 0.15) 0px, transparent 50%),
+    radial-gradient(at 100% 100%, rgba(168, 85, 247, 0.18) 0px, transparent 50%);
 }
 
-.animate-shimmer {
+/* Glowing Accent Utilities */
+.shadow-azure-glow {
+  box-shadow: 0 0 30px -5px rgba(2, 132, 199, 0.4);
+}
+
+.shadow-cyan-glow {
+  box-shadow: 0 0 30px -5px rgba(34, 211, 238, 0.4);
+}
+
+.shadow-emerald-glow {
+  box-shadow: 0 0 30px -5px rgba(16, 185, 129, 0.4);
+}
+
+.shadow-violet-glow {
+  box-shadow: 0 0 30px -5px rgba(168, 85, 247, 0.4);
+}
+
+/* Animated Shimmer Gradient Utilities for Luxury UI */
+.animate-gradient-shimmer {
+  background-size: 200% auto;
+  animation: shimmerGradient 5s linear infinite;
+}
+
+@keyframes shimmerGradient {
+  0% { background-position: 0% center; }
+  50% { background-position: 100% center; }
+  100% { background-position: 0% center; }
+}
+
+/* Specular Card Hover Reflection Shimmer */
+.glass-card-hover {
   position: relative;
   overflow: hidden;
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.animate-shimmer::after {
+.glass-card-hover::after {
   content: '';
   position: absolute;
-  top: 0; right: 0; bottom: 0; left: 0;
-  transform: translateX(-100%);
-  background-image: linear-gradient(
-    90deg,
-    rgba(255, 255, 255, 0) 0,
-    rgba(255, 255, 255, 0.08) 20%,
-    rgba(255, 255, 255, 0.2) 60%,
-    rgba(255, 255, 255, 0)
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: linear-gradient(
+    60deg,
+    transparent 30%,
+    rgba(255, 255, 255, 0.15) 50%,
+    transparent 70%
   );
-  animation: shimmer 3s infinite;
+  transform: rotate(30deg) translateY(-100%);
+  transition: transform 0.8s ease-in-out;
+  pointer-events-none: none;
 }
+
+.glass-card-hover:hover::after {
+  transform: rotate(30deg) translateY(100%);
+}
+
+.glass-card-hover:hover {
+  transform: translateY(-4px) scale(1.008);
+  border-color: rgba(2, 132, 199, 0.45);
+  box-shadow: 
+    0 20px 40px -15px rgba(2, 132, 199, 0.18),
+    0 0 20px 0 rgba(34, 211, 238, 0.15);
+}
+
+/* Cyber Dot Matrix */
+.bg-dot-matrix {
+  background-image: radial-gradient(rgba(2, 132, 199, 0.18) 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+
+.dark .bg-dot-matrix {
+  background-image: radial-gradient(rgba(56, 189, 248, 0.25) 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+

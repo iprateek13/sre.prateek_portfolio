@@ -4,15 +4,21 @@ import React, { useState } from "react";
 import { motion } from "framer-motion";
 import { portfolioData } from "@/data/content";
 import { 
-  Mail, Send, CheckCircle2, Copy, Github, Linkedin, 
-  Sparkles, MessageSquare, Terminal, MapPin, Globe, Clock
+  Mail, Send, CheckCircle2, Copy, Check, MessageSquare, 
+  MapPin, Sparkles, ShieldCheck, Clock 
 } from "lucide-react";
 import confetti from "canvas-confetti";
 
 export function ContactSection() {
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    subject: "",
+    message: "",
+  });
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [statusMessage, setStatusMessage] = useState<{ type: "success" | "error"; text: string } | null>(null);
   const [copiedEmail, setCopiedEmail] = useState(false);
-  const [formStatus, setFormStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
-  const [formData, setFormData] = useState({ name: "", email: "", message: "" });
 
   const handleCopyEmail = () => {
     navigator.clipboard.writeText(portfolioData.email);
@@ -22,155 +28,228 @@ export function ContactSection() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setFormStatus("loading");
+    setIsSubmitting(true);
+    setStatusMessage(null);
 
     try {
-      const res = await fetch("/api/contact", {
+      const response = await fetch("/api/contact", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),
       });
 
-      if (res.ok) {
-        setFormStatus("success");
-        setFormData({ name: "", email: "", message: "" });
-        confetti({ particleCount: 80, spread: 60, origin: { y: 0.7 } });
+      const data = await response.json();
+
+      if (response.ok && data.success) {
+        setStatusMessage({
+          type: "success",
+          text: "Message received! Thank you for reaching out.",
+        });
+        setFormData({ name: "", email: "", subject: "", message: "" });
+        
+        // Trigger celebratory confetti
+        confetti({
+          particleCount: 80,
+          spread: 70,
+          origin: { y: 0.7 },
+        });
       } else {
-        setFormStatus("error");
+        setStatusMessage({
+          type: "error",
+          text: data.error || "Failed to send message. Please try again.",
+        });
       }
-    } catch {
-      setFormStatus("error");
+    } catch (err) {
+      setStatusMessage({
+        type: "error",
+        text: "Network error. Please try sending again.",
+      });
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
   return (
-    <section id="contact" className="py-24 relative overflow-hidden bg-dot-grid">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 space-y-12">
-        
+    <section id="contact" className="py-20 sm:py-32 relative overflow-hidden bg-mesh-gradient">
+      {/* Background Radial Halos */}
+      <div className="absolute top-1/3 right-10 w-96 h-96 bg-azure-500/15 rounded-full blur-[160px] pointer-events-none" />
+
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         {/* Section Header */}
-        <div className="text-center max-w-3xl mx-auto space-y-4">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-cyan-500/10 border border-cyan-500/30 text-cyan-300 text-xs font-mono"
-          >
-            <Mail className="w-3.5 h-3.5 text-cyan-400" />
-            <span>LET'S CONNECT</span>
-          </motion.div>
-          <motion.h2
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.1 }}
-            className="font-heading font-extrabold text-3xl sm:text-5xl text-white tracking-tight"
-          >
-            Start a <span className="text-gradient-sre">Conversation</span>
-          </motion.h2>
-          <p className="text-slate-300 text-sm sm:text-base max-w-xl mx-auto">
-            Looking for an experienced SRE/DevOps engineer to architect resilient infrastructure or optimize cloud performance? Reach out below!
+        <div className="text-center max-w-3xl mx-auto mb-12 sm:mb-16">
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-azure-500/10 border border-azure-500/30 text-azure-600 dark:text-cyan-300 text-xs font-mono mb-4 shadow-sm">
+            <Mail className="w-4 h-4 text-cyan-400" />
+            <span>Get In Touch</span>
+          </div>
+          <h2 className="text-3xl sm:text-5xl font-heading font-extrabold text-dark-900 dark:text-white tracking-tight mb-4">
+            Let's Build Resilient <span className="text-gradient-sre">Cloud Infrastructure</span>
+          </h2>
+          <p className="text-sm sm:text-base text-slate-600 dark:text-slate-300 leading-relaxed font-body">
+            Open for Site Reliability Engineering (SRE), Multi-Cloud Architecture, and DevSecOps opportunities.
           </p>
         </div>
 
-        {/* Contact Console Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-          
-          {/* Left Column: Direct Info & Quick Email Copy */}
-          <div className="lg:col-span-5 space-y-6">
-            <div className="glass-panel rounded-3xl p-6 sm:p-8 space-y-6">
-              <div className="space-y-2">
-                <span className="text-xs font-mono text-cyan-400">DIRECT EMAIL</span>
-                <div className="flex items-center justify-between gap-2 p-3 rounded-2xl bg-slate-900 border border-slate-800">
-                  <span className="font-mono text-xs sm:text-sm text-white truncate">{portfolioData.email}</span>
+          {/* Left Column: Direct Contact Info & Quick Copy */}
+          <motion.div
+            initial={{ opacity: 0, x: -20 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+            className="lg:col-span-5 space-y-6"
+          >
+            {/* Contact Card */}
+            <div className="p-6 sm:p-8 rounded-3xl bg-white/90 dark:bg-dark-900/90 border border-slate-200/80 dark:border-slate-800 backdrop-blur-xl shadow-xl space-y-6">
+              <div className="flex items-center gap-3 pb-4 border-b border-slate-200 dark:border-slate-800">
+                <div className="p-3 rounded-2xl bg-azure-500/10 text-azure-500 border border-azure-500/20">
+                  <MessageSquare className="w-6 h-6" />
+                </div>
+                <div>
+                  <h3 className="font-heading font-bold text-lg text-dark-900 dark:text-white">Direct Communication</h3>
+                  <p className="text-xs text-slate-500 dark:text-slate-400 font-mono">Fast Response within 24h</p>
+                </div>
+              </div>
+
+              {/* Email Copy Card */}
+              <div className="p-4 rounded-2xl bg-slate-50 dark:bg-dark-950 border border-slate-200/80 dark:border-slate-800 space-y-2">
+                <div className="text-xs font-mono text-slate-400">Direct Email Address</div>
+                <div className="flex items-center justify-between gap-2">
+                  <span className="font-mono text-xs sm:text-sm font-bold text-azure-500 truncate">
+                    {portfolioData.email}
+                  </span>
                   <button
                     onClick={handleCopyEmail}
-                    className="p-2 rounded-xl bg-cyan-500/10 hover:bg-cyan-500/20 text-cyan-300 transition-colors shrink-0"
-                    title="Copy Email"
+                    className="p-2 rounded-xl bg-white dark:bg-dark-850 border border-slate-200 dark:border-slate-800 hover:border-azure-500 text-xs font-mono text-slate-700 dark:text-slate-300 transition-all flex items-center gap-1.5 shrink-0"
                   >
-                    {copiedEmail ? <CheckCircle2 className="w-4 h-4 text-emerald-400" /> : <Copy className="w-4 h-4" />}
+                    {copiedEmail ? (
+                      <>
+                        <Check className="w-3.5 h-3.5 text-emerald-400" />
+                        <span className="text-emerald-400">Copied</span>
+                      </>
+                    ) : (
+                      <>
+                        <Copy className="w-3.5 h-3.5 text-azure-500" />
+                        <span>Copy</span>
+                      </>
+                    )}
                   </button>
                 </div>
               </div>
 
-              <div className="space-y-3 pt-2 border-t border-slate-800">
-                <div className="flex items-center gap-3 text-xs text-slate-300">
-                  <MapPin className="w-4 h-4 text-rose-400" />
-                  <span>New Delhi, India (IST UTC+5:30)</span>
+              {/* Status Badges */}
+              <div className="space-y-3 pt-2">
+                <div className="flex items-center gap-3 text-xs text-slate-600 dark:text-slate-300 font-mono">
+                  <div className="p-1.5 rounded-lg bg-emerald-500/10 text-emerald-400">
+                    <Clock className="w-4 h-4" />
+                  </div>
+                  <span>Available for immediate SRE & DevOps onboarding</span>
                 </div>
-                <div className="flex items-center gap-3 text-xs text-slate-300">
-                  <Clock className="w-4 h-4 text-cyan-400" />
-                  <span>Response Time: &lt; 12 Hours</span>
-                </div>
-                <div className="flex items-center gap-3 text-xs text-emerald-400 font-mono">
-                  <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping" />
-                  <span>Open to Full-Time Remote / Hybrid Roles</span>
+
+                <div className="flex items-center gap-3 text-xs text-slate-600 dark:text-slate-300 font-mono">
+                  <div className="p-1.5 rounded-lg bg-azure-500/10 text-azure-400">
+                    <ShieldCheck className="w-4 h-4" />
+                  </div>
+                  <span>Encrypted message storage in MongoDB Atlas</span>
                 </div>
               </div>
             </div>
-          </div>
+          </motion.div>
 
           {/* Right Column: Contact Form */}
-          <div className="lg:col-span-7">
-            <form onSubmit={handleSubmit} className="glass-panel rounded-3xl p-6 sm:p-8 space-y-6">
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                <div className="space-y-2">
-                  <label className="text-xs font-mono text-slate-300">YOUR NAME</label>
+          <motion.div
+            initial={{ opacity: 0, x: 20 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+            className="lg:col-span-7 p-6 sm:p-10 rounded-3xl bg-white/90 dark:bg-dark-900/90 border border-slate-200/80 dark:border-slate-800 backdrop-blur-xl shadow-xl"
+          >
+            <form onSubmit={handleSubmit} className="space-y-5">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                <div>
+                  <label className="block text-xs font-mono font-semibold text-slate-700 dark:text-slate-300 mb-2">
+                    Your Name *
+                  </label>
                   <input
                     type="text"
                     required
                     value={formData.name}
                     onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                    placeholder="John Doe"
-                    className="w-full px-4 py-3 rounded-2xl bg-slate-900 border border-slate-800 text-white font-mono text-xs focus:outline-none focus:border-cyan-400 transition-colors"
+                    placeholder="e.g. Alex Morgan"
+                    className="w-full px-4 py-3 rounded-2xl bg-slate-50 dark:bg-dark-950 border border-slate-200 dark:border-slate-800 text-sm text-dark-900 dark:text-white placeholder-slate-400 focus:outline-none focus:border-azure-500 transition-colors"
                   />
                 </div>
-                <div className="space-y-2">
-                  <label className="text-xs font-mono text-slate-300">EMAIL ADDRESS</label>
+
+                <div>
+                  <label className="block text-xs font-mono font-semibold text-slate-700 dark:text-slate-300 mb-2">
+                    Email Address *
+                  </label>
                   <input
                     type="email"
                     required
                     value={formData.email}
                     onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                    placeholder="john@example.com"
-                    className="w-full px-4 py-3 rounded-2xl bg-slate-900 border border-slate-800 text-white font-mono text-xs focus:outline-none focus:border-cyan-400 transition-colors"
+                    placeholder="e.g. alex@company.com"
+                    className="w-full px-4 py-3 rounded-2xl bg-slate-50 dark:bg-dark-950 border border-slate-200 dark:border-slate-800 text-sm text-dark-900 dark:text-white placeholder-slate-400 focus:outline-none focus:border-azure-500 transition-colors"
                   />
                 </div>
               </div>
 
-              <div className="space-y-2">
-                <label className="text-xs font-mono text-slate-300">MESSAGE</label>
+              <div>
+                <label className="block text-xs font-mono font-semibold text-slate-700 dark:text-slate-300 mb-2">
+                  Subject / Inquiry Type
+                </label>
+                <input
+                  type="text"
+                  value={formData.subject}
+                  onChange={(e) => setFormData({ ...formData, subject: e.target.value })}
+                  placeholder="e.g. SRE Role Opportunity / Infrastructure Consulting"
+                  className="w-full px-4 py-3 rounded-2xl bg-slate-50 dark:bg-dark-950 border border-slate-200 dark:border-slate-800 text-sm text-dark-900 dark:text-white placeholder-slate-400 focus:outline-none focus:border-azure-500 transition-colors"
+                />
+              </div>
+
+              <div>
+                <label className="block text-xs font-mono font-semibold text-slate-700 dark:text-slate-300 mb-2">
+                  Message *
+                </label>
                 <textarea
                   required
                   rows={4}
                   value={formData.message}
                   onChange={(e) => setFormData({ ...formData, message: e.target.value })}
-                  placeholder="Hello Prateek, I'd like to discuss a Cloud SRE opportunity..."
-                  className="w-full px-4 py-3 rounded-2xl bg-slate-900 border border-slate-800 text-white font-mono text-xs focus:outline-none focus:border-cyan-400 transition-colors resize-none"
+                  placeholder="Tell me about your project, team, or infrastructure requirements..."
+                  className="w-full px-4 py-3 rounded-2xl bg-slate-50 dark:bg-dark-950 border border-slate-200 dark:border-slate-800 text-sm text-dark-900 dark:text-white placeholder-slate-400 focus:outline-none focus:border-azure-500 transition-colors resize-none"
                 />
               </div>
 
+              {statusMessage && (
+                <div
+                  className={`p-4 rounded-2xl text-xs font-mono flex items-center gap-2 ${
+                    statusMessage.type === "success"
+                      ? "bg-emerald-500/10 border border-emerald-500/30 text-emerald-400"
+                      : "bg-rose-500/10 border border-rose-500/30 text-rose-400"
+                  }`}
+                >
+                  <CheckCircle2 className="w-4 h-4 shrink-0" />
+                  <span>{statusMessage.text}</span>
+                </div>
+              )}
+
               <button
                 type="submit"
-                disabled={formStatus === "loading"}
-                className="w-full py-4 rounded-2xl bg-gradient-to-r from-sky-500 via-cyan-400 to-emerald-400 text-slate-950 font-bold text-sm flex items-center justify-center gap-2 shadow-[0_0_25px_rgba(56,189,248,0.4)] hover:scale-[1.01] transition-all disabled:opacity-50"
+                disabled={isSubmitting}
+                className="w-full py-4 rounded-2xl bg-gradient-to-r from-azure-500 via-cyan-500 to-emerald-500 text-white font-heading font-extrabold text-sm shadow-azure-glow hover:scale-[1.02] active:scale-[0.98] transition-all disabled:opacity-50 flex items-center justify-center gap-2"
               >
-                {formStatus === "loading" ? (
+                {isSubmitting ? (
                   <span>Sending Message...</span>
                 ) : (
                   <>
-                    <span>Send Message</span>
+                    <span>Send Message to Prateek</span>
                     <Send className="w-4 h-4" />
                   </>
                 )}
               </button>
-
-              {formStatus === "success" && (
-                <div className="p-4 rounded-2xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-300 text-xs font-mono text-center">
-                  ✓ Message sent successfully! I will reply to you shortly.
-                </div>
-              )}
             </form>
-          </div>
+          </motion.div>
         </div>
       </div>
     </section>
