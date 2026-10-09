@@ -44,11 +44,11 @@ export const portfolioData: PortfolioData = {
       sublabel: "Resilient Hub & Spoke Infra",
     },
     {
-      id: "az-900",
-      value: 900,
-      prefix: "AZ-",
-      label: "Certified",
-      sublabel: "Azure Cloud Fundamentals",
+      id: "multi-cloud",
+      value: 2,
+      suffix: "+ Clouds",
+      label: "Multi-Cloud Platforms",
+      sublabel: "Microsoft Azure & AWS Architecture",
     },
     {
       id: "modules",
@@ -249,12 +249,12 @@ export const portfolioData: PortfolioData = {
   },
   certifications: [
     {
-      name: "Microsoft Certified: Azure Fundamentals",
-      code: "AZ-900",
-      issuer: "Microsoft",
-      issueDate: "Verified",
-      credentialUrl: "https://learn.microsoft.com",
-      description: "Core cloud concepts, Azure architectural components, security governance, and cloud management tools.",
+      name: "Microsoft Azure & AWS Multi-Cloud Architecture",
+      code: "Multi-Cloud",
+      issuer: "Hands-on Projects & Labs",
+      issueDate: "Production-Grade",
+      credentialUrl: "https://github.com/iprateek13",
+      description: "CAF Hub-and-Spoke Landing Zones, 15+ Terraform IaC child modules, DevSecOps pipelines, and Azure/AWS governance.",
     },
   ],
 };

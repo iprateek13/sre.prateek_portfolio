@@ -144,8 +144,8 @@ summary_text = (
     "(Terraform), Azure Landing Zone design, and DevSecOps-driven CI/CD pipelines. Skilled at translating business requirements into High-Level "
     "Design (HLD) and Low-Level Design (LLD) for secure, scalable, and cost-efficient network and cloud architectures. Proficient in Azure core "
     "networking (VNet peering, Hub-Spoke topology, ExpressRoute, VPN Gateway, Private Endpoints, Azure Firewall, Application Gateway, Load "
-    "Balancer), infrastructure security scanning (tfsec, tflint, Checkov), and cost governance (Infracost, Azure Cost Management). Microsoft Azure "
-    "Fundamentals (AZ-900) certified, with growing AWS proficiency, and eager to deliver enterprise-grade cloud solutions in a professional services environment."
+    "Balancer), infrastructure security scanning (tfsec, tflint, Checkov), and cost governance (Infracost, Azure Cost Management). "
+    "Possesses deep hands-on proficiency in Azure & AWS multi-cloud architecture, and eager to deliver enterprise-grade cloud solutions in a professional services environment."
 )
 story.append(Paragraph(summary_text, body_style))
 story.append(Spacer(1, 3))
@@ -255,9 +255,9 @@ story.append(Paragraph("<b>B.Tech – Computer Science & Engineering</b> &nbsp;&
 story.append(Paragraph("12th – PCM | UP Board 2021 • 76% &nbsp;&nbsp;&nbsp;&nbsp; 10th – Mathematics | CBSE 2019 • 79.8%", body_style))
 story.append(Spacer(1, 3))
 
-# Certifications
-add_section_header("CERTIFICATIONS")
-story.append(Paragraph("• &nbsp; <b>Microsoft Certified: Azure Fundamentals (AZ-900)</b> – Microsoft", bullet_style))
+# Certifications & Credentials
+add_section_header("CREDENTIALS & ARCHITECTURE MASTERY")
+story.append(Paragraph("• &nbsp; <b>Microsoft Azure & AWS Multi-Cloud Architecture</b> – Hands-on Enterprise Implementations", bullet_style))
 story.append(Paragraph("• &nbsp; <b>Data Structures & Algorithms Certification</b> – Apna College", bullet_style))
 story.append(Spacer(1, 3))
 
@@ -267,4 +267,6 @@ story.append(Paragraph("• &nbsp; Active participant in the Microsoft Azure lea
 story.append(Paragraph("• &nbsp; Completed hands-on labs and learning paths on Azure Skill Builder (Microsoft Learn) to strengthen cloud fundamentals and services.", bullet_style))
 
 doc.build(story)
-print("Updated PDF with Button Links Generated successfully at public/resume.pdf")
+import shutil
+shutil.copyfile("public/resume.pdf", "public/sre.prateek_resume.pdf")
+print("Updated PDF with Button Links Generated successfully at public/resume.pdf and public/sre.prateek_resume.pdf")

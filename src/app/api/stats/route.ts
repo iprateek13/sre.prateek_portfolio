@@ -27,7 +27,7 @@ export async function GET() {
         mongoActive,
         stats: {
           slaUptime: "99.99%",
-          certifications: "AZ-900 Certified",
+          certifications: "Azure & AWS Cloud Expert",
           iacModules: "15+ Child Modules",
           telemetryLatency: "<5ms",
           totalInquiries,
@@ -42,7 +42,7 @@ export async function GET() {
         success: true,
         stats: {
           slaUptime: "99.99%",
-          certifications: "AZ-900 Certified",
+          certifications: "Azure & AWS Cloud Expert",
           iacModules: "15+ Child Modules",
           telemetryLatency: "<5ms",
           totalInquiries: 0,
