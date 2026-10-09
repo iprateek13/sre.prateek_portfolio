@@ -4,7 +4,6 @@ import React, { useState, useEffect, memo } from "react";
 import { motion } from "framer-motion";
 import { portfolioData } from "@/data/content";
 import { SreMetricsCard } from "@/components/ui/SreMetricsCard";
-import { ThreeCloudScene } from "@/components/canvas/ThreeCloudScene";
 import { ArchitectureVisualizer } from "@/components/ui/ArchitectureVisualizer";
 import { TerraformModuleExplorerModal } from "@/components/ui/TerraformModuleExplorerModal";
 import { 
@@ -69,9 +68,6 @@ export function HeroSection() {
         {/* Ambient Neon Radial Halos */}
         <div className="absolute top-1/4 left-10 w-96 h-96 bg-azure-500/20 rounded-full blur-[140px] pointer-events-none" />
         <div className="absolute bottom-10 right-10 w-96 h-96 bg-cyan-500/20 rounded-full blur-[140px] pointer-events-none" />
-
-        {/* Dynamic 3D WebGL Background Canvas */}
-        <ThreeCloudScene />
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 w-full space-y-12">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
