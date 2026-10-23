@@ -5,6 +5,8 @@ import { motion, AnimatePresence } from "framer-motion";
 import { portfolioData } from "@/data/content";
 import { ProjectModal } from "@/components/ui/ProjectModal";
 import { TerraformModuleExplorerModal } from "@/components/ui/TerraformModuleExplorerModal";
+import { TiltCard } from "@/components/ui/TiltCard";
+import { soundFx } from "@/lib/soundFx";
 import { 
   Folder, ExternalLink, Github, ArrowRight, Sparkles, ShieldCheck, 
   Layers, Terminal, CheckCircle2, Boxes, Code, Cpu 
@@ -208,43 +210,52 @@ export function ProjectsSection() {
                 className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
               >
                 {filteredProjects.map((project) => (
-                  <div
+                  <TiltCard
                     key={project.id}
-                    onClick={() => setSelectedProject(project)}
-                    className="p-6 rounded-3xl bg-white/90 dark:bg-dark-900/90 border border-slate-200/80 dark:border-slate-800 backdrop-blur-xl shadow-xl hover:border-azure-500/50 glass-card-hover cursor-pointer flex flex-col justify-between group"
+                    maxTilt={7}
+                    className="h-full rounded-3xl"
                   >
-                    <div>
-                      <div className="flex items-center justify-between mb-3">
-                        <span className="text-xs font-mono px-2.5 py-1 rounded-xl bg-azure-500/10 text-azure-600 dark:text-cyan-300 font-semibold">
-                          {project.category}
-                        </span>
-                        <Github className="w-4 h-4 text-slate-400 group-hover:text-azure-500 transition-colors" />
-                      </div>
-
-                      <h4 className="text-lg font-heading font-bold text-dark-900 dark:text-white group-hover:text-azure-500 transition-colors mb-2">
-                        {project.title}
-                      </h4>
-
-                      <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed mb-4">
-                        {project.description}
-                      </p>
-                    </div>
-
-                    <div>
-                      <div className="flex flex-wrap gap-1.5 mb-4">
-                        {project.tags.slice(0, 3).map((tag) => (
-                          <span key={tag} className="text-[10px] font-mono px-2 py-0.5 rounded bg-slate-100 dark:bg-dark-850 text-slate-500 dark:text-slate-400">
-                            {tag}
+                    <div
+                      onClick={() => {
+                        soundFx.playClick();
+                        setSelectedProject(project);
+                      }}
+                      onMouseEnter={() => soundFx.playHover()}
+                      className="p-6 h-full rounded-3xl bg-white/90 dark:bg-dark-900/90 border border-slate-200/80 dark:border-slate-800 backdrop-blur-xl shadow-xl hover:border-azure-500/50 glass-card-hover cursor-pointer flex flex-col justify-between group"
+                    >
+                      <div>
+                        <div className="flex items-center justify-between mb-3">
+                          <span className="text-xs font-mono px-2.5 py-1 rounded-xl bg-azure-500/10 text-azure-600 dark:text-cyan-300 font-semibold">
+                            {project.category}
                           </span>
-                        ))}
+                          <Github className="w-4 h-4 text-slate-400 group-hover:text-azure-500 transition-colors" />
+                        </div>
+
+                        <h4 className="text-lg font-heading font-bold text-dark-900 dark:text-white group-hover:text-azure-500 transition-colors mb-2">
+                          {project.title}
+                        </h4>
+
+                        <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed mb-4">
+                          {project.description}
+                        </p>
                       </div>
 
-                      <div className="pt-3 border-t border-slate-200 dark:border-slate-800 flex items-center justify-between text-xs font-heading font-bold text-azure-500 group-hover:translate-x-1 transition-transform">
-                        <span>View Specifications</span>
-                        <ArrowRight className="w-4 h-4" />
+                      <div>
+                        <div className="flex flex-wrap gap-1.5 mb-4">
+                          {project.tags.slice(0, 3).map((tag) => (
+                            <span key={tag} className="text-[10px] font-mono px-2 py-0.5 rounded bg-slate-100 dark:bg-dark-850 text-slate-500 dark:text-slate-400">
+                              {tag}
+                            </span>
+                          ))}
+                        </div>
+
+                        <div className="pt-3 border-t border-slate-200 dark:border-slate-800 flex items-center justify-between text-xs font-heading font-bold text-azure-500 group-hover:translate-x-1 transition-transform">
+                          <span>View Specifications</span>
+                          <ArrowRight className="w-4 h-4" />
+                        </div>
                       </div>
                     </div>
-                  </div>
+                  </TiltCard>
                 ))}
               </motion.div>
             </AnimatePresence>

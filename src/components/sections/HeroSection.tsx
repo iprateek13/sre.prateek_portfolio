@@ -1,14 +1,18 @@
 "use client";
 
 import React, { useState, useEffect, memo } from "react";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { portfolioData } from "@/data/content";
 import { SreMetricsCard } from "@/components/ui/SreMetricsCard";
 import { ArchitectureVisualizer } from "@/components/ui/ArchitectureVisualizer";
 import { TerraformModuleExplorerModal } from "@/components/ui/TerraformModuleExplorerModal";
+import { ThreeInfrastructureSphere } from "@/components/canvas/ThreeInfrastructureSphere";
+import { LiveTerminal } from "@/components/ui/LiveTerminal";
+import { soundFx } from "@/lib/soundFx";
 import { 
   Github, Linkedin, Mail, Download, ArrowRight, Zap, Cloud, 
-  Layers, ShieldCheck, Boxes, Network, CheckCircle2, Sparkles 
+  Layers, ShieldCheck, Boxes, Network, CheckCircle2, Sparkles,
+  Terminal, Activity, Radio
 } from "lucide-react";
 import { trackResumeDownload } from "@/lib/telemetry";
 
@@ -50,11 +54,17 @@ const TypewriterTitle = memo(function TypewriterTitle() {
 
 export function HeroSection() {
   const [isModuleExplorerOpen, setIsModuleExplorerOpen] = useState(false);
+  const [activeHeroTab, setActiveHeroTab] = useState<"3d" | "metrics" | "terminal">("3d");
 
   const socialIconMap: Record<string, React.ReactNode> = {
     Github: <Github className="w-5 h-5" />,
     Linkedin: <Linkedin className="w-5 h-5" />,
     Mail: <Mail className="w-5 h-5" />,
+  };
+
+  const handleTabSwitch = (tab: "3d" | "metrics" | "terminal") => {
+    setActiveHeroTab(tab);
+    soundFx.playClick();
   };
 
   return (
@@ -70,9 +80,9 @@ export function HeroSection() {
         <div className="absolute bottom-10 right-10 w-96 h-96 bg-cyan-500/20 rounded-full blur-[140px] pointer-events-none" />
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 w-full space-y-12">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-center">
             {/* Left Column: Hero Typography & Bio */}
-            <div className="lg:col-span-7 text-center lg:text-left flex flex-col items-center lg:items-start">
+            <div className="lg:col-span-6 text-center lg:text-left flex flex-col items-center lg:items-start">
               
               {/* Availability & Live SLA Badge */}
               <motion.div
@@ -95,7 +105,7 @@ export function HeroSection() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: 0.1 }}
-                className="font-heading font-extrabold text-4xl xs:text-5xl sm:text-7xl lg:text-8xl tracking-tight text-dark-900 dark:text-white leading-[1.08] mb-3 sm:mb-4"
+                className="font-heading font-extrabold text-4xl xs:text-5xl sm:text-7xl lg:text-7xl xl:text-8xl tracking-tight text-dark-900 dark:text-white leading-[1.08] mb-3 sm:mb-4"
               >
                 <span className="bg-clip-text text-transparent bg-gradient-to-r from-azure-600 via-cyan-400 to-emerald-400 dark:from-azure-300 dark:via-cyan-300 dark:to-emerald-300">
                   {portfolioData.name}
@@ -203,14 +213,92 @@ export function HeroSection() {
               </motion.div>
             </div>
 
-            {/* Right Column: SRE Live Command Center Dashboard */}
+            {/* Right Column: SRE 3D Interactive HoloDeck */}
             <motion.div
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.7, delay: 0.3 }}
-              className="lg:col-span-5 w-full"
+              className="lg:col-span-6 w-full space-y-3"
             >
-              <SreMetricsCard />
+              {/* Interactive View Switcher Tabs */}
+              <div className="flex items-center justify-between p-1.5 rounded-2xl bg-white/80 dark:bg-dark-900/80 border border-slate-200 dark:border-slate-800 backdrop-blur-xl shadow-lg">
+                <button
+                  onClick={() => handleTabSwitch("3d")}
+                  className={`flex-1 py-2 sm:py-2.5 px-3 rounded-xl text-xs font-mono font-bold transition-all flex items-center justify-center gap-2 ${
+                    activeHeroTab === "3d"
+                      ? "bg-gradient-to-r from-azure-600 to-cyan-500 text-white shadow-azure-glow scale-[1.02]"
+                      : "text-slate-600 dark:text-slate-400 hover:text-dark-900 dark:hover:text-white"
+                  }`}
+                >
+                  <Radio className="w-3.5 h-3.5 animate-pulse" />
+                  <span>3D HoloMesh</span>
+                </button>
+
+                <button
+                  onClick={() => handleTabSwitch("metrics")}
+                  className={`flex-1 py-2 sm:py-2.5 px-3 rounded-xl text-xs font-mono font-bold transition-all flex items-center justify-center gap-2 ${
+                    activeHeroTab === "metrics"
+                      ? "bg-gradient-to-r from-emerald-600 to-teal-500 text-white shadow-emerald-glow scale-[1.02]"
+                      : "text-slate-600 dark:text-slate-400 hover:text-dark-900 dark:hover:text-white"
+                  }`}
+                >
+                  <Activity className="w-3.5 h-3.5" />
+                  <span>Telemetry</span>
+                </button>
+
+                <button
+                  onClick={() => handleTabSwitch("terminal")}
+                  className={`flex-1 py-2 sm:py-2.5 px-3 rounded-xl text-xs font-mono font-bold transition-all flex items-center justify-center gap-2 ${
+                    activeHeroTab === "terminal"
+                      ? "bg-gradient-to-r from-purple-600 to-indigo-500 text-white shadow-violet-glow scale-[1.02]"
+                      : "text-slate-600 dark:text-slate-400 hover:text-dark-900 dark:hover:text-white"
+                  }`}
+                >
+                  <Terminal className="w-3.5 h-3.5" />
+                  <span>Live Terminal</span>
+                </button>
+              </div>
+
+              {/* View Container with Smooth AnimatePresence */}
+              <div className="relative min-h-[480px]">
+                <AnimatePresence mode="wait">
+                  {activeHeroTab === "3d" && (
+                    <motion.div
+                      key="3d"
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -10 }}
+                      transition={{ duration: 0.25 }}
+                    >
+                      <ThreeInfrastructureSphere />
+                    </motion.div>
+                  )}
+
+                  {activeHeroTab === "metrics" && (
+                    <motion.div
+                      key="metrics"
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -10 }}
+                      transition={{ duration: 0.25 }}
+                    >
+                      <SreMetricsCard />
+                    </motion.div>
+                  )}
+
+                  {activeHeroTab === "terminal" && (
+                    <motion.div
+                      key="terminal"
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -10 }}
+                      transition={{ duration: 0.25 }}
+                    >
+                      <LiveTerminal />
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
             </motion.div>
           </div>
 

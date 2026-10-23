@@ -5,9 +5,10 @@ import { motion, AnimatePresence } from "framer-motion";
 import { portfolioData } from "@/data/content";
 import { ThemeToggle } from "./ThemeToggle";
 import { CmdKModal } from "./CmdKModal";
+import { soundFx } from "@/lib/soundFx";
 import { 
   Terminal, Menu, X, Download, Search, ShieldCheck, Folder, 
-  Cpu, Layers, Mail, User, Sparkles 
+  Cpu, Layers, Mail, User, Sparkles, Volume2, VolumeX, Radio
 } from "lucide-react";
 import { trackResumeDownload } from "@/lib/telemetry";
 
@@ -16,6 +17,11 @@ export function Navbar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [activeSection, setActiveSection] = useState("hero");
   const [cmdKOpen, setCmdKOpen] = useState(false);
+  const [isMuted, setIsMuted] = useState(true);
+
+  useEffect(() => {
+    setIsMuted(soundFx.getMuted());
+  }, []);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -51,6 +57,7 @@ export function Navbar() {
 
   const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
     e.preventDefault();
+    soundFx.playClick();
     const targetId = href.replace("#", "");
     setMobileMenuOpen(false);
     const element = document.getElementById(targetId);
@@ -130,6 +137,23 @@ export function Navbar() {
                 <kbd className="px-1.5 py-0.5 text-[10px] rounded bg-white dark:bg-dark-950 border border-slate-300 dark:border-slate-800 text-slate-600 dark:text-slate-300 font-sans">
                   ⌘K
                 </kbd>
+              </button>
+
+              {/* Cyber Sound FX Toggle Button */}
+              <button
+                onClick={() => {
+                  const muted = soundFx.toggleMute();
+                  setIsMuted(muted);
+                }}
+                className={`p-2 rounded-xl border transition-all ${
+                  isMuted
+                    ? "bg-slate-100 dark:bg-dark-850 border-slate-200 dark:border-slate-800 text-slate-400 hover:text-dark-900 dark:hover:text-white"
+                    : "bg-azure-500/15 border-azure-400 text-azure-600 dark:text-cyan-300 shadow-azure-glow"
+                }`}
+                title={isMuted ? "Enable Cyber Sound FX" : "Mute Sound FX"}
+                aria-label="Toggle Cyber Sound Effects"
+              >
+                {isMuted ? <VolumeX className="w-4 h-4" /> : <Volume2 className="w-4 h-4" />}
               </button>
 
               {/* Theme Toggle */}

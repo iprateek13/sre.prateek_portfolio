@@ -3,6 +3,8 @@
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { portfolioData } from "@/data/content";
+import { TiltCard } from "@/components/ui/TiltCard";
+import { soundFx } from "@/lib/soundFx";
 import { 
   Cloud, Cpu, Layers, ShieldCheck, Activity, Code, Search, 
   Sparkles, CheckCircle2, Terminal, BarChart3, Boxes, Award, X 
@@ -134,39 +136,45 @@ export function SkillsSection() {
               {/* Skill Cards Grid with 100% uniform card styling */}
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                 {catGroup.skills.map((skill, idx) => (
-                  <div
+                  <TiltCard
                     key={idx}
-                    className="p-4 rounded-2xl border transition-all duration-300 relative group flex flex-col justify-between bg-slate-50/90 dark:bg-dark-850/90 border-azure-500/30 dark:border-azure-500/30 hover:border-azure-500 glass-card-hover shadow-md"
+                    maxTilt={8}
+                    className="h-full rounded-2xl"
                   >
-                    <div>
-                      <div className="flex items-center justify-between mb-2">
-                        <span className="font-heading font-bold text-sm text-dark-900 dark:text-white flex items-center gap-1.5">
-                          {skill.name}
-                        </span>
-                        <span
-                          className={`text-[10px] font-mono font-semibold px-2 py-0.5 rounded-full shrink-0 ${
-                            skill.level === "Advanced"
-                              ? "bg-azure-500/15 text-azure-600 dark:text-cyan-300 border border-azure-500/30"
-                              : "bg-emerald-500/15 text-emerald-600 dark:text-emerald-300 border border-emerald-500/30"
-                          }`}
-                        >
-                          {skill.level}
-                        </span>
+                    <div
+                      onMouseEnter={() => soundFx.playHover()}
+                      className="p-4 h-full rounded-2xl border transition-all duration-300 relative group flex flex-col justify-between bg-slate-50/90 dark:bg-dark-850/90 border-azure-500/30 dark:border-azure-500/30 hover:border-azure-500 glass-card-hover shadow-md"
+                    >
+                      <div>
+                        <div className="flex items-center justify-between mb-2">
+                          <span className="font-heading font-bold text-sm text-dark-900 dark:text-white flex items-center gap-1.5">
+                            {skill.name}
+                          </span>
+                          <span
+                            className={`text-[10px] font-mono font-semibold px-2 py-0.5 rounded-full shrink-0 ${
+                              skill.level === "Advanced"
+                                ? "bg-azure-500/15 text-azure-600 dark:text-cyan-300 border border-azure-500/30"
+                                : "bg-emerald-500/15 text-emerald-600 dark:text-emerald-300 border border-emerald-500/30"
+                            }`}
+                          >
+                            {skill.level}
+                          </span>
+                        </div>
+
+                        <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed mb-3">
+                          {skill.description}
+                        </p>
                       </div>
 
-                      <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed mb-3">
-                        {skill.description}
-                      </p>
+                      <div className="mt-3 pt-2.5 border-t border-slate-200 dark:border-slate-800 flex items-center justify-between text-[11px] font-mono text-azure-500">
+                        <span className="flex items-center gap-1">
+                          <Sparkles className="w-3 h-3 text-amber-400" />
+                          <span>Core Competency</span>
+                        </span>
+                        <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />
+                      </div>
                     </div>
-
-                    <div className="mt-3 pt-2.5 border-t border-slate-200 dark:border-slate-800 flex items-center justify-between text-[11px] font-mono text-azure-500">
-                      <span className="flex items-center gap-1">
-                        <Sparkles className="w-3 h-3 text-amber-400" />
-                        <span>Core Competency</span>
-                      </span>
-                      <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />
-                    </div>
-                  </div>
+                  </TiltCard>
                 ))}
               </div>
             </div>
