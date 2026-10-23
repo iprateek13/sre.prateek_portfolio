@@ -3,8 +3,6 @@
 import React from "react";
 import { motion } from "framer-motion";
 import { portfolioData } from "@/data/content";
-import { TiltCard } from "@/components/ui/TiltCard";
-import { soundFx } from "@/lib/soundFx";
 import { 
   User, Award, GraduationCap, MapPin, CheckCircle2, 
   Cloud, ShieldCheck, Activity, Terminal, ExternalLink, Sparkles, Layers
@@ -81,66 +79,59 @@ export function AboutSection() {
             className="lg:col-span-5 grid grid-cols-1 sm:grid-cols-2 gap-4"
           >
             {portfolioData.stats.map((stat) => (
-              <TiltCard key={stat.id} maxTilt={9} className="rounded-3xl">
-                <div
-                  onMouseEnter={() => soundFx.playHover()}
-                  className="p-6 h-full rounded-3xl bg-white/90 dark:bg-dark-900/90 border border-slate-200/80 dark:border-slate-800 backdrop-blur-xl shadow-xl flex flex-col justify-between hover:border-azure-500/40 transition-all glass-card-hover"
-                >
-                  <div className="text-[10px] font-mono font-bold text-azure-500 uppercase tracking-wider mb-2">
-                    {stat.label}
-                  </div>
-
-                  <div className="text-3xl sm:text-4xl font-heading font-extrabold text-dark-900 dark:text-white mb-2">
-                    <span className="text-gradient-sre">
-                      {stat.prefix || ""}
-                      {stat.value}
-                      {stat.suffix || ""}
-                    </span>
-                  </div>
-
-                  <div className="text-xs text-slate-500 dark:text-slate-400 font-mono">
-                    {stat.sublabel}
-                  </div>
+              <div
+                key={stat.id}
+                className="p-6 rounded-3xl bg-white/90 dark:bg-dark-900/90 border border-slate-200/80 dark:border-slate-800 backdrop-blur-xl shadow-xl flex flex-col justify-between hover:border-azure-500/40 transition-all hover:-translate-y-1 glass-card-hover"
+              >
+                <div className="text-[10px] font-mono font-bold text-azure-500 uppercase tracking-wider mb-2">
+                  {stat.label}
                 </div>
-              </TiltCard>
+
+                <div className="text-3xl sm:text-4xl font-heading font-extrabold text-dark-900 dark:text-white mb-2">
+                  <span className="text-gradient-sre">
+                    {stat.prefix || ""}
+                    {stat.value}
+                    {stat.suffix || ""}
+                  </span>
+                </div>
+
+                <div className="text-xs text-slate-500 dark:text-slate-400 font-mono">
+                  {stat.sublabel}
+                </div>
+              </div>
             ))}
 
             {/* Cloud Architecture & Governance Showcase Card */}
-            <TiltCard maxTilt={5} className="sm:col-span-2 rounded-3xl">
-              <div
-                onMouseEnter={() => soundFx.playHover()}
-                className="p-6 h-full rounded-3xl bg-white/90 dark:bg-dark-900/90 border border-slate-200/80 dark:border-slate-800 backdrop-blur-xl shadow-xl flex items-center justify-between hover:border-azure-500/40 transition-all glass-card-hover"
-              >
-                <div className="flex items-center gap-4">
-                  <div className="p-3.5 rounded-2xl bg-azure-500/10 dark:bg-azure-500/20 border border-azure-500/30 text-azure-500 dark:text-cyan-300 shrink-0">
-                    <Cloud className="w-6 h-6" />
+            <div className="sm:col-span-2 p-6 rounded-3xl bg-white/90 dark:bg-dark-900/90 border border-slate-200/80 dark:border-slate-800 backdrop-blur-xl shadow-xl flex items-center justify-between hover:border-azure-500/40 transition-all hover:-translate-y-1 glass-card-hover">
+              <div className="flex items-center gap-4">
+                <div className="p-3.5 rounded-2xl bg-azure-500/10 dark:bg-azure-500/20 border border-azure-500/30 text-azure-500 dark:text-cyan-300 shrink-0">
+                  <Cloud className="w-6 h-6" />
+                </div>
+                <div>
+                  <div className="text-[10px] font-mono font-bold text-azure-500 uppercase tracking-wider mb-1 flex items-center gap-1.5">
+                    <ShieldCheck className="w-3.5 h-3.5 text-cyan-400" />
+                    <span>MULTI-CLOUD INFRASTRUCTURE ARCHITECTURE</span>
                   </div>
-                  <div>
-                    <div className="text-[10px] font-mono font-bold text-azure-500 uppercase tracking-wider mb-1 flex items-center gap-1.5">
-                      <ShieldCheck className="w-3.5 h-3.5 text-cyan-400" />
-                      <span>MULTI-CLOUD INFRASTRUCTURE ARCHITECTURE</span>
-                    </div>
-                    <div className="text-lg sm:text-xl font-heading font-extrabold mb-1">
-                      <span className="text-gradient-sre">Microsoft Azure & AWS Specialist</span>
-                    </div>
-                    <div className="text-xs text-slate-500 dark:text-slate-400 font-mono">
-                      CAF Hub & Spoke Landing Zones, 15+ Terraform IaC Modules & DevSecOps Guardrails
-                    </div>
+                  <div className="text-lg sm:text-xl font-heading font-extrabold mb-1">
+                    <span className="text-gradient-sre">Microsoft Azure & AWS Specialist</span>
+                  </div>
+                  <div className="text-xs text-slate-500 dark:text-slate-400 font-mono">
+                    CAF Hub & Spoke Landing Zones, 15+ Terraform IaC Modules & DevSecOps Guardrails
                   </div>
                 </div>
-
-                <a
-                  href={portfolioData.certifications[0]?.credentialUrl || "https://github.com/iprateek13"}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="p-3 rounded-2xl bg-azure-500/10 dark:bg-azure-500/20 hover:bg-azure-500/20 border border-azure-500/30 text-azure-500 dark:text-cyan-300 transition-all hover:scale-105 active:scale-95 shrink-0"
-                  title="View GitHub Repositories"
-                  aria-label="View GitHub Repositories"
-                >
-                  <ExternalLink className="w-4 h-4" />
-                </a>
               </div>
-            </TiltCard>
+
+              <a
+                href={portfolioData.certifications[0]?.credentialUrl || "https://github.com/iprateek13"}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="p-3 rounded-2xl bg-azure-500/10 dark:bg-azure-500/20 hover:bg-azure-500/20 border border-azure-500/30 text-azure-500 dark:text-cyan-300 transition-all hover:scale-105 active:scale-95 shrink-0"
+                title="View GitHub Repositories"
+                aria-label="View GitHub Repositories"
+              >
+                <ExternalLink className="w-4 h-4" />
+              </a>
+            </div>
           </motion.div>
         </div>
       </div>
